@@ -1,0 +1,25 @@
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --background: #fffffe;
+    --heading: #2b2c34;
+    --desc: #2b2c34;
+    --btn-bg: #6246ea;
+    --btn-text: #fffffe;
+    --stroke: #2b2c34;
+    --secondary: #d1d1e9;
+    --active: #6246ea;
+    --tertiary: #e45858;
+    --btn-hover: #8169f5;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    background-color: var(--background);
+}

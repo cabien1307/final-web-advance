@@ -1,0 +1,112 @@
+@import url("../../index.css");
+
+.login-page {
+    display: flex;
+    box-shadow: var(--heading) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+}
+
+.brand {
+    flex-basis: 60%;
+}
+
+.login {
+    flex-basis: 40%;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.label {
+    display: block;
+    color: var(--heading);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.input {
+    width: 100%;
+    padding: 7px 20px;
+    font-size: 20px;
+    color: var(--desc);
+    outline: none;
+    font-style: italic;
+}
+
+.input:focus {
+    font-style: normal;
+}
+
+.btn {
+    background: transparent;
+    border: 2px solid var(--stroke);
+    padding: 8px 20px;
+    border-radius: 24px;
+    font-size: 20px;
+    line-height: 28px;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.btn:hover {
+    box-shadow: 1px 3px var(--heading);
+}
+
+
+@media (min-width: 1201px) {
+    .brand {
+        flex-basis: 60%;
+    }
+    .login {
+        flex-basis: 40%;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .brand {
+        flex-basis: 55%;
+    }
+    .login {
+        flex-basis: 45%;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .login-page {
+        flex-direction: column;
+    }
+    .brand {
+        order: 2;
+    }
+    .login {
+        order: 1;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .login-page {
+        flex-direction: column;
+    }
+    .brand {
+        order: 2;
+    }
+    .login {
+        order: 1;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .login-page {
+        flex-direction: column;
+    }
+    .brand {
+        order: 2;
+    }
+    .login {
+        order: 1;
+    }
+
+    .login-page .intro p {
+        display: none;
+    }
+}
