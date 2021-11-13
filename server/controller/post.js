@@ -117,20 +117,20 @@ class postController {
         const { postID } = req.value.params;
         const { userID } = req.value.body;
         const post = await Post.findById(postID);
-        const user = await User.findById(userID)
-
-        console.log(post._id);
-
-        // return res.status(200).json(user)
+        const user = await User.findById(userID);
 
         if (userID === post.userID.toString()) {
+            await post.deleteOne();
 
-            await post.deleteOne()
-            await user.update({ $pull: { posts: post._id } })
-            // pull post array in user 
-            return res.status(200).json("The post has been deleted")
+            // pull post array in user
+            await user.update({ $pull: { posts: post._id } });
+
+            // Delete comment of post
+            await Comments.deleteMany({ postID: post._id });
+            
+            return res.status(200).json("The post has been deleted");
         } else {
-            return res.status(403).json("You can delete only your post !")
+            return res.status(403).json("You can delete only your post !");
         }
     }
 
