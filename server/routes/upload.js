@@ -2,27 +2,22 @@ const router = require("express-promise-router")();
 const cloudinary = require("cloudinary");
 const multer = require("multer");
 const fs = require("fs");
-
-const { CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+const  { cloud } = require("../config/cloudinary");
 
 cloudinary.v2.config({
-    cloud_name: CLOUD_NAME,
-    api_key: CLOUDINARY_API_KEY,
-    api_secret: CLOUDINARY_API_SECRET,
+    cloud_name: cloud.name,
+    api_key: cloud.api_key,
+    api_secret: cloud.api_secret,
 });
 
 const storage = multer.diskStorage({
     filename: (req, file, done) => {
-        // done(null, req.body.name);
         done(null, Date.now() + "-" + file.originalname);
     },
 });
 
 const upload = multer({ storage: storage });
 
-// router.post("/", upload.single("file"), (req, res, next) => {
-//     res.status(200).json("File has been uploaded !");
-// });
 
 // upload.array("images") ------ images is a name of key form-data
 router.post("/", upload.array("images"), async (req, res) => {
