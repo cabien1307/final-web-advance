@@ -4,6 +4,8 @@ import Toast from '../../components/Toast'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { LoginFailure, LoginSuccessfull } from '../../store/actions/authAction'
+import { GoogleLogin } from "react-google-login";
+import axios from "axios";
 
 function TeacherForm({ login }) {
 
@@ -82,28 +84,7 @@ function TeacherForm({ login }) {
     )
 }
 
-function StudentForm({ login }) {
 
-    const triggerClick = () => {
-        login({
-            type: 1, data: {
-                email: 'student@gmail.com',
-                password: '123456'
-            }
-        })
-    }
-
-    return (
-        <div className="form-group px-10 space-y-3">
-            <h1 className="text-center text-3xl font-semibold">Login</h1>
-            {/* Update login with google button */}
-            <button className="btn w-full" onClick={() => triggerClick()}>
-                <i className="fab fa-google mr-2"></i>
-                Sign in with google
-            </button>
-        </div>
-    )
-}
 
 function Login() {
 
@@ -122,33 +103,75 @@ function Login() {
         setIsChoose(true)
     }
 
-    const handleLogin = ({ type, data }) => {
+    const responseGoogle = async (response) => {
+        try {
+            const res = await axios.post("/user/auth/google", {
+                access_token: response.accessToken,
+            });
 
+            localStorage.setItem("firstLogin", true);
+
+            dispatch(LoginSuccessfull(res.data.user))
+            history.push("/");
+        } catch (error) {
+            setToast({
+                title: "Login failure !",
+                type: 'warning',
+                msg: 'Incorrect username/password !',
+                duration: 3000
+            })
+            dispatch(LoginFailure())
+            setIsShow(true)
+        }
+    };
+
+    const StudentForm = () => {
+        return (
+            <div className="form-group px-10 space-y-3">
+                <h1 className="text-center text-3xl font-semibold">Login</h1>
+                {/* Update login with google button */}
+                
+                <GoogleLogin
+                    render={renderProps => (
+                        <button className="btn w-full" onClick={renderProps.onClick}>
+                        <i className="fab fa-google mr-2"></i>
+                        Sign in with google
+                    </button>
+                      )}
+                    clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
+                    buttonText="Login with Google"
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    cookiePolicy={"single_host_origin"}
+                />
+            </div>
+        )
+    }
+
+    const handleLogin = async ({type, data}) => {
+        const {email, password} = data
         // Teacher login with email
-        if (type === 0) {
-            if (data.email === 'cabien13072000@gmail.com' && data.password === '123456') {
-                localStorage.setItem('user', JSON.stringify(data))
-                dispatch(LoginSuccessfull(data))
-                history.push('/')
-            } else {
-                // Catch
-                dispatch(LoginFailure())
-                setIsShow(true)
-                setToast({
-                    title: "Login failure !",
-                    type: 'warning',
-                    msg: 'Incorrect username/password !',
-                    duration: 3000
-                })
-            }
-        }
-        //Student login with google
-        else {
-            localStorage.setItem('user', JSON.stringify(data))
-            dispatch(LoginSuccessfull(data))
-            history.push('/')
-        }
+        try {
+            const res = await axios.post("/user/sign-in", {
+                email, password
+            })
 
+            localStorage.setItem("firstLogin", true);
+
+            dispatch(LoginSuccessfull(res.data))
+            history.push("/");
+        } catch (error) {
+            // Catch
+            setToast({
+                title: "Login failure !",
+                type: 'warning',
+                msg: 'Incorrect username/password !',
+                duration: 3000
+            })
+            dispatch(LoginFailure())
+            setIsShow(true)
+        }
+        
     }
 
     // Close Toast
@@ -189,7 +212,7 @@ function Login() {
                     isChoose
                         ? typeLogin === 0
                             ? <TeacherForm login={handleLogin} />
-                            : <StudentForm login={handleLogin} />
+                            : <StudentForm />
                         : false
                 }
             </div>

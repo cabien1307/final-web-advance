@@ -1,14 +1,14 @@
-const io = require("socket.io")(5000, {
+const io = require("socket.io")(8080, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: "http://localhost:3000",
     },
 });
 
-io.on('connection', (socket) => {
-    console.log('Socket is connected !', socket.id);
+io.on("connection", (socket) => {
+    console.log("Socket is connected !", socket.id);
 
     socket.on("new-notify", () => {
         console.log(socket.id);
-        socket.broadcast.emit('broadcast-notify')
-    })
-})
+        socket.broadcast.emit("broadcast-notify");
+    });
+});
