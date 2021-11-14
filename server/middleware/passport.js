@@ -41,7 +41,7 @@ passport.use(new LocalStrategy({
 
         const isValidPassword = await user.isValidPassword(passwordReq)
         if (!isValidPassword) return done(null, false)
-        const { password, posts, listRolePost, authType, authFacebookID, authTwitterID, authGoogleID, ...others } = user._doc
+        const { password, posts, listRolePost, authType, authFacebookID, authTwitterID, authGoogleID, createdAt, updatedAt, ...others } = user._doc
         done(null, others)
     } catch (error) {
         done(error, false)

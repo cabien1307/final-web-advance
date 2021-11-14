@@ -1,12 +1,14 @@
 import { Route, Link, useHistory } from 'react-router-dom'
 import './sideBar.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Logout } from '../../store/actions/authAction'
 
 function NavBar() {
 
     const dispatch = useDispatch();
     const history = useHistory();
+
+    const user = useSelector(state => state.auth.user)
 
     const menus = [
         {
@@ -77,7 +79,7 @@ function NavBar() {
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('user')
+        localStorage.removeItem('firstLogin')
         history.push('/')
         dispatch(Logout())
     }
@@ -108,13 +110,13 @@ function NavBar() {
             {/* Profile */}
             <div className="profile mb-10 hover:text-btn-bg lg:w-9/12 md:w-9/12 sm:w-9/12 flex items-center space-x-3 cursor-pointer relative">
                 <div className="avt w-12 h-12">
-                    <img className="rounded-full border-2 border-stroke" src={process.env.PUBLIC_URL + '/images/male_avatar.svg'} alt="" />
+                    <img className="rounded-full border-2 border-stroke" src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} alt="" />
                 </div>
 
                 <div className="flex items-center justify-around w-full 2xl:flex xl:hidden lg:hidden md:hidden sm:hidden">
                     <div className="info">
-                        <h1 className="text-md font-semibold">Doan Nguyen Lam</h1>
-                        <p className="text-sm italic text-gray-500 w-36 whitespace-nowrap overflow-hidden overflow-ellipsis">doannguyenlam@gmail.com</p>
+                        <h1 className="text-md font-semibold">{user.username}</h1>
+                        <p className="text-sm italic text-gray-500 w-36 whitespace-nowrap overflow-hidden overflow-ellipsis">{user.email}</p>
                     </div>
                     <div>
                         <i className="fas fa-ellipsis-h"></i>
@@ -126,13 +128,13 @@ function NavBar() {
 
                     <div className="flex items-center">
                         <div className="avt w-12 h-12">
-                            <img className="rounded-full border-2 border-stroke" src={process.env.PUBLIC_URL + '/images/male_avatar.svg'} alt="" />
+                            <img className="rounded-full border-2 border-stroke" src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} alt="" />
                         </div>
 
                         <div className="flex items-center justify-around w-full 2xl:flex ">
                             <div className="info">
-                                <h1 className="text-md font-semibold">Doan Nguyen Lam</h1>
-                                <p className="text-sm italic text-gray-500 w-full whitespace-nowrap overflow-hidden overflow-ellipsis">doannguyenlam@gmail.com</p>
+                                <h1 className="text-md font-semibold">{user.username}</h1>
+                                <p className="text-sm italic text-gray-500 w-full whitespace-nowrap overflow-hidden overflow-ellipsis">{user.email}</p>
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 import { ACTIONS } from "../actions"
 
-const user = JSON.parse(localStorage.getItem('user'))
+const user = JSON.parse(localStorage.getItem('firstLogin'))
 
 const initialState = {
     user: user || null,
@@ -23,7 +23,6 @@ const authReducer = (state = initialState, action) => {
             }
         case ACTIONS.LOGOUT:
             return {
-                ...state,
                 isLoggedIn: false
             }
         default:

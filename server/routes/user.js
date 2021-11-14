@@ -18,7 +18,9 @@ router.get('/:id/getByID', validateParams(schemas.idSchema, 'id'), userControlle
 
 // Edit user
 router.put('/:id/replace', validateParams(schemas.idSchema, 'id'), validateBody(schemas.userReplaceSchema), userController.replaceUser)
+
 router.patch('/:id/update', validateParams(schemas.idSchema, 'id'), validateBody(schemas.userUpdateSchema), userController.updateUser)
+
 router.patch('/:userID/update-role', validateParams(schemas.idSchema, "userID"), userController.updateRole)
 
 //  Delete user
@@ -29,7 +31,9 @@ router.post('/secret', passport.authenticate('jwt', { session: false }), userCon
 
 // signup
 router.post('/sign-up', validateBody(schemas.userSchema), userController.signUp)
+
 router.post('/auth/google', passport.authenticate('google-token', { session: false }), userController.authGoogle)
+
 router.post('/auth/facebook', passport.authenticate('facebook-token', { session: false }), userController.authFacebook)
 
 // login
