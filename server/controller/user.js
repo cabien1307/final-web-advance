@@ -2,17 +2,41 @@ const User = require("../model/User");
 const Faculty = require("../model/Faculty");
 const JWT = require("jsonwebtoken");
 
-const { JWT_SECRET } = require("../config/token/index");
+const { JWT_SECRET, JWT_REFRESH_SECRET, JWT_ACTIVATION } = require("../config/token/index");
 
-const encodeToken = (userID) => {
+const createActivationToken = (payload) => {
     return JWT.sign(
         {
             iss: "CaBien",
-            sub: userID,
+            sub: payload,
+            iat: new Date().getTime(),
+            expiresIn: "5m",
+        },
+        JWT_ACTIVATION
+    );
+};
+
+const createAccessToken = (payload) => {
+    return JWT.sign(
+        {
+            iss: "CaBien",
+            sub: payload,
             iat: new Date().getTime(),
             exp: new Date().setDate(new Date().getDate() + 3),
         },
         JWT_SECRET
+    );
+};
+
+const createRefreshToken = (payload) => {
+    return JWT.sign(
+        {
+            iss: "CaBien",
+            sub: payload,
+            iat: new Date().getTime(),
+            expiresIn: "7d",
+        },
+        JWT_REFRESH_SECRET
     );
 };
 
@@ -36,7 +60,7 @@ class UserController {
         await newUser.save();
 
         // Encode token
-        const token = encodeToken(newUser._id);
+        const token = createActivationToken(newUser._id);
         res.setHeader("Authorization", token);
         return res.status(201).json({
             success: true,
@@ -69,23 +93,39 @@ class UserController {
 
     // [POST] user/sign-in
     async signIn(req, res, next) {
-        const token = encodeToken(req.user._id);
+        const token = createRefreshToken(req.user._id);
+        res.cookie("refreshtoken", token, {
+            httpOnly: true,
+            path: "/user/get-access-token",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
         res.setHeader("Authorization", token);
         return res.status(200).json({
             success: true,
-            user: req.user
+            user: req.user,
         });
     }
 
     //[POST] /user/secret
     async secret(req, res, next) {
-        console.log("Call to secret function !");
-        return res.status(200).json({ resource: true });
+        return res.status(200).json({ resource: req.user });
+    }
+
+    async getAccessToken(req, res, next) {
+        const rf_token = req.cookies.refreshtoken;
+
+        console.log(rf_token, req.cookies.refreshtoken);
+
+        JWT.verify(rf_token, JWT_REFRESH_SECRET, (err, user) => {
+            if (err) return res.status(400).json({ msg: "Please login now!" });
+            const access_token = createAccessToken({ id: user.sub });
+            res.json({ access_token });
+        });
     }
 
     //[POST] /auth/google
     async authGoogle(req, res, next) {
-        const token = encodeToken(req.user._id);
+        const token = createRefreshToken(req.user._id);
         res.setHeader("Authorization", token);
         const user = req.user;
         return res.status(200).json({
@@ -96,7 +136,7 @@ class UserController {
 
     //[POST] /auth/facebook
     async authFacebook(req, res, next) {
-        const token = encodeToken(req.user._id);
+        const token = createRefreshToken(req.user._id);
         res.setHeader("Authorization", token);
         return res.status(200).json({
             success: true,

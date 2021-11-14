@@ -6,6 +6,7 @@ const express = require("express");
 const logged = require("morgan");
 const path = require("path");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 // Module
 const route = require("./routes");
@@ -20,6 +21,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+// Cookies
+app.use(cookieParser());
 
 /*assuming an express app is declared here*/
 app.use(express.json());

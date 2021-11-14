@@ -26,11 +26,14 @@ router.patch('/:userID/update-role', validateParams(schemas.idSchema, "userID"),
 //  Delete user
 router.delete('/:userID/delete', validateParams(schemas.idSchema, 'userID'), userController.deleteUser)
 
-// secret
+// secret : get user-info
 router.post('/secret', passport.authenticate('jwt', { session: false }), userController.secret)
 
 // signup
 router.post('/sign-up', validateBody(schemas.userSchema), userController.signUp)
+
+//  get-access-token
+router.post('/get-access-token', userController.getAccessToken)
 
 router.post('/auth/google', passport.authenticate('google-token', { session: false }), userController.authGoogle)
 
