@@ -2,6 +2,7 @@ import { Route, Link, useHistory } from 'react-router-dom'
 import './sideBar.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { Logout } from '../../store/actions/authAction'
+import axios from "axios";
 
 function NavBar() {
 
@@ -78,10 +79,16 @@ function NavBar() {
         )
     }
 
-    const handleLogout = () => {
-        localStorage.removeItem('firstLogin')
-        history.push('/')
-        dispatch(Logout())
+    const handleLogout = async () => {
+        try {
+            await axios.post('/user/log-out')
+            localStorage.removeItem('firstLogin')
+            history.push('/')
+            dispatch(Logout())
+        } catch (err) {
+            console.log(err);
+        }
+
     }
 
     return (

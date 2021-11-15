@@ -157,7 +157,6 @@ function Login() {
             })
 
             localStorage.setItem("firstLogin", JSON.stringify(true));
-
             dispatch(LoginSuccessfull(res.data.user))
             history.push("/");
         } catch (error) {

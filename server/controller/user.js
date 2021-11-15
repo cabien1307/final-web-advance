@@ -125,9 +125,22 @@ class UserController {
         });
     }
 
+    // [POST] /logout
+    async logOut(req, res, next){
+        res.clearCookie("refreshtoken", {
+            path: "/user/get-access-token",
+        });
+        return res.json({ msg: "Logged out." });
+    }
+
     //[POST] /auth/google
     async authGoogle(req, res, next) {
         const token = createRefreshToken(req.user._id);
+        res.cookie("refreshtoken", token, {
+            httpOnly: true,
+            path: "/user/get-access-token",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
         res.setHeader("Authorization", token);
         const user = req.user;
         return res.status(200).json({

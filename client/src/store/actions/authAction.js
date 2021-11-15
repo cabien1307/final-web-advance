@@ -15,11 +15,8 @@ export const Logout = () => ({
 });
 
 export const fetchUser = async (token) => {
-    const res = await axios.post("/user/secret", {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const res = await axios.post("/user/secret");
     return res;
 };
 

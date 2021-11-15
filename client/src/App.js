@@ -27,7 +27,7 @@ function App() {
         if (token) {
             const getUser = () => {
                 return fetchUser(token).then((res) => {
-                    dispatch(LoginSuccessfull(res.data.user));
+                    dispatch(LoginSuccessfull(res.data.resource));
                 });
             };
             getUser();
