@@ -156,7 +156,7 @@ function Login() {
                 email, password
             })
 
-            localStorage.setItem("firstLogin", JSON.stringify(res.data.user));
+            localStorage.setItem("firstLogin", JSON.stringify(true));
 
             dispatch(LoginSuccessfull(res.data.user))
             history.push("/");

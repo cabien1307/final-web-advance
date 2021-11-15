@@ -1,11 +1,9 @@
-import { ACTIONS } from "../actions"
-
-const user = JSON.parse(localStorage.getItem('firstLogin'))
+import ACTIONS from "../actions";
 
 const initialState = {
-    user: user || null,
-    isLoggedIn: user ? true : false,
-}
+    user: null,
+    isLoggedIn: false,
+};
 
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -13,21 +11,21 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoggedIn: true,
-                user: action.payload
-            }
+                user: action.payload,
+            };
 
         case ACTIONS.LOGIN_FAILURE:
             return {
                 ...state,
                 isLoggedIn: false,
-            }
+            };
         case ACTIONS.LOGOUT:
             return {
-                isLoggedIn: false
-            }
+                isLoggedIn: false,
+            };
         default:
-            return state
+            return state;
     }
-}
+};
 
-export default authReducer
+export default authReducer;

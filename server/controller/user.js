@@ -2,7 +2,11 @@ const User = require("../model/User");
 const Faculty = require("../model/Faculty");
 const JWT = require("jsonwebtoken");
 
-const { JWT_SECRET, JWT_REFRESH_SECRET, JWT_ACTIVATION } = require("../config/token/index");
+const {
+    JWT_SECRET,
+    JWT_REFRESH_SECRET,
+    JWT_ACTIVATION,
+} = require("../config/token/index");
 
 const createActivationToken = (payload) => {
     return JWT.sign(
@@ -113,8 +117,6 @@ class UserController {
 
     async getAccessToken(req, res, next) {
         const rf_token = req.cookies.refreshtoken;
-
-        console.log(rf_token, req.cookies.refreshtoken);
 
         JWT.verify(rf_token, JWT_REFRESH_SECRET, (err, user) => {
             if (err) return res.status(400).json({ msg: "Please login now!" });
