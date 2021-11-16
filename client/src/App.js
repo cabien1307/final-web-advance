@@ -36,7 +36,7 @@ function App() {
 
     return (
         <Router>
-            <div className="2xl:container xl:container grid grid-cols-12 gap-1 py-2 min-h-screen">
+            <div className="grid grid-cols-12 min-h-screen">
                 {isLoggedIn && <SideBar />}
                 <Body />
             </div>

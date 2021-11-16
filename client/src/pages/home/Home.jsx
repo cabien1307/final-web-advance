@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import RightBar from "../../components/RightBar/RightBar"
+import Status from "../../components/Status/Status";
 import Toast from "../../components/Toast";
 
 function Home() {
@@ -23,11 +25,12 @@ function Home() {
 
     return (
         <>
-            <div className="col-span-6 2xl:col-span-6 xl:col-span-8 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 sm:px-1 px-3">
-                <h1>Home Page</h1>
-                <button className="px-2 py-2 rounded-md bg-green-500 text-btn-text shadow-md hover:bg-btn-hover" onClick={() => handleClickSuccess()}>
-                    Success Toast
-                </button>
+            <div className="col-span-6 -ml-5 mr-1 2xl:col-span-6 xl:col-span-8 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 sm:px-1">
+                <Link to='/'>
+                    <h1 className="text-xl p-1.5 font-medium">Home</h1>
+                    <hr />
+                </Link>
+                <Status />
 
 
                 {isShow && <Toast closeToast={() => handleClose()} toast={toast} />}

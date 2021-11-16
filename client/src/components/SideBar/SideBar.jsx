@@ -56,7 +56,7 @@ function NavBar() {
                 path={to}
                 exact={activeWhenExact}
                 children={({ match }) => {
-                    var baseClass = "flex space-x-5 text-2xl hover:text-btn-hover";
+                    var baseClass = "flex space-x-5 text-xl hover:text-btn-hover ";
                     return (
                         <li className={match ? baseClass + ' text-active' : baseClass}>
                             <div className="icon">
@@ -92,7 +92,7 @@ function NavBar() {
     }
 
     return (
-        <div className="col-span-3 mx-auto flex flex-col justify-between border-r-2 py-7 px-3 2xl:col-span-3 xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2 sm:px-0">
+        <div className="col-span-3 flex flex-col justify-between border-r-2 py-7 px-5 mx-auto 2xl:col-span-3 xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2 sm:px-0">
 
             {/* Main */}
             <div className="main lg:mx-auto md:mx-auto sm:mx-auto">
@@ -131,14 +131,14 @@ function NavBar() {
                 </div>
 
                 {/* Hover logout */}
-                <div className="option bg-background absolute bottom-16 right-0 shadow-xl rounded-2xl py-3 px-5  border-2 hidden xl:left-0 lg:left-0 md:left-0 sm:left-0">
+                <div className="option bg-background absolute bottom-16 right-0 shadow-xl rounded-2xl py-3 px-5 border-2 hidden xl:left-0 lg:left-0 md:left-0 sm:left-0">
 
                     <div className="flex items-center">
                         <div className="avt w-12 h-12">
                             <img className="rounded-full border-2 border-stroke" src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} alt="" />
                         </div>
 
-                        <div className="flex items-center justify-around w-full 2xl:flex ">
+                        <div className="flex mx-2 w-full 2xl:flex ">
                             <div className="info">
                                 <h1 className="text-md font-semibold">{user.username}</h1>
                                 <p className="text-sm italic text-gray-500 w-full whitespace-nowrap overflow-hidden overflow-ellipsis">{user.email}</p>
