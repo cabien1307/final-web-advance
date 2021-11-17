@@ -1,22 +1,92 @@
-.icon {
-    max-width: 0;
-    margin-right: 20px;
+.nav-link {
+    display: flex;
+    padding: 12px;
+    font-size: 24px;
+    line-height: 32px;
+    max-width: 100%;
 }
 
-.option {
-    width: 300px;
+.nav-link:hover,
+.info:hover,
+.logout:hover {
+    color: #6246ea;
 }
 
-.profile:hover .option {
-    display: block !important;
-    color: #000;
-    left: -20px;
+.text-wrap {
+    white-space: nowrap;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
 }
 
-.profile::after {
-    content: "";
-    width: 300px;
-    height: 50px;
+.uncount {
     position: absolute;
-    bottom: 25px;
+    top: -8px;
+    right: -12px;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border: 2px solid #2b2c34;
+    font-size: 10px;
+    line-height: 14px;
+    color: #fff;
+    font-weight: 600;
+    background-color: rgba(239, 68, 68, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (min-width: 1201px) {
+    .logo {
+        text-align: left;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .nav-link,
+    .flex-item-profile {
+        justify-content: center;
+    }
+    .logo {
+        text-align: center;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .nav-link,
+    .flex-item-profile {
+        justify-content: center;
+    }
+    .logo {
+        text-align: center;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .nav-link,
+    .flex-item-profile {
+        justify-content: center;
+    }
+    .logo {
+        text-align: center;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .nav-link,
+    .flex-item-profile {
+        justify-content: center;
+    }
+    .logo {
+        display: none;
+    }
+}
+
+.hover-container {
+    position: absolute;
+    bottom: 110%;
+    left: 0;
 }

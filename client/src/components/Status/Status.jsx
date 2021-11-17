@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { LIST_ICONS_POST } from "../../utils/staticData";
 
 const Status = () => {
-    const {auth} = useSelector((state) => state);
+    const { auth } = useSelector((state) => state);
     const [images, setImages] = useState([]);
     return (
         <div>
@@ -55,10 +55,11 @@ const Status = () => {
                                 </span>
                             </label>
                         </li>
-                        <div className="flex" style={{display: 'none'}}>
+                        <div className="flex" style={{ display: 'none' }}>
                             {
                                 LIST_ICONS_POST.map((item, index) => (
                                     <li
+                                        key={index}
                                         className="cursor-pointer py-2 px-5 rounded-xl hover:bg-blue-100"
                                     >
                                         <label>
@@ -68,15 +69,15 @@ const Status = () => {
                                     </li>
                                 ))
                             }
-                            
+
                         </div>
 
                         <li>
                             <select
-                                className="w-full focus:outline-none focus:ring-2 focus:ring-primary py-1 px-2"
+                                className="w-full focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent py-1 px-2"
                                 required
                             >
-                                <option value="" disabled hidden selected>
+                                <option defaultValue disabled>
                                     ---Select faculty---
                                 </option>
 

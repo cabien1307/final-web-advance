@@ -1,54 +1,16 @@
-import { Route, Link, useHistory } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import './sideBar.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { Logout } from '../../store/actions/authAction'
-import axios from "axios";
+import { useSelector } from 'react-redux'
+
+import HoverLogout from './HoverLogout';
+import { useState } from 'react';
+import { menus } from "../../constant"
 
 function NavBar() {
 
-    const dispatch = useDispatch();
-    const history = useHistory();
+    const [isShow, setIsShow] = useState(false)
 
     const user = useSelector(state => state.auth.user)
-
-    const menus = [
-        {
-            name: 'Home',
-            to: '/',
-            exact: true,
-            icon: 'fas fa-home'
-        },
-        {
-            name: 'Faculty',
-            to: '/faculty',
-            exact: false,
-            icon: 'far fa-list-alt'
-        },
-        {
-            name: 'Notification',
-            to: '/notify',
-            exact: false,
-            icon: 'far fa-bell'
-        },
-        {
-            name: 'Add user',
-            to: '/register',
-            exact: false,
-            icon: 'fas fa-user-plus'
-        },
-        {
-            name: 'Profile',
-            to: '/profile/:id',
-            exact: false,
-            icon: 'far fa-user'
-        },
-        {
-            name: 'More',
-            to: '/more',
-            exact: false,
-            icon: 'fas fa-ellipsis-h'
-        }
-    ]
 
     const MenuLink = ({ label, to, activeWhenExact, icon }) => {
         return (
@@ -56,51 +18,42 @@ function NavBar() {
                 path={to}
                 exact={activeWhenExact}
                 children={({ match }) => {
-                    var baseClass = "flex space-x-5 text-xl hover:text-btn-hover ";
                     return (
-                        <li className={match ? baseClass + ' text-active' : baseClass}>
-                            <div className="icon">
-                                <Link to={to} className="relative">
-                                    {to === '/notify'
-                                        ? (<span className="absolute w-5 h-5 -top-2 -right-3 border-2 border-stroke rounded-full text-xs text-white font-semibold bg-red-500 flex justify-center items-center ">1</span>)
-                                        : null}
-                                    <i className={icon} title={label}></i>
-                                </Link>
+                        <Link to={to} className="text-heading">
+                            <div className={match ? 'nav-link font-semibold' : 'nav-link'}>
+                                <div className="relative">
+                                    {
+                                        to === '/notify'
+                                        && (<span className="uncount">2</span>)
+                                    }
+                                    <i className={icon}></i>
+                                </div>
+                                <div className="ml-5 min-w-0 xl:hidden lg:hidden md:hidden sm:hidden">
+                                    <span>{label}</span>
+                                </div>
                             </div>
-                            <div className="">
-                                <Link to={to}>
-                                    <span className="block 2xl:block xl:hidden lg:hidden md:hidden sm:hidden">{label}</span>
-                                </Link>
-                            </div>
-                        </li>
+                        </Link>
                     )
                 }}
             />
         )
     }
 
-    const handleLogout = async () => {
-        try {
-            await axios.post('/user/log-out')
-            localStorage.removeItem('firstLogin')
-            history.push('/')
-            dispatch(Logout())
-        } catch (err) {
-            console.log(err);
-        }
-
-    }
-
     return (
-        <div className="col-span-3 flex flex-col justify-between border-r-2 py-7 px-5 mx-auto 2xl:col-span-3 xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2 sm:px-0">
+        <div className="col-span-3 2xl:col-span-3 xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2 flex flex-col justify-between px-2 border-r-2 my-4">
 
             {/* Main */}
-            <div className="main lg:mx-auto md:mx-auto sm:mx-auto">
-                <Link to='/'><i className="fab fa-trade-federation text-3xl font-semibold xl:mx-auto lg:mx-auto md:mx-auto text-blue-500"></i></Link>
-                <ul className="flex flex-col space-y-7 mt-7">
-                    {
-                        menus.map((menu, index) => {
-                            return (
+            <div className="main">
+                {/* Logo */}
+                <div className="logo mb-5">
+                    <h1 className="text-4xl font-semibold mx-3 lg:text-2xl md:text-xl">Logo</h1>
+                </div>
+
+                {/* Menu */}
+                <div className="menu">
+                    <nav>
+                        {
+                            menus.map((menu, index) => (
                                 <MenuLink
                                     key={index}
                                     label={menu.name}
@@ -108,50 +61,51 @@ function NavBar() {
                                     activeWhenExact={menu.exact}
                                     icon={menu.icon}
                                 />
-                            )
-                        })
-                    }
-                </ul>
+                            ))
+                        }
+                    </nav>
+                </div>
             </div>
 
             {/* Profile */}
-            <div className="profile mb-10 hover:text-btn-bg lg:w-9/12 md:w-9/12 sm:w-9/12 flex items-center space-x-3 cursor-pointer relative">
-                <div className="avt w-12 h-12">
-                    <img className="rounded-full border-2 border-stroke" src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} alt="" />
-                </div>
+            <div className="profile mb-10 cursor-pointer relative" onClick={() => setIsShow(!isShow)}>
+                <div className="flex-item-profile flex items-center px-3 my-3">
 
-                <div className="flex items-center justify-around w-full 2xl:flex xl:hidden lg:hidden md:hidden sm:hidden">
-                    <div className="info">
-                        <h1 className="text-md font-semibold">{user.username}</h1>
-                        <p className="text-sm italic text-gray-500 w-36 whitespace-nowrap overflow-hidden overflow-ellipsis">{user.email}</p>
+                    {/* Image */}
+                    <div className="profilePic">
+                        <div className="h-10 w-10">
+                            <img src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} className="rounded-full border-2 border-stroke" alt="" />
+                        </div>
                     </div>
-                    <div>
+
+                    {/* Info */}
+                    <div className="info max-w-full flex-shrink xl:hidden lg:hidden md:hidden sm:hidden">
+                        <div className="mx-3 max-w-full w-36">
+                            {/* Username */}
+                            <div className="name">
+                                <span className="text-wrap text-xl font-semibold">{user.username}</span>
+                            </div>
+
+                            {/* Email*/}
+                            <div className="email">
+                                <div className="text-wrap">
+                                    <span className="text-sm italic text-paragraph min-w-0 max-w-full">{user.email}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* Option */}
+                    <div className="option flex-grow items-end xl:hidden lg:hidden md:hidden sm:hidden">
                         <i className="fas fa-ellipsis-h"></i>
                     </div>
                 </div>
 
-                {/* Hover logout */}
-                <div className="option bg-background absolute bottom-16 right-0 shadow-xl rounded-2xl py-3 px-5 border-2 hidden xl:left-0 lg:left-0 md:left-0 sm:left-0">
+                {isShow && <HoverLogout />}
 
-                    <div className="flex items-center">
-                        <div className="avt w-12 h-12">
-                            <img className="rounded-full border-2 border-stroke" src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} alt="" />
-                        </div>
-
-                        <div className="flex mx-2 w-full 2xl:flex ">
-                            <div className="info">
-                                <h1 className="text-md font-semibold">{user.username}</h1>
-                                <p className="text-sm italic text-gray-500 w-full whitespace-nowrap overflow-hidden overflow-ellipsis">{user.email}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr className="my-3" />
-
-                    <button onClick={handleLogout} className="font-semibold text-lg hover:text-btn-bg">Logout</button>
-                </div>
             </div>
-        </div>
+        </div >
     )
 }
 
