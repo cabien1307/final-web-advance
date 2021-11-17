@@ -14,6 +14,9 @@
     --active: #6246ea;
     --tertiary: #e45858;
     --btn-hover: #8169f5;
+    --card-bg: #d1d1e9;
+    --card-heading: #2b2c34;
+    --card-paragraph: #2b2c34;
 }
 
 body {

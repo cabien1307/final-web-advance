@@ -120,7 +120,7 @@ function Register() {
             </div>
 
             <div className="register">
-                <form onSubmit={handleSubmit} className="px-10 space-y-6">
+                <form onSubmit={handleSubmit} className="px-10 sm:px-3 space-y-6">
                     <h1 className="text-center text-3xl font-semibold text-heading">Add user</h1>
 
                     {/* Show error message */}

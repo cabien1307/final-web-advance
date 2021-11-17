@@ -8,7 +8,7 @@ const Status = () => {
     return (
         <div>
             <form
-                className="form mx-1 my-1 xl:mx-1 lg:mx-3 md:mx-2 sm:mx-1 xs:mx-1 md:my-0 sm:my-0 xs:my-0 py-2 flex flex-col justify-between rounded-xl shadow-lg"
+                className="form py-2 flex flex-col justify-between rounded-md border-b-2"
             >
                 {/* Preview image before share */}
                 <div className="previewContainer relative mb-2 px-3">
