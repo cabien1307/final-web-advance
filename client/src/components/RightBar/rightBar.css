@@ -4,7 +4,7 @@
     font-size: 12px;
     cursor: pointer;
     font-weight: 600;
-    color: #2b2c34;
+    color: var(--card-heading);
     word-wrap: break-word;
     overflow: hidden;
     display: -webkit-box;
@@ -24,7 +24,7 @@
 }
 
 .main-notify {
-    height: calc(100vh - 50px);
+    height: calc(80vh - 50px);
     overflow-y: scroll;
 }
 ::-webkit-scrollbar {

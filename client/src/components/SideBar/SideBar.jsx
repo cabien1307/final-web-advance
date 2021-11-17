@@ -40,7 +40,7 @@ function NavBar() {
     }
 
     return (
-        <div className="col-span-3 2xl:col-span-3 xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2 flex flex-col justify-between px-2 my-4">
+        <div className="col-span-3 2xl:col-span-3 xl:col-span-3 lg:col-span-2 md:col-span-2 sm:col-span-2 flex flex-col justify-between px-2 py-4 border-r-2">
 
             {/* Main */}
             <div className="main">

@@ -4,7 +4,7 @@ import { listNotity } from '../../dummyData'
 
 function RightBar() {
     return (
-        <div className="col-span-3 2xl:col-span-3 xl:col-span-2 lg:hidden md:hidden sm:hidden py-4 px-2">
+        <div className="col-span-3 2xl:col-span-3 xl:col-span-3 lg:hidden md:hidden sm:hidden py-4 px-2 border-l-2">
             {/* Top */}
             <div className="top">
                 <div className="text-4xl space-x-5">
