@@ -83,7 +83,7 @@ function NavBar() {
                         <div className="mx-3 max-w-full w-36">
                             {/* Username */}
                             <div className="name">
-                                <span className="text-wrap text-xl font-semibold">{user.username}</span>
+                                <span className="text-wrap text-md font-semibold">{user.username}</span>
                             </div>
 
                             {/* Email*/}

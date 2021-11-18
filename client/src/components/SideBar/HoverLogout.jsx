@@ -36,7 +36,7 @@ function HoverLogout() {
                     <div className="mx-3 max-w-full">
                         {/* Username */}
                         <div className="name">
-                            <span className=" text-xl font-semibold">{user.username}</span>
+                            <span className=" text-lg font-semibold">{user.username}</span>
                         </div>
 
                         {/* Email*/}
