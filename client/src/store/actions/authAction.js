@@ -1,17 +1,17 @@
 import axios from "axios";
-import ACTIONS from "./index";
+import { GLOBALTYPES } from "./globalTypes";
 
 export const LoginSuccessfull = (user) => ({
-    type: ACTIONS.LOGIN_SUCCESS,
+    type: GLOBALTYPES.LOGIN_SUCCESS,
     payload: user,
 });
 
 export const LoginFailure = () => ({
-    type: ACTIONS.LOGIN_FAILURE,
+    type: GLOBALTYPES.LOGIN_FAILURE,
 });
 
 export const Logout = () => ({
-    type: ACTIONS.LOGOUT,
+    type: GLOBALTYPES.LOGOUT,
 });
 
 export const fetchUser = async (token) => {
@@ -22,7 +22,7 @@ export const fetchUser = async (token) => {
 
 export const dispatchGetUser = (res) => {
     return {
-        type: ACTIONS.GET_USER,
+        type: GLOBALTYPES.GET_USER,
         payload: {
             user: res.data,
             isAdmin: res.data.role === 1 ? true : false,

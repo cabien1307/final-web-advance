@@ -1,14 +1,14 @@
 import { GLOBALTYPES } from "../actions/globalTypes";
 
-const token = "";
+const initialState = {};
 
-const tokenReducer = (state = token, action) => {
+const alertReducer = (state = initialState, action) => {
     switch (action.type) {
-        case GLOBALTYPES.GET_TOKEN:
+        case GLOBALTYPES.ALERT:
             return action.payload;
         default:
             return state;
     }
 };
 
-export default tokenReducer;
+export default alertReducer;

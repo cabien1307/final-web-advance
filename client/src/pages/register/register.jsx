@@ -7,31 +7,25 @@ import {
     isEmail,
 } from "../../utils/validation";
 import './register.css';
-import Toast from '../../components/Toast';
+import { useDispatch } from 'react-redux';
+import {GLOBALTYPES} from '../../store/actions/globalTypes';
+
+const initialState = {
+    username: "",
+    email: "",
+    password: "",
+    cf_password: "",
+    faculty: "",
+    err: "",
+};
 
 function Register() {
 
-    const initialState = {
-        username: "",
-        email: "",
-        password: "",
-        cf_password: "",
-        faculty: "",
-        err: "",
-        success: false
-    };
-
-    // Toast
-    const [isShow, setIsShow] = useState(false)
-    const [toast, setToast] = useState(null)
+    const dispatch = useDispatch();
 
     const [data, setData] = useState(initialState);
-    const { username, email, password, cf_password, faculty, err, success } = data
+    const { username, email, password, cf_password, faculty, err } = data
 
-    // Close Toast
-    const handleClose = () => {
-        setIsShow(false)
-    }
 
     // Validate and submit
     const handleSubmit = (e) => {
@@ -83,20 +77,15 @@ function Register() {
 
         try {
             
-            setIsShow(true)
-            setToast({
-                title: "Register success",
-                type: 'success',
-                msg: '',
-                duration: 3000
-            })
-            setData({
-                err: "",
-                success: true
-            })
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: "Register Successful!" },
+            });
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
         } catch (error) {
             error.response.data.msg &&
-            setData({ ...data, err: error.response.data.msg, success: "" });
+            setData({ ...data, err: error.response.data.msg });
         }
     }
 
@@ -112,8 +101,6 @@ function Register() {
 
     return (
         <div className="col-span-9 2xl:col-span-9 xl:col-span-10 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 register-page">
-
-            {success && isShow && <Toast closeToast={() => handleClose()} toast={toast} />}
 
             <div className="img px-10 border-r-2">
                 <img src={process.env.PUBLIC_URL + '/images/add_user.svg'} alt="" className="w-full mx-auto" />
