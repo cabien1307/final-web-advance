@@ -1,4 +1,4 @@
-import ACTIONS from "../actions";
+import { GLOBALTYPES } from "../actions/globalTypes";
 
 const initialState = {
     user: null,
@@ -7,19 +7,19 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
-        case ACTIONS.LOGIN_SUCCESS:
+        case GLOBALTYPES.LOGIN_SUCCESS:
             return {
                 ...state,
                 isLoggedIn: true,
                 user: action.payload,
             };
 
-        case ACTIONS.LOGIN_FAILURE:
+        case GLOBALTYPES.LOGIN_FAILURE:
             return {
                 ...state,
                 isLoggedIn: false,
             };
-        case ACTIONS.LOGOUT:
+        case GLOBALTYPES.LOGOUT:
             return {
                 user: null,
                 isLoggedIn: false,

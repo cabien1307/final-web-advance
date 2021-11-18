@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import './login.css';
-import Toast from '../../components/Toast'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { LoginFailure, LoginSuccessfull } from '../../store/actions/authAction'
 import { GoogleLogin } from "react-google-login";
 import axios from "axios";
+import {GLOBALTYPES} from '../../store/actions/globalTypes';
 
 function TeacherForm({ login }) {
 
@@ -94,10 +94,6 @@ function Login() {
     const [typeLogin, setTypeLogin] = useState(0)
     const [isChoose, setIsChoose] = useState(false)
 
-    // Toast
-    const [isShow, setIsShow] = useState(false)
-    const [toast, setToast] = useState(null)
-
     const setType = (type) => {
         setTypeLogin(type)
         setIsChoose(true)
@@ -105,6 +101,7 @@ function Login() {
 
     const responseGoogle = async (response) => {
         try {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
             const res = await axios.post("/user/auth/google", {
                 access_token: response.accessToken,
             });
@@ -112,16 +109,14 @@ function Login() {
             localStorage.setItem("firstLogin", true);
 
             dispatch(LoginSuccessfull(res.data.user))
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
             history.push("/");
         } catch (error) {
-            setToast({
-                title: "Login failure !",
-                type: 'warning',
-                msg: 'Incorrect username/password !',
-                duration: 3000
-            })
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
             dispatch(LoginFailure())
-            setIsShow(true)
         }
     };
 
@@ -152,30 +147,24 @@ function Login() {
         const {email, password} = data
         // Teacher login with email
         try {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
             const res = await axios.post("/user/sign-in", {
                 email, password
             })
 
             localStorage.setItem("firstLogin", JSON.stringify(true));
             dispatch(LoginSuccessfull(res.data.user))
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
             history.push("/");
         } catch (error) {
             // Catch
-            setToast({
-                title: "Login failure !",
-                type: 'warning',
-                msg: 'Incorrect username/password !',
-                duration: 3000
-            })
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
             dispatch(LoginFailure())
-            setIsShow(true)
         }
         
-    }
-
-    // Close Toast
-    const handleClose = () => {
-        setIsShow(false)
     }
 
     return (
@@ -183,11 +172,6 @@ function Login() {
             <div className="brand my-auto px-10  border-r-2">
                 <img src={process.env.PUBLIC_URL + '/images/bg.svg'} alt="" className="w-3/4 mx-auto" />
             </div>
-
-            {
-                isShow && <Toast closeToast={() => handleClose()} toast={toast} />
-            }
-
 
             <div className="login">
                 {/* Introduction */}

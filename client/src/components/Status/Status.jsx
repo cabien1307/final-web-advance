@@ -1,30 +1,47 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {GLOBALTYPES} from "../../store/actions/globalTypes";
 import { LIST_ICONS_POST } from "../../utils/staticData";
+import './status.css'
 
 const Status = () => {
     const { auth } = useSelector((state) => state);
+    const dispatch = useDispatch();
+
+    const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
+
+
+    const handleChangeImages = (e) => {
+        const files = [...e.target.files];
+        let err = "";
+        let newImages = [];
+
+        files.forEach((file) => {
+            if (!file) return (err = "File does not exist!");
+
+            if (file.type !== "image/jpeg" && file.type !== "image/png") {
+                return (err = "Image format is incorrect!");
+            }
+
+            return newImages.push(file);
+        });
+
+        if (err) if (err) dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err } });
+        setImages([...images, ...newImages]);
+    };
+
+    const deleteImages = (index) => {
+        const newArr = [...images];
+        newArr.splice(index, 1);
+        setImages(newArr);
+    };
+
     return (
         <div>
             <form
-                className="form py-2 flex flex-col justify-between rounded-md border-b-2"
+                className="form py-2 flex flex-col justify-between rounded-md border-2 m-2 shadow"
             >
-                {/* Preview image before share */}
-                <div className="previewContainer relative mb-2 px-3">
-                    {
-                        images.map((img, index) => (
-                            <>
-                                <img className="w-full object-cover" src={URL.createObjectURL(img)} alt="images" />
-                                <i
-                                    className="fas fa-times-circle absolute top-0 right-3 text-2xl text-white cursor-pointer"
-                                ></i>
-                            </>
-                        ))
-                    }
-
-                </div>
-
                 <div className="content flex justify-between px-3">
                     <img
                         src={auth.user.profilePic ? auth.user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'}
@@ -35,9 +52,27 @@ const Status = () => {
                         type="text"
                         className="flex-1 mx-4 px-3 focus:outline-none border-b-2 border-gray-700"
                         placeholder={`What's on your mind ${auth.user.username} ?`}
-                        v-model="title"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
                     />
                 </div>
+
+                {/* Preview image before share */}
+                <div className="show_images">
+                    {
+                        images.map((img, index) => (
+                            <div key={index} className="relative w-full h-full">
+                                <img className="block object-contain w-full h-full max-h-24" src={URL.createObjectURL(img)} alt="images" />
+                                <i
+                                    className="fas fa-times-circle absolute -top-1 right-0 text-xl text-red-500 cursor-pointer"
+                                    onClick={() => deleteImages(index)}
+                                />
+                            </div>
+                        ))
+                    }
+
+                </div>
+
                 <div className="img-post mt-2 px-3">
                     <input
                         type="file"
@@ -45,6 +80,7 @@ const Status = () => {
                         id="isPhotoId"
                         accept=".png,.jpeg,.jpg,.jfif"
                         hidden
+                        onChange={handleChangeImages}
                     />
                     <ul className="flex justify-around items-center">
                         <li>

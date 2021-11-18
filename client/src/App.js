@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { fetchUser, LoginSuccessfull } from "./store/actions/authAction";
+import Alert from "./components/Alert/Alert";
 
 function App() {
     const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function App() {
 
     return (
         <Router>
+            <Alert />
             <div className="2xl:container grid grid-cols-12 min-h-screen">
                 {isLoggedIn && <SideBar />}
                 <Body />
