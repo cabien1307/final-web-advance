@@ -18,11 +18,12 @@ export const createPost =
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
             if (images.length > 0) media = await imageUpload(images);
 
-            const res = await postDataAPI(
-                "post",
-                { userID: auth.user._id, title, img: media, faculty },
-                token
-            );
+            const data = { userID: auth.user._id, title, img: media, faculty };
+
+            if (auth.user.role === 2) {
+                delete data.faculty;
+            }
+            const res = await postDataAPI("post", data, token);
 
             dispatch({
                 type: POST_TYPES.CREATE_POST,

@@ -126,7 +126,7 @@ class UserController {
     }
 
     // [POST] /logout
-    async logOut(req, res, next){
+    async logOut(req, res, next) {
         res.clearCookie("refreshtoken", {
             path: "/user/get-access-token",
         });
@@ -197,12 +197,11 @@ class UserController {
         const { userID } = req.value.params;
         const { listRolePost, username } = req.body;
 
-        console.log(username);
-        await User.findByIdAndUpdate(
+        const result = await User.findByIdAndUpdate(
             { _id: userID },
             { $set: { listRolePost }, username: username }
         );
-
+        console.log(userID, username, listRolePost, result);
         return res.status(202).json({
             success: true,
         });

@@ -47,7 +47,7 @@ const Status = () => {
                 type: GLOBALTYPES.ALERT,
                 payload: { error: "Please add your photo!" },
             });
-
+        
         dispatch(createPost({ title, images, faculty, auth, token }));
 
         setTitle("");
