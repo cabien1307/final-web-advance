@@ -26,6 +26,7 @@ const Status = () => {
 
             return newImages.push(file);
         });
+        
 
         if (err) if (err) dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err } });
         setImages([...images, ...newImages]);
