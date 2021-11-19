@@ -27,8 +27,6 @@ passport.use(
 
                 const {
                     password,
-                    posts,
-                    listRolePost,
                     authType,
                     authFacebookID,
                     authTwitterID,

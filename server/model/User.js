@@ -26,7 +26,7 @@ const UserSchema = new Schema(
         role: {
             type: Number,
             enum: [0, 1, 2],
-            default: 1, //0 admin....1 teacher....2 student
+            default: 2, //0 admin....1 teacher....2 student
         },
         listRolePost: [
             {

@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {GLOBALTYPES} from "../../store/actions/globalTypes";
+import { createPost } from "../../store/actions/postAction";
 import { LIST_ICONS_POST } from "../../utils/staticData";
 import './status.css'
 
 const Status = () => {
-    const { auth } = useSelector((state) => state);
+    const { auth, token } = useSelector((state) => state);
     const dispatch = useDispatch();
 
-    const [content, setContent] = useState("");
+    const [faculty, setFaculty] = useState("");
+    const [title, setTitle] = useState("");
     const [images, setImages] = useState([]);
 
 
@@ -26,7 +28,6 @@ const Status = () => {
 
             return newImages.push(file);
         });
-        
 
         if (err) if (err) dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err } });
         setImages([...images, ...newImages]);
@@ -38,10 +39,26 @@ const Status = () => {
         setImages(newArr);
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (images.length === 0)
+            return dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: "Please add your photo!" },
+            });
+
+        dispatch(createPost({ title, images, faculty, auth, token }));
+
+        setTitle("");
+        setImages([]);
+    };
+
     return (
         <div>
             <form
                 className="form py-2 flex flex-col justify-between rounded-md border-2 m-2 shadow"
+                onSubmit={handleSubmit}
             >
                 <div className="content flex justify-between px-3">
                     <img
@@ -53,8 +70,8 @@ const Status = () => {
                         type="text"
                         className="flex-1 mx-4 px-3 focus:outline-none border-b-2 border-gray-700"
                         placeholder={`What's on your mind ${auth.user.username} ?`}
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>
 
@@ -84,49 +101,59 @@ const Status = () => {
                         onChange={handleChangeImages}
                     />
                     <ul className="flex justify-around items-center">
-                        <li>
-                            <label htmlFor="isPhotoId">
+                        <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
+                            <label htmlFor="isPhotoId" className="cursor-pointer">
                                 <i className="fas fa-photo-video text-red-600 mx-2" />
                                 <span className="md:hidden sm:hidden xs:hidden">
                                     Photo or video
                                 </span>
                             </label>
                         </li>
-                        <div className="flex" style={{ display: 'none' }}>
-                            {
-                                LIST_ICONS_POST.map((item, index) => (
-                                    <li
-                                        key={index}
-                                        className="cursor-pointer py-2 px-5 rounded-xl hover:bg-blue-100"
-                                    >
-                                        <label>
-                                            <i className="mx-2"></i>
-                                            <span className="md:hidden sm:hidden xs:hidden">{item.name}</span>
-                                        </label>
-                                    </li>
-                                ))
-                            }
 
-                        </div>
+                        {
+                            auth.user.role === 2 &&
+                            <div className="flex" >
+                                {
+                                    LIST_ICONS_POST.map((item, index) => (
+                                        <li
+                                            key={index}
+                                            className="cursor-pointer py-2 px-2 rounded-xl hover:bg-blue-100"
+                                        >
+                                            <label className="cursor-pointer">
+                                                <i className={`mx-1 ${item.icon}`}></i>
+                                                <span className="md:hidden sm:hidden xs:hidden">{item.name}</span>
+                                            </label>
+                                        </li>
+                                    ))
+                                }
 
-                        <li>
-                            <select
-                                className="w-full focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent py-1 px-2"
-                                required
-                            >
-                                <option defaultValue disabled>
-                                    ---Select faculty---
-                                </option>
+                            </div>
+                        }
 
-                                <option value="1">
-                                    Faculty 1
-                                </option>
+                        {
+                            (auth.user.role === 1 || auth.user.role === 0) && 
+                            <li className="w-52">
+                                <select
+                                    className="w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent py-1 px-2"
+                                    required
+                                    value={faculty}
+                                    onChange={(e) => setFaculty(e.target.value)}
+                                >
+                                    <option value="">
+                                        ---Select faculty---
+                                    </option>
 
-                                <option value="2">
-                                    Faculty 2
-                                </option>
-                            </select>
-                        </li>
+                                    {
+                                        auth.user.listRolePost && auth.user.listRolePost.map(faculty => (
+                                            <option value={faculty._id} key={faculty._id}>
+                                                {faculty.name}
+                                            </option>
+                                        ))
+                                    }
+
+                                </select>
+                            </li>
+                        }
 
                         <li className="cursor-pointer py-2">
                             <button

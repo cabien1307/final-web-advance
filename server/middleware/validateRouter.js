@@ -1,47 +1,48 @@
-const Joi = require('@hapi/joi');
+const Joi = require("@hapi/joi");
 
 // PARAM
 const validateParams = (schema, name) => {
     return (req, res, next) => {
-        const validateResult = schema.validate({ param: req.params[name] })
+        const validateResult = schema.validate({ param: req.params[name] });
 
-        if (validateResult.error) { //error
-            return res.status(400).json(validateResult.error)
+        if (validateResult.error) {
+            //error
+            return res.status(400).json(validateResult.error);
         } else {
-            if (!req.value) req.value = {} // create req.value = {} if doesn't exist            
-            if (!req.value['params']) req.value.params = {} // create req.value.params = {} if doesn't exist    
+            if (!req.value) req.value = {}; // create req.value = {} if doesn't exist
+            if (!req.value["params"]) req.value.params = {}; // create req.value.params = {} if doesn't exist
 
-            req.value.params[name] = validateResult.value.param// attach params after validate from request into req.value.params[name]
-            next()
+            req.value.params[name] = validateResult.value.param; // attach params after validate from request into req.value.params[name]
+            next();
         }
-    }
-}
+    };
+};
 
 // BODY
 const validateBody = (schema) => {
     return (req, res, next) => {
-        const result = schema.validate(req.body)
+        const result = schema.validate(req.body);
 
-        if (result.error) { //error
-            return res.status(400).json(result.error)
+        if (result.error) {
+            //error
+            return res.status(400).json(result.error);
         } else {
-            if (!req.value) req.value = {} //create req.value = {} if req.value doesn't exist
-            if (!req.value['body']) req.value.body = {} //create req.value.body = {} if req.value.body doesn't exist
+            if (!req.value) req.value = {}; //create req.value = {} if req.value doesn't exist
+            if (!req.value["body"]) req.value.body = {}; //create req.value.body = {} if req.value.body doesn't exist
 
-            req.value.body = result.value  // attach body after validate from request into req.value.body
-            next()
+            req.value.body = result.value; // attach body after validate from request into req.value.body
+            next();
         }
-    }
-}
+    };
+};
 
 // Schema
 const schemas = {
     // params
     idSchema: Joi.object().keys({
-        param: Joi
-            .string()
+        param: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
-            .required()
+            .required(),
     }),
 
     // POST (sign-up, )
@@ -80,12 +81,12 @@ const schemas = {
     // POST user (login)
     authSignInSchema: Joi.object().keys({
         email: Joi.string().email().required(),
-        password: Joi.string().min(6).max(20).required()
+        password: Joi.string().min(6).max(20).required(),
     }),
 
     // PATCH list-role
     userListRolePost: Joi.object().keys({
-        listRolePost: Joi.array()
+        listRolePost: Joi.array(),
     }),
 
     // POST faculty (create)
@@ -106,7 +107,7 @@ const schemas = {
         phone: Joi.string(),
         email: Joi.string().email(),
         facebook: Joi.string(),
-        numRole: Joi.number()
+        numRole: Joi.number(),
     }),
 
     // POST notification (create)
@@ -120,8 +121,7 @@ const schemas = {
 
     // PATCH notification (update)
     notificationUpdateSchema: Joi.object().keys({
-        userID: Joi
-            .string()
+        userID: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
         title: Joi.string(),
@@ -132,59 +132,68 @@ const schemas = {
 
     // DELETE notification
     notificationDeleteSchema: Joi.object().keys({
-        userID: Joi
-            .string()
+        userID: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
     }),
 
     // POST post (create)
     postSchema: Joi.object().keys({
-        userID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+        userID: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
         title: Joi.string().required(),
-        img: Joi.string(),
-        video: Joi.string(),
+        img: Joi.array(),
+        video: Joi.array(),
         faculty: Joi.string(),
         likes: Joi.string(),
-        comments: Joi.string()
+        comments: Joi.string(),
     }),
 
     // DELETE post
     postDeleteSchema: Joi.object().keys({
-        userID: Joi
-            .string()
+        userID: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
     }),
 
     // PATCH post (update)
     postUpdateSchema: Joi.object().keys({
-        userID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+        userID: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
         title: Joi.string(),
         img: Joi.string(),
         video: Joi.string(),
         faculty: Joi.string(),
         likes: Joi.string(),
-        comments: Joi.string()
+        comments: Joi.string(),
     }),
 
     // POST comment (Create)
     commentSchema: Joi.object().keys({
-        postID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-        userID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-        content: Joi.string()
+        postID: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        userID: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        content: Joi.string(),
     }),
 
     // DELETE comment
     commentDeleteSchema: Joi.object().keys({
-        userID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-        postID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
+        userID: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        postID: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
     }),
-
-}
+};
 
 module.exports = {
     validateParams,
     validateBody,
-    schemas
-}
+    schemas,
+};
