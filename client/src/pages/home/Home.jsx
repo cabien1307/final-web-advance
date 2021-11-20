@@ -20,19 +20,19 @@ function Home() {
                     />
                 ) : homePosts.result === 0 ? (
                     <div
-                        class="list-posts mx-7 my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
+                        className="list-posts mx-7 my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
                     >
                         <img
                             src={NoPost}
                             alt="NoPost"
-                            class="w-1/2 h-auto object-cover mx-auto"
+                            className="w-1/2 h-auto object-cover mx-auto"
                         />
-                        <h1 class="text-center text-xl mt-2 text-red-500 font-semibold">
+                        <h1 className="text-center text-xl mt-2 text-red-500 font-semibold">
                             Publish new post to see something !
                         </h1>
                     </div>
                 ) : (
-                    homePosts.posts.map((post) => <Post post={post} />)
+                    homePosts.posts.map((post, index) => <Post key={index} post={post} />)
                 )}
             </div>
             <RightBar />

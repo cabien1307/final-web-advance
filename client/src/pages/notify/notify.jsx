@@ -1,9 +1,17 @@
 import { useState } from 'react'
+import { useSelector, useDispatch } from "react-redux"
+import { Link } from 'react-router-dom'
+import { GLOBALTYPES } from "../../store/actions/globalTypes"
+
 import './notify.css'
+import { listNotity } from "../../dummyData"
 
 function Notify() {
 
-    const [modal, setModal] = useState(false);
+    const user = useSelector(state => state.auth.user)
+    const modal = useSelector(state => state.modal)
+    const dispatch = useDispatch();
+
     const [data, setData] = useState({
         title: '',
         content: '',
@@ -11,7 +19,10 @@ function Notify() {
         attachment: ''
     })
 
-    const inputChange = (e) => {
+
+    const [keyword, setKeyword] = useState("")
+
+    const handleChangeInput = (e) => {
         const { name, value } = e.target
         setData({
             ...data,
@@ -24,15 +35,134 @@ function Notify() {
         console.log(data);
     }
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+        console.log(keyword);
+    }
+
+    const handleDelete = () => {
+        // eslint-disable-next-line no-restricted-globals
+        confirm("Are you sure to delete this notify ?")
+    }
+
+    const handleEdit = (data) => {
+        dispatch({
+            type: GLOBALTYPES.MODAL,
+            payload: !modal
+        })
+        setData({
+            title: data.title
+        })
+    }
+
+    const handleModal = () => {
+        dispatch({
+            type: GLOBALTYPES.MODAL,
+            payload: !modal
+        })
+        setData({
+            title: '',
+            content: '',
+            faculty: '',
+            attachment: ''
+        })
+    }
+
     return (
-        <div className="col-span-9 2xl:col-span-9 xl:col-span-10 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3">
+        <div className="col-span-9 2xl:col-span-9 xl:col-span-10 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 py-3">
 
-            <button onClick={() => setModal(true)}>Show Modal</button>
+            <div className="wrapper">
 
+                {/* Top */}
+                <div className="option space-y-3">
+
+                    {/* Button new */}
+                    {user.role !== 2 &&
+                        (<div className="flex justify-end items-center space-x-2">
+
+                            <button className="px-3 py-2 bg-btn-bg rounded-md text-btn-text hover:bg-btn-hover" onClick={handleModal}>
+                                <i className="fas fa-plus mr-2"></i>
+                                <span className="font-semibold">New</span>
+                            </button>
+                        </div>)
+                    }
+
+                    {/* Search */}
+                    <form onSubmit={handleSearch}>
+                        <div className="flex justify-between">
+                            <div className="w-2/3 flex items-center border-b-2 border-stroke">
+                                <label htmlFor="seacch">
+                                    <i className="fas fa-search"></i>
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Search here..."
+                                    className="w-full focus:outline-none py-2 px-5"
+                                    name="search"
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                />
+                            </div>
+                            <div className="w-1/3 flex justify-end">
+                                <button type="submit" className="ctr_btn rounded-md md:w-full md:rounded-3xl sm:w-full sm:rounded-3xl">
+                                    <i className="fas fa-search mr-2"></i>
+                                    <span>Find</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                {/* List notify */}
+                <div className="list-notify mt-5">
+
+                    {
+                        listNotity.map((notify, index) => (
+                            <div className="notify-item my-3 px-3 py-2 border-l-2 border-stroke space-y-6" key={index}>
+                                {/* Heading notify */}
+                                <div className="heading flex">
+                                    <Link to={`/notify/${notify.to}`} className="title-heading">
+                                        <h1>{notify.title}</h1>
+                                    </Link>
+                                    <div className="space-x-3 flex items-center ml-4">
+                                        {
+                                            user.role !== 2
+                                                ? (
+                                                    <>
+                                                        <i
+                                                            className="far fa-edit cursor-pointer text-blue-500"
+                                                            title="Edit"
+                                                            onClick={() => handleEdit(notify)}
+                                                        >
+                                                        </i>
+                                                        <i
+                                                            className="far fa-trash-alt cursor-pointer text-red-500"
+                                                            title="Delete"
+                                                            onClick={() => handleDelete()}
+                                                        >
+                                                        </i>
+                                                    </>
+                                                )
+                                                : (
+                                                    <i className="far fa-bookmark cursor-pointer text-yellow-500" title="Unread"></i>
+                                                )
+                                        }
+
+
+                                    </div>
+                                </div>
+                                {/* Footer */}
+                                <div className="footer-notify flex justify-end italic">
+                                    <span className="text-paragraph text-sm">Faculty of Infomation | Date created: {notify.createdAt}</span>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
 
             {/* Modal create notify */}
-            {
-                modal &&
+            {modal &&
                 (
                     <div className="modal fixed top-0 left-0 right-0 bottom-0 flex">
 
@@ -48,7 +178,7 @@ function Notify() {
                                         {/* Heading */}
                                         <div className="heading_form">
                                             <h1 className="text-card-heading text-3xl text-center">Create notify</h1>
-                                            <i className="fas fa-times absolute -right-3 -top-5 text-3xl hover:text-active cursor-pointer" onClick={() => setModal(false)}></i>
+                                            <i className="fas fa-times absolute -right-3 -top-5 text-3xl hover:text-active cursor-pointer" onClick={handleModal}></i>
                                         </div>
 
                                         {/* Content */}
@@ -59,10 +189,11 @@ function Notify() {
                                                 <input
                                                     type="text"
                                                     id="txtTitle"
-                                                    className="w-full py-2 bg-transparent  rounded-sm text-card-heading outline-none"
+                                                    className="txtTitle w-full py-2 bg-transparent  rounded-sm text-card-heading outline-none"
                                                     placeholder="Enter title ..."
                                                     name="title"
-                                                    onChange={inputChange}
+                                                    onChange={handleChangeInput}
+                                                    value={data.title}
                                                 />
                                             </div>
 
@@ -76,7 +207,8 @@ function Notify() {
                                                     cols="20"
                                                     rows="3"
                                                     name="content"
-                                                    onChange={inputChange}
+                                                    onChange={handleChangeInput}
+                                                    value={data.content}
                                                 ></textarea>
                                             </div>
 
@@ -89,7 +221,8 @@ function Notify() {
                                                         id="faculty"
                                                         className="appearance-none bg-transparent"
                                                         name="faculty"
-                                                        onChange={inputChange}
+                                                        onChange={handleChangeInput}
+                                                        value={data.faculty}
                                                     >
                                                         <option defaultValue disabled>---- Choose faculty: ----</option>
                                                         <option value="saab">Saab</option>
@@ -107,7 +240,8 @@ function Notify() {
                                                     id="txtAttachment"
                                                     className="w-full py-2 bg-transparent  rounded-sm text-card-heading outline-none"
                                                     name="attachment"
-                                                    onChange={inputChange}
+                                                    onChange={handleChangeInput}
+                                                    value={data.attachment}
                                                 />
                                             </div>
                                         </div>
@@ -121,8 +255,7 @@ function Notify() {
                             </div>
                         </div>
                     </div>
-                )
-            }
+                )}
 
         </div>
     )
