@@ -1,0 +1,14 @@
+.content {
+    position: relative;
+}
+.content::before {
+    content: "";
+}
+
+.my-comment {
+    border-left: 2px solid teal;
+}
+.isLiked {
+    color: blue;
+    font-weight: 500;
+}
