@@ -39,6 +39,18 @@ function NavBar() {
         )
     }
 
+    const RenderSideBar = (menus) => {
+        const reduceRole = menus.reduce((acc, cur) => {
+            if (cur.role.includes(user.role) || cur.role.includes(3)) {
+                acc.push(cur)
+            }
+            return acc
+        }, [])
+        return reduceRole
+    }
+
+
+
     return (
         <div className="col-span-3 2xl:col-span-3 xl:col-span-3 lg:col-span-2 md:col-span-2 sm:col-span-2 flex flex-col justify-between px-2 py-4 border-r-2">
 
@@ -53,15 +65,15 @@ function NavBar() {
                 <div className="menu">
                     <nav>
                         {
-                            menus.map((menu, index) => (
-                                <MenuLink
-                                    key={index}
-                                    label={menu.name}
-                                    to={menu.to}
-                                    activeWhenExact={menu.exact}
-                                    icon={menu.icon}
-                                />
-                            ))
+                            RenderSideBar(menus).map((menu, index) =>
+                            (<MenuLink
+                                key={index}
+                                label={menu.name}
+                                to={menu.to}
+                                activeWhenExact={menu.exact}
+                                icon={menu.icon}
+                            />)
+                            )
                         }
                     </nav>
                 </div>

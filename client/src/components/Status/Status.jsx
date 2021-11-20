@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {GLOBALTYPES} from "../../store/actions/globalTypes";
+import { GLOBALTYPES } from "../../store/actions/globalTypes";
 import { createPost } from "../../store/actions/postAction";
 import { LIST_ICONS_POST } from "../../utils/staticData";
 import './status.css'
@@ -42,12 +42,12 @@ const Status = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (images.length === 0)
-            return dispatch({
-                type: GLOBALTYPES.ALERT,
-                payload: { error: "Please add your photo!" },
-            });
-        
+        // if (images.length === 0)
+        //     return dispatch({
+        //         type: GLOBALTYPES.ALERT,
+        //         payload: { error: "Please add your photo!" },
+        //     });
+
         dispatch(createPost({ title, images, faculty, auth, token }));
 
         setTitle("");
@@ -111,7 +111,7 @@ const Status = () => {
                         </li>
 
                         {
-                            auth.user.role === 2 &&
+                            (auth.user.role === 2 || auth.user.role === 0 )&&
                             <div className="flex" >
                                 {
                                     LIST_ICONS_POST.map((item, index) => (
@@ -131,7 +131,7 @@ const Status = () => {
                         }
 
                         {
-                            (auth.user.role === 1 || auth.user.role === 0) && 
+                            (auth.user.role === 1) &&
                             <li className="w-52">
                                 <select
                                     className="w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent py-1 px-2"

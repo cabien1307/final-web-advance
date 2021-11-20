@@ -20,8 +20,12 @@ export const createPost =
 
             const data = { userID: auth.user._id, title, img: media, faculty };
 
-            if (auth.user.role === 2) {
+            if (auth.user.role === 2 || auth.user.role === 0) {
                 delete data.faculty;
+            }
+
+            if (!media.length) {
+                delete data.img;
             }
             const res = await postDataAPI("post", data, token);
 
@@ -31,6 +35,10 @@ export const createPost =
             });
 
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { success: "Post sucess" },
+            });
         } catch (error) {
             dispatch({
                 type: GLOBALTYPES.ALERT,
