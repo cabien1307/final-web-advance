@@ -19,6 +19,8 @@ const UserSchema = new Schema(
         },
         profilePic: {
             type: String,
+            default:
+                "https://res.cloudinary.com/kietlam0901/image/upload/v1632801432/3493535_obq5ax.png",
         },
         coverPic: {
             type: String,
