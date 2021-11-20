@@ -1,0 +1,79 @@
+@import url("../../index.css");
+/* Animation */
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes growth {
+    from {
+        transform: scale(var(--growth-from));
+    }
+    to {
+        transform: scale(var(--growth-to));
+    }
+}
+.modal {
+    animation: fadeIn linear 0.1s;
+}
+
+.modal__overlay {
+    background-color: rgba(0, 0, 0, 0.07);
+}
+
+.modal__body {
+    --growth-from: 0.5;
+    --growth-to: 1;
+    margin: auto;
+    animation: growth linear 0.1s;
+}
+
+.create__form {
+    width: 550px;
+}
+
+.create__form_container {
+    padding: 32px;
+}
+
+input[type="text"]::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: var(--card-heading);
+    font-style: italic;
+}
+
+.ctr_btn {
+    background: transparent;
+    border: 2px solid var(--stroke);
+    padding: 8px 20px;
+    font-size: 20px;
+    line-height: 28px;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.ctr_btn:hover {
+    box-shadow: 1px 3px var(--heading);
+}
+
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .create__form {
+        width: 450px;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .create__form {
+        width: 400px;
+    }
+    .create__form_container {
+        padding: 20px;
+    }
+}
+
