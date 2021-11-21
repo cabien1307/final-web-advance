@@ -154,13 +154,13 @@ function Login() {
 
             localStorage.setItem("firstLogin", JSON.stringify(true));
             dispatch(LoginSuccessfull(res.data.user))
-            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
             history.push("/");
         } catch (error) {
             // Catch
             dispatch({
                 type: GLOBALTYPES.ALERT,
-                payload: { error: error.response.data.msg },
+                payload: { error: "Incorrect username/password !" },
             });
             dispatch(LoginFailure())
         }

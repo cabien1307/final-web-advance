@@ -69,7 +69,7 @@ function Notify() {
     }
 
     return (
-        <div className="col-span-9 2xl:col-span-9 xl:col-span-10 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 py-3">
+        <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 py-3">
 
             <div className="wrapper">
 
@@ -77,16 +77,16 @@ function Notify() {
                 <div className="option space-y-3">
 
                     {/* Button new */}
-                    {user.role !== 2 &&
-                        (<div className="flex justify-end items-center space-x-2">
-
-                            <button className="px-3 py-2 bg-btn-bg rounded-md text-btn-text hover:bg-btn-hover" onClick={handleModal}>
+                    <div className="flex justify-between items-center space-x-2">
+                        <h1 className="text-heading text-2xl font-semibold">List notifications</h1>
+                        {user.role !== 2 &&
+                            (<button className="px-3 py-2 bg-btn-bg rounded-md text-btn-text hover:bg-btn-hover" onClick={handleModal}>
                                 <i className="fas fa-plus mr-2"></i>
                                 <span className="font-semibold">New</span>
-                            </button>
-                        </div>)
-                    }
+                            </button>)}
+                    </div>
 
+                    <hr />
                     {/* Search */}
                     <form onSubmit={handleSearch}>
                         <div className="flex justify-between">
@@ -121,7 +121,7 @@ function Notify() {
                             <div className="notify-item my-3 px-3 py-2 border-l-2 border-stroke space-y-6" key={index}>
                                 {/* Heading notify */}
                                 <div className="heading flex">
-                                    <Link to={`/notify/${notify.to}`} className="title-heading">
+                                    <Link to={`/notify/${notify.to}`} className="title-heading text-base sm:text-sm">
                                         <h1>{notify.title}</h1>
                                     </Link>
                                     <div className="space-x-3 flex items-center ml-4">
@@ -153,7 +153,7 @@ function Notify() {
                                 </div>
                                 {/* Footer */}
                                 <div className="footer-notify flex justify-end italic">
-                                    <span className="text-paragraph text-sm">Faculty of Infomation | Date created: {notify.createdAt}</span>
+                                    <span className="text-paragraph text-sm sm:text-xs">Faculty of Infomation | Date created: {notify.createdAt}</span>
                                 </div>
                             </div>
                         ))
@@ -167,18 +167,18 @@ function Notify() {
                     <div className="modal fixed top-0 left-0 right-0 bottom-0 flex">
 
                         {/* Overlay */}
-                        <div className="modal__overlay w-full h-full absolute"></div>
+                        <div className="modal__overlay"></div>
 
                         {/* Body */}
-                        <div className="modal__body bg-background relative rounded-md">
-                            <div className="create__form bg-card-bg rounded-md">
+                        <div className="modal__body relative">
+                            <div className="create__form bg-background rounded-2xl">
                                 <div className="create__form_container">
 
                                     <form onSubmit={handleCreateNotify}>
                                         {/* Heading */}
                                         <div className="heading_form">
                                             <h1 className="text-card-heading text-3xl text-center">Create notify</h1>
-                                            <i className="fas fa-times absolute -right-3 -top-5 text-3xl hover:text-active cursor-pointer" onClick={handleModal}></i>
+                                            <i className="fas fa-times absolute right-3 top-3 text-2xl hover:text-active cursor-pointer" onClick={handleModal}></i>
                                         </div>
 
                                         {/* Content */}
