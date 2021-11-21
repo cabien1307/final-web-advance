@@ -17,7 +17,7 @@ function NotFound() {
     }, [isLoggedIn])
 
     return (
-        <div className={`col-span-${col} 2xl:col-span-${col} xl:col-span-${col + 1} lg:col-span-${col + 1} md:col-span-${col + 1} sm:col-span-${col + 1}`}>
+        <div className={`col-span-${col} 2xl:col-span-${col} xl:col-span-${col} lg:col-span-${col} md:col-span-${col + 1} sm:col-span-${col + 1}`}>
             <div className="content flex flex-col items-center space-y-5 text-heading text-center px-5">
                 <img className="w-1/2 2xl:w-1/2 xl:w-1/2 lg:w-3/5 md:w-3/4 sm:w-full h-auto"
                     src={process.env.PUBLIC_URL + '/images/404.svg'} alt="" />

@@ -103,7 +103,7 @@ function Register() {
     }
 
     return (
-        <div className="col-span-9 2xl:col-span-9 xl:col-span-10 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 register-page">
+        <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 register-page">
 
             <div className="img px-10 border-r-2">
                 <img src={process.env.PUBLIC_URL + '/images/add_user.svg'} alt="" className="w-full mx-auto" />

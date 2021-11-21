@@ -4,9 +4,14 @@ import { GLOBALTYPES } from "../../store/actions/globalTypes";
 import { useState } from 'react';
 
 function User() {
+
     const modal = useSelector(state => state.modal)
+    const { faculties } = useSelector(state => state.faculty)
+
     const dispatch = useDispatch();
+
     const [data, setData] = useState({
+        _id: "14174810410941441",
         username: 'Nguyen Van A',
         listRolePost: []
     })
@@ -16,11 +21,35 @@ function User() {
             type: GLOBALTYPES.MODAL,
             payload: !modal
         })
+        setData({
+            _id: "14174810410941441",
+            username: 'Nguyen Van A',
+            listRolePost: []
+        })
     }
 
     const handleUpdateRole = (e) => {
         e.preventDefault();
-        console.log("Update");
+        console.log(data);
+    }
+
+    // Checked
+    const handleCheck = (id) => {
+        setData(pre => {
+            const isChecked = data.listRolePost.includes(id)
+            if (isChecked) {
+                return {
+                    ...pre,
+                    listRolePost: data.listRolePost.filter(item => item !== id)
+                }
+            } else {
+                return {
+                    ...data,
+                    listRolePost: [...data.listRolePost, id]
+                }
+
+            }
+        })
     }
 
     const handleChangeInput = (e) => {
@@ -29,6 +58,11 @@ function User() {
             ...data,
             [name]: value
         })
+    }
+
+    const handleDelete = () => {
+        // eslint-disable-next-line no-restricted-globals
+        confirm("Are you sure to delete this notify ?")
     }
 
     return (
@@ -59,7 +93,7 @@ function User() {
                                         <span>Edit</span>
                                         <i className="far fa-edit hidden text-heading"></i>
                                     </button>
-                                    <button className="bg-tertiary text-btn-text">
+                                    <button className="bg-tertiary text-btn-text" onClick={() => handleDelete()}>
                                         <span>Delete</span>
                                         <i className="far fa-trash-alt hidden text-red-500"></i>
                                     </button>
@@ -75,7 +109,7 @@ function User() {
                                         <span>Edit</span>
                                         <i className="far fa-edit hidden text-heading"></i>
                                     </button>
-                                    <button className="bg-tertiary text-btn-text">
+                                    <button className="bg-tertiary text-btn-text" onClick={() => handleDelete()}>
                                         <span>Delete</span>
                                         <i className="far fa-trash-alt hidden text-red-500"></i>
                                     </button>
@@ -91,7 +125,7 @@ function User() {
                                         <span>Edit</span>
                                         <i className="far fa-edit hidden text-heading"></i>
                                     </button>
-                                    <button className="bg-tertiary text-btn-text">
+                                    <button className="bg-tertiary text-btn-text" onClick={() => handleDelete()}>
                                         <span>Delete</span>
                                         <i className="far fa-trash-alt hidden text-red-500"></i>
                                     </button>
@@ -127,18 +161,55 @@ function User() {
 
                                         {/* Content */}
                                         <div className="content_form px-5 md:px-2 sm:px-2 space-y-5">
-                                            {/* Title */}
+
+                                            {/* ID */}
                                             <div className="title border-b-2 border-stroke">
-                                                <label htmlFor="txtTitle" className="block text-heading text-lg font-semibold">Username:</label>
+                                                <label htmlFor="txtTitle" className="block text-heading text-lg font-semibold">ID: </label>
                                                 <input
                                                     type="text"
-                                                    id="txtTitle"
-                                                    className="txtTitle w-full py-2 bg-transparent  rounded-sm text-card-heading outline-none"
+                                                    id="txtID"
+                                                    className="txtID w-full py-2 bg-transparent  rounded-sm text-secondary outline-none pointer-events-none"
                                                     placeholder="Enter title ..."
-                                                    name="title"
+                                                    name="id"
+                                                    value={data._id}
+                                                    disabled
+                                                />
+                                            </div>
+
+                                            {/* Username */}
+                                            <div className="title border-b-2 border-stroke">
+                                                <label htmlFor="txtUsername" className="block text-heading text-lg font-semibold">Username: </label>
+                                                <input
+                                                    type="text"
+                                                    id="txtUsername"
+                                                    className="txtUsername w-full py-2 bg-transparent  rounded-sm text-card-heading outline-none"
+                                                    placeholder="Enter title ..."
+                                                    name="username"
                                                     onChange={handleChangeInput}
                                                     value={data.username}
                                                 />
+                                            </div>
+
+                                            {/* List role */}
+                                            <div className="checkboxOptions py-2">
+                                                <h1 className="font-bold w-full text-gray-700">Options:</h1>
+                                                <div className="w-full py-1.5 text-gray-700 space-y-1">
+                                                    {
+                                                        faculties.map((item, index) => (
+                                                            <label className="input-group" key={index}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    name="listRolePost"
+                                                                    onChange={() => handleCheck(item._id)}
+                                                                    checked={data.listRolePost.includes(item._id)}
+                                                                    value={item._id}
+                                                                />
+                                                                <span className="checkmark"></span>
+                                                                {item.name}
+                                                            </label>
+                                                        ))
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
 
@@ -151,10 +222,10 @@ function User() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div >
                 )
             }
-        </div>
+        </div >
     )
 }
 
