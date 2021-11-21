@@ -4,6 +4,7 @@ import token from "./tokenReducer";
 import alert from "./alertReducer";
 import homePosts from "./postReducer";
 import modal from "./modalReducer";
+import faculty from "./facultyReducer";
 
 export default combineReducers({
     auth,
@@ -11,4 +12,5 @@ export default combineReducers({
     alert,
     homePosts,
     modal,
+    faculty,
 });

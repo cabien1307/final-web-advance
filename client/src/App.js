@@ -7,12 +7,14 @@ import axios from "axios";
 import { fetchUser, LoginSuccessfull } from "./store/actions/authAction";
 import Alert from "./components/Alert/Alert";
 import { getPosts } from "./store/actions/postAction";
+import { getFaculties } from "./store/actions/facultyAction";
 
 function App() {
     const dispatch = useDispatch();
     const { isLoggedIn } = useSelector((state) => state.auth);
     const { token } = useSelector((state) => state);
 
+    // Get Access Token
     useEffect(() => {
         const firstLogin = localStorage.getItem("firstLogin");
         if (firstLogin) {
@@ -25,6 +27,7 @@ function App() {
         }
     }, [isLoggedIn, dispatch]);
 
+    // GetUserInfo
     useEffect(() => {
         if (token) {
             const getUser = () => {
@@ -36,9 +39,15 @@ function App() {
         }
     }, [token, dispatch]);
 
+    // Get posts
     useEffect(() => {
         if (token) dispatch(getPosts(token));
     }, [dispatch, token]);
+
+    // Get faculty
+    useEffect(() => {
+        dispatch(getFaculties());
+    }, [dispatch]);
 
     return (
         <Router>

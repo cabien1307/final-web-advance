@@ -6,6 +6,7 @@ import Register from "../pages/register/register";
 import NotifyDetail from "../pages/notify-detail/NotifyDetail";
 import User from "../pages/users/User";
 import Faculty from "../pages/faculty/Faculty";
+import FacultyDetail from "../pages/facultyDetail/FacultyDetail";
 
 const routes = [
     {
@@ -14,7 +15,12 @@ const routes = [
         main: () => <Home />,
         authRequired: true,
     },
-
+    {
+        path: "/faculty/:id",
+        exact: false,
+        main: () => <FacultyDetail />,
+        authRequired: true,
+    },
     {
         path: "/faculty",
         exact: false,
