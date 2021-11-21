@@ -167,7 +167,7 @@ function Notify() {
                     <div className="modal fixed top-0 left-0 right-0 bottom-0 flex">
 
                         {/* Overlay */}
-                        <div className="modal__overlay"></div>
+                        <div className="modal__overlay" onClick={handleModal}></div>
 
                         {/* Body */}
                         <div className="modal__body relative">
@@ -176,7 +176,7 @@ function Notify() {
 
                                     <form onSubmit={handleCreateNotify}>
                                         {/* Heading */}
-                                        <div className="heading_form">
+                                        <div className="heading_form mb-5">
                                             <h1 className="text-card-heading text-3xl text-center">Create notify</h1>
                                             <i className="fas fa-times absolute right-3 top-3 text-2xl hover:text-active cursor-pointer" onClick={handleModal}></i>
                                         </div>
@@ -255,7 +255,8 @@ function Notify() {
                             </div>
                         </div>
                     </div>
-                )}
+                )
+            }
 
         </div>
     )

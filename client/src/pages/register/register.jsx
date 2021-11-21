@@ -7,8 +7,8 @@ import {
     isEmail,
 } from "../../utils/validation";
 import './register.css';
-import { useDispatch } from 'react-redux';
-import {GLOBALTYPES} from '../../store/actions/globalTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import { GLOBALTYPES } from '../../store/actions/globalTypes';
 
 const initialState = {
     username: "",
@@ -25,6 +25,8 @@ function Register() {
 
     const [data, setData] = useState(initialState);
     const { username, email, password, cf_password, faculty, err } = data
+
+    const { faculties } = useSelector(state => state.faculty)
 
 
     // Validate and submit
@@ -68,7 +70,7 @@ function Register() {
                 err: 'Password does not match !',
                 success: false
             })
-        
+
         if (isEmpty(faculty))
             return setData({
                 ...data,
@@ -76,8 +78,9 @@ function Register() {
             })
 
         try {
-            
+
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+            console.log(data);
             dispatch({
                 type: GLOBALTYPES.ALERT,
                 payload: { error: "Register Successful!" },
@@ -85,7 +88,7 @@ function Register() {
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
         } catch (error) {
             error.response.data.msg &&
-            setData({ ...data, err: error.response.data.msg });
+                setData({ ...data, err: error.response.data.msg });
         }
     }
 
@@ -149,6 +152,28 @@ function Register() {
                         </div>
                     </div>
 
+                    {/* Faculty */}
+                    <div>
+                        <label htmlFor="faculty" className="lb">Faculty:</label>
+                        <div className="flex items-center border-b-2 border-stroke">
+                            <i className="fas fa-braille"></i>
+                            <select
+                                id="faculty"
+                                className="appearance-none"
+                                onChange={handleChangeInput}
+                                name="faculty"
+                            >
+                                <option defaultValue>---- Choose faculty: ----</option>
+                                {
+                                    faculties.map((item, index) => (
+                                        <option key={index} value={item._id}>{item.name}</option>
+                                    ))
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+
                     {/* Password */}
                     <div>
                         <label htmlFor="password" className="lb">Password:</label>
@@ -183,24 +208,7 @@ function Register() {
                         </div>
                     </div>
 
-                    {/* Faculty */}
-                    <div>
-                        <label htmlFor="faculty" className="lb">Faculty:</label>
-                        <div className="flex items-center border-b-2 border-stroke">
-                            <i className="fas fa-braille"></i>
-                            <select
-                                id="faculty"
-                                className="appearance-none"
-                                onChange={handleChangeInput}
-                                name="faculty"
-                            >
-                                <option defaultValue disabled>---- Choose faculty: ----</option>
-                                <option value="saab">Saab</option>
-                                <option value="vw">VW</option>
-                                <option value="audi">Audi</option>
-                            </select>
-                        </div>
-                    </div>
+
 
                     {/* Button submit */}
                     <div>
