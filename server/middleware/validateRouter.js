@@ -45,7 +45,7 @@ const schemas = {
             .required(),
     }),
 
-    // POST (sign-up, )
+    // POST (sign-up)
     userSchema: Joi.object().keys({
         username: Joi.string().min(2).max(50).required(),
         email: Joi.string().email().required(),

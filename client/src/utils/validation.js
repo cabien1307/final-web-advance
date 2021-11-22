@@ -1,8 +1,3 @@
-export const checkUserName = (data) => {
-    const regex = /^(?=[a-z_\d]*[a-z])[a-z_\d]{6,}$/
-    return regex.test(data)
-}
-
 export const isEmpty = (value) => {
     if (!value) return true;
     return false;

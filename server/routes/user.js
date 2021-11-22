@@ -1,5 +1,6 @@
 const router = require("express-promise-router")();
 const passport = require("passport");
+const auth = require("../middleware/auth");
 require("../middleware/passport");
 
 // Import validator
@@ -48,6 +49,7 @@ router.patch(
 router.delete(
     "/:userID/delete",
     validateParams(schemas.idSchema, "userID"),
+    auth,
     userController.deleteUser
 );
 

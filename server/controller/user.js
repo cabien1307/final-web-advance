@@ -192,16 +192,15 @@ class UserController {
         });
     }
 
-    // [PATCH] /:id/updateRole
+    // [PATCH] /:id/update-role
     async updateRole(req, res, next) {
         const { userID } = req.value.params;
         const { listRolePost, username } = req.body;
 
-        const result = await User.findByIdAndUpdate(
+        await User.findByIdAndUpdate(
             { _id: userID },
             { $set: { listRolePost }, username: username }
         );
-        console.log(userID, username, listRolePost, result);
         return res.status(202).json({
             success: true,
         });
@@ -210,10 +209,11 @@ class UserController {
     // [DELETE] /:userID/delete
     async deleteUser(req, res, next) {
         const { userID } = req.value.params;
+        console.log(req.value.params, "parase");
         const result = await User.findByIdAndDelete(userID);
         return res.status(200).json({
             action: "success",
-            result,
+            result
         });
     }
 

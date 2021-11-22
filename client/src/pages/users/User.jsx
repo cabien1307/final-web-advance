@@ -1,36 +1,49 @@
-import './user.css';
 import { useSelector, useDispatch } from "react-redux";
-import { GLOBALTYPES } from "../../store/actions/globalTypes";
 import { useState } from 'react';
+
+import { GLOBALTYPES } from "../../store/actions/globalTypes";
+import { updateUserRole, deleteUser } from "../../store/actions/usersAction"
+import './user.css';
 
 function User() {
 
     const modal = useSelector(state => state.modal)
     const { faculties } = useSelector(state => state.faculty)
-
+    const { users } = useSelector(state => state.users)
+    const { token } = useSelector(state => state)
     const dispatch = useDispatch();
 
     const [data, setData] = useState({
-        _id: "14174810410941441",
-        username: 'Nguyen Van A',
+        _id: "",
+        username: "",
+        email: "",
         listRolePost: []
     })
 
-    const handleModal = () => {
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    const handleModal = (user) => {
         dispatch({
             type: GLOBALTYPES.MODAL,
             payload: !modal
         })
+        setIsAdmin(user.role === 0)
         setData({
-            _id: "14174810410941441",
-            username: 'Nguyen Van A',
-            listRolePost: []
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            listRolePost: user.listRolePost
         })
     }
 
     const handleUpdateRole = (e) => {
         e.preventDefault();
-        console.log(data);
+        if (isAdmin) delete data.listRolePost
+        dispatch(updateUserRole({ _id: data._id, data, token }))
+        dispatch({
+            type: GLOBALTYPES.MODAL,
+            payload: !modal
+        })
     }
 
     // Checked
@@ -60,9 +73,11 @@ function User() {
         })
     }
 
-    const handleDelete = () => {
+    const handleDelete = (user) => {
         // eslint-disable-next-line no-restricted-globals
-        confirm("Are you sure to delete this notify ?")
+        if (confirm(`Are you sure to delete ${user.username} ?`)) {
+            dispatch(deleteUser({ _id: user._id, token }))
+        }
     }
 
     return (
@@ -84,53 +99,27 @@ function User() {
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td className="font-semibold">0</td>
-                                <td>admin</td>
-                                <td>TEACHER</td>
-                                <td className="space-x-4">
-                                    <button className="bg-transparent" onClick={() => handleModal()}>
-                                        <span>Edit</span>
-                                        <i className="far fa-edit hidden text-heading"></i>
-                                    </button>
-                                    <button className="bg-tertiary text-btn-text" onClick={() => handleDelete()}>
-                                        <span>Delete</span>
-                                        <i className="far fa-trash-alt hidden text-red-500"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            {
+                                users &&
+                                users.map((user, index) => (
 
-                            <tr>
-                                <td className="font-semibold">1</td>
-                                <td>admin</td>
-                                <td>TEACHER</td>
-                                <td className="space-x-4">
-                                    <button className="bg-transparent" onClick={() => handleModal()}>
-                                        <span>Edit</span>
-                                        <i className="far fa-edit hidden text-heading"></i>
-                                    </button>
-                                    <button className="bg-tertiary text-btn-text" onClick={() => handleDelete()}>
-                                        <span>Delete</span>
-                                        <i className="far fa-trash-alt hidden text-red-500"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                    <tr key={index}>
+                                        <td className="font-semibold">{index + 1}</td>
+                                        <td>{user.username}</td>
+                                        <td>{user.role === 0 ? "ADMIN" : "TEACHER"}</td>
+                                        <td className="space-x-4">
+                                            <button className="bg-transparent" onClick={() => handleModal(user)}>
+                                                <span>Edit</span>
+                                                <i className="far fa-edit hidden text-heading"></i>
+                                            </button>
+                                            <button className="bg-tertiary text-btn-text" onClick={() => handleDelete(user)}>
+                                                <span>Delete</span>
+                                                <i className="far fa-trash-alt hidden text-red-500"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
 
-                            <tr>
-                                <td className="font-semibold">2</td>
-                                <td>admin</td>
-                                <td>TEACHER</td>
-                                <td className="space-x-4">
-                                    <button className="bg-transparent" onClick={() => handleModal()}>
-                                        <span>Edit</span>
-                                        <i className="far fa-edit hidden text-heading"></i>
-                                    </button>
-                                    <button className="bg-tertiary text-btn-text" onClick={() => handleDelete()}>
-                                        <span>Delete</span>
-                                        <i className="far fa-trash-alt hidden text-red-500"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                ))}
 
                         </tbody>
 
@@ -176,6 +165,19 @@ function User() {
                                                 />
                                             </div>
 
+                                            {/* email */}
+                                            <div className="title border-b-2 border-stroke">
+                                                <label htmlFor="txtTitle" className="block text-heading text-lg font-semibold">Email: </label>
+                                                <input
+                                                    type="email"
+                                                    className="txtID w-full py-2 bg-transparent  rounded-sm text-secondary outline-none pointer-events-none"
+                                                    placeholder="Enter title ..."
+                                                    name="id"
+                                                    value={data.email}
+                                                    disabled
+                                                />
+                                            </div>
+
                                             {/* Username */}
                                             <div className="title border-b-2 border-stroke">
                                                 <label htmlFor="txtUsername" className="block text-heading text-lg font-semibold">Username: </label>
@@ -191,26 +193,32 @@ function User() {
                                             </div>
 
                                             {/* List role */}
-                                            <div className="checkboxOptions py-2">
-                                                <h1 className="font-bold w-full text-gray-700">Options:</h1>
-                                                <div className="w-full py-1.5 text-gray-700 space-y-1">
-                                                    {
-                                                        faculties.map((item, index) => (
-                                                            <label className="input-group" key={index}>
-                                                                <input
-                                                                    type="checkbox"
-                                                                    name="listRolePost"
-                                                                    onChange={() => handleCheck(item._id)}
-                                                                    checked={data.listRolePost.includes(item._id)}
-                                                                    value={item._id}
-                                                                />
-                                                                <span className="checkmark"></span>
-                                                                {item.name}
-                                                            </label>
-                                                        ))
-                                                    }
-                                                </div>
-                                            </div>
+                                            {
+                                                !isAdmin &&
+                                                (
+                                                    <div className="checkboxOptions py-2">
+                                                        <h1 className="font-bold w-full text-gray-700">Options:</h1>
+                                                        <div className="w-full py-1.5 text-gray-700 space-y-1">
+                                                            {
+                                                                faculties.map((item, index) => (
+                                                                    <label className="input-group" key={index}>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            name="listRolePost"
+                                                                            onChange={() => handleCheck(item._id)}
+                                                                            checked={data.listRolePost.includes(item._id)}
+                                                                            value={item._id}
+                                                                        />
+                                                                        <span className="checkmark"></span>
+                                                                        {item.name}
+                                                                    </label>
+                                                                ))
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+
                                         </div>
 
 

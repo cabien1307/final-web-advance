@@ -5,9 +5,9 @@ export const FACULTY_TYPES = {
     GET_FACULTY: "GET_FACULTY",
 };
 
-export const getFaculties = () => async (dispatch) => {
+export const getFaculties = (token) => async (dispatch) => {
     try {
-        const res = await getDataAPI("faculty");
+        const res = await getDataAPI("faculty", token);
         dispatch({
             type: FACULTY_TYPES.GET_FACULTY,
             payload: res.data

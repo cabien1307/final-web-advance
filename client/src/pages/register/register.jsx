@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-    checkUserName,
     isEmpty,
     isLength,
     isMatch,
@@ -9,13 +8,14 @@ import {
 import './register.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { GLOBALTYPES } from '../../store/actions/globalTypes';
+import { createUsers } from "../../store/actions/usersAction"
 
 const initialState = {
     username: "",
     email: "",
     password: "",
     cf_password: "",
-    faculty: "",
+    listRolePost: "",
     err: "",
 };
 
@@ -24,10 +24,10 @@ function Register() {
     const dispatch = useDispatch();
 
     const [data, setData] = useState(initialState);
-    const { username, email, password, cf_password, faculty, err } = data
+    const { username, email, password, cf_password, listRolePost, err } = data
 
     const { faculties } = useSelector(state => state.faculty)
-
+    const { token } = useSelector(state => state)
 
     // Validate and submit
     const handleSubmit = (e) => {
@@ -39,14 +39,6 @@ function Register() {
                 err: 'Please fill in all fields!',
                 success: false,
             });
-
-
-        if (!checkUserName(username))
-            return setData({
-                ...data,
-                err: 'User is least 6 char constraint !',
-                success: false
-            })
 
         if (!isEmail(email))
             return setData({
@@ -71,24 +63,33 @@ function Register() {
                 success: false
             })
 
-        if (isEmpty(faculty))
+        if (isEmpty(listRolePost))
             return setData({
                 ...data,
                 err: "Choose one faculty for user ?"
             })
 
+
         try {
 
-            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
-            console.log(data);
-            dispatch({
-                type: GLOBALTYPES.ALERT,
-                payload: { error: "Register Successful!" },
-            });
-            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+            data.role = 1
+            delete data.cf_password
+            delete data.err
+
+            dispatch(createUsers({ data, token }))
+            setData({
+                username: "",
+                email: "",
+                password: "",
+                cf_password: "",
+                listRolePost: "",
+                err: "",
+            })
+
         } catch (error) {
-            error.response.data.msg &&
-                setData({ ...data, err: error.response.data.msg });
+            dispatch({
+                type: GLOBALTYPES.ALERT, payload: { error: "Something went wrong !" },
+            });
         }
     }
 
@@ -130,6 +131,7 @@ function Register() {
                                 className="ip"
                                 placeholder="Nguyen Van A"
                                 onChange={handleChangeInput}
+                                value={data.username}
                                 name="username"
                             />
                         </div>
@@ -147,6 +149,7 @@ function Register() {
                                 className="ip"
                                 placeholder="example@gmail.com"
                                 onChange={handleChangeInput}
+                                value={data.email}
                                 name="email"
                             />
                         </div>
@@ -161,7 +164,8 @@ function Register() {
                                 id="faculty"
                                 className="appearance-none"
                                 onChange={handleChangeInput}
-                                name="faculty"
+                                name="listRolePost"
+                                value={data.listRolePost}
                             >
                                 <option defaultValue>---- Choose faculty: ----</option>
                                 {
@@ -186,6 +190,7 @@ function Register() {
                                 className="ip"
                                 placeholder="************"
                                 onChange={handleChangeInput}
+                                value={data.password}
                                 name="password"
                             />
                         </div>
@@ -204,6 +209,7 @@ function Register() {
                                 placeholder="************"
                                 onChange={handleChangeInput}
                                 name="cf_password"
+                                value={data.cf_password}
                             />
                         </div>
                     </div>

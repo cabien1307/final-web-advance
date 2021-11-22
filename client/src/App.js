@@ -8,6 +8,7 @@ import { fetchUser, LoginSuccessfull } from "./store/actions/authAction";
 import Alert from "./components/Alert/Alert";
 import { getPosts } from "./store/actions/postAction";
 import { getFaculties } from "./store/actions/facultyAction";
+import { getUsers } from "./store/actions/usersAction";
 
 function App() {
     const dispatch = useDispatch();
@@ -46,8 +47,13 @@ function App() {
 
     // Get faculty
     useEffect(() => {
-        dispatch(getFaculties());
-    }, [dispatch]);
+        if (token) dispatch(getFaculties(token));
+    }, [dispatch, token]);
+
+    // Get users
+    useEffect(() => {
+        if (token) dispatch(getUsers(token));
+    }, [dispatch, token]);
 
     return (
         <Router>

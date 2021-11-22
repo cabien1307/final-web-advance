@@ -20,7 +20,7 @@ function NavBar() {
                 children={({ match }) => {
                     return (
                         <Link to={to} className="text-heading">
-                            <div className={match ? 'nav-link font-semibold' : 'nav-link'}>
+                            <div className={match ? 'nav-link text-active' : 'nav-link'}>
                                 <div className="relative">
                                     {
                                         to === '/notify'
