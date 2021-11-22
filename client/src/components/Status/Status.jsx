@@ -157,7 +157,7 @@ const Status = () => {
 
                         <li className="cursor-pointer py-2">
                             <button
-                                className="py-2 px-5 text-white font-semibold rounded-lg shadow-lg bg-green-400 hover:bg-green-500"
+                                className="py-2 px-3 text-white font-semibold rounded-lg shadow-lg bg-green-400 hover:bg-green-500"
                                 type="submit"
                             >
                                 Share

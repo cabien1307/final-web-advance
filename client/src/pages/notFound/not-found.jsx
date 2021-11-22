@@ -32,8 +32,8 @@ function NotFound() {
                 <p className="msg sm:text-sm">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate aspernatur beatae natus minima eos.
                 </p>
-                <button className="bg-btn-bg text-btn-text px-7 py-4 rounded-md shadow-md text-xl font-semibold hover:bg-btn-hover md:w-full sm:w-full">
-                    <Link to='/'>Back to {isLoggedIn ? 'Home' : 'Login'}</Link>
+                <button className="bg-btn-bg text-btn-text px-7 py-3 rounded-md shadow-md text-xl font-semibold hover:bg-btn-hover md:w-full sm:w-full">
+                    <Link to='/' className="btn-back">Back to {isLoggedIn ? 'Home' : 'Login'}</Link>
                 </button>
             </div>
         </div>

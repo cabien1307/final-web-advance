@@ -10,7 +10,7 @@ function Home() {
 
     return (
         <>
-            <div className="col-span-6 2xl:col-span-6 xl:col-span-6 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0">
+            <div className="col-span-6 2xl:col-span-6 xl:col-span-6 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 border-r-2">
                 <Status />
                 {homePosts.loading ? (
                     <img

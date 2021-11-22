@@ -88,6 +88,7 @@ export const updateNotify =
             });
 
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+
             dispatch({
                 type: GLOBALTYPES.ALERT,
                 payload: { success: "Update Successfull !" },

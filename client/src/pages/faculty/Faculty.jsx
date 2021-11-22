@@ -14,7 +14,7 @@ function Faculty() {
                 <div className="grid grid-cols-12 gap-3">
                     {
                         faculties.length > 0 && faculties.map((faculty, index) => (
-                            <div className="card col-span-4" key={index}>
+                            <div className="card col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12" key={index}>
                                 <div className="circle">
                                     <img className="cart-image" src={faculty.profilePic} alt={faculties.slug} />
                                 </div>

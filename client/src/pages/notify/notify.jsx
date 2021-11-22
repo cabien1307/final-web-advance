@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { Link } from 'react-router-dom'
+
 import { GLOBALTYPES } from "../../store/actions/globalTypes"
 import { createNotify, deleteNotify, updateNotify } from "../../store/actions/notifyAction"
 
@@ -13,8 +14,18 @@ function Notify() {
     const modal = useSelector(state => state.modal)
     const { notifications } = useSelector(state => state.notify)
 
-
     const dispatch = useDispatch();
+
+    // const [notifies, setNotifies] = useState([])
+    // useEffect(() => {
+    //     axios.get(`/notification`)
+    //         .then(res => {
+    //             setNotifies(res.data);
+    //         })
+    // }, [])
+
+
+
 
     const [data, setData] = useState({
         _id: '',
@@ -38,6 +49,9 @@ function Notify() {
 
     const handleFormNotify = (e) => {
         e.preventDefault()
+        if (!data.faculty)
+            return false
+
         if (data.isUpdate) {
             const body = {
                 userID: user._id,
@@ -155,57 +169,67 @@ function Notify() {
                 </div>
 
                 {/* List notify */}
-                <div className="list-notify mt-5">
+                {
+                    (notifications && notifications.length > 0) &&
+                    (
+                        <div className="list-notify mt-5">
 
-                    {
-                        notifications.map((notify, index) => (
-                            <div className="notify-item my-3 px-3 py-2 border-l-2 border-stroke space-y-6" key={index}>
-                                {/* Heading notify */}
-                                <div className="heading flex">
-                                    <Link to={`/notify/${notify._id}`} className="title-heading text-base sm:text-sm">
-                                        <h1>{notify.title}</h1>
-                                    </Link>
-                                    <div className="space-x-3 flex items-center ml-4">
-                                        {
-                                            (user.role !== 2 && notify.userID === user._id) &&
-                                            (
-                                                <>
-                                                    <i
-                                                        className="far fa-edit cursor-pointer text-blue-500"
-                                                        title="Edit"
-                                                        onClick={() => handleEdit(notify)}
-                                                    >
-                                                    </i>
-                                                    <i
-                                                        className="far fa-trash-alt cursor-pointer text-red-500"
-                                                        title="Delete"
-                                                        onClick={() => handleDelete(notify)}
-                                                    >
-                                                    </i>
-                                                </>
-                                            )
+                            {
+                                notifications.map((notify, index) => (
+                                    <div className="notify-item my-3 px-3 py-2 border-l-2 border-stroke space-y-6" key={index}>
+                                        {/* Heading notify */}
+                                        <div className="heading flex">
+                                            <Link
+                                                to={`/notify/${notify._id}`}
+                                                className="title-heading text-base sm:text-sm"
+                                                target="_blank"
+                                            >
+                                                <h1>{notify.title}</h1>
+                                            </Link>
+                                            <div className="space-x-3 flex items-center ml-4">
+                                                {
+                                                    (user.role !== 2 && notify.userID === user._id) &&
+                                                    (
+                                                        <>
+                                                            <i
+                                                                className="far fa-edit cursor-pointer text-blue-500"
+                                                                title="Edit"
+                                                                onClick={() => handleEdit(notify)}
+                                                            >
+                                                            </i>
+                                                            <i
+                                                                className="far fa-trash-alt cursor-pointer text-red-500"
+                                                                title="Delete"
+                                                                onClick={() => handleDelete(notify)}
+                                                            >
+                                                            </i>
+                                                        </>
+                                                    )
 
-                                        }
+                                                }
 
-                                        {   !notify.read.includes(user._id) &&
-                                            (
-                                                <i className="far fa-bookmark cursor-pointer text-yellow-500" title="Unread"></i>
-                                            )
-                                        }
+                                                {(!notify.read.includes(user._id) && user.role === 2) &&
+                                                    (
+                                                        <i className="far fa-bookmark cursor-pointer text-yellow-500" title="Unread"></i>
+                                                    )
+                                                }
 
 
+                                            </div>
+                                        </div>
+                                        {/* Footer */}
+                                        <div className="footer-notify flex justify-end italic">
+                                            <span className="text-paragraph text-sm sm:text-xs">{notify.faculty.name} | Date created: {new Date(
+                                                notify.createdAt
+                                            ).toLocaleDateString()}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                {/* Footer */}
-                                <div className="footer-notify flex justify-end italic">
-                                    <span className="text-paragraph text-sm sm:text-xs">{notify.faculty.name} | Date created: {new Date(
-                                        notify.createdAt
-                                    ).toLocaleDateString()}</span>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
+                                ))
+                            }
+                        </div>
+                    )
+                }
+
             </div>
 
             {/* Modal create notify */}
@@ -240,6 +264,7 @@ function Notify() {
                                                     placeholder="Enter title ..."
                                                     name="title"
                                                     onChange={handleChangeInput}
+                                                    required
                                                     value={data.title}
                                                 />
                                             </div>
@@ -256,6 +281,7 @@ function Notify() {
                                                     name="content"
                                                     onChange={handleChangeInput}
                                                     value={data.content}
+                                                    required
                                                 ></textarea>
                                             </div>
 
@@ -273,6 +299,7 @@ function Notify() {
                                                                 name="faculty"
                                                                 onChange={handleChangeInput}
                                                                 value={data.faculty}
+                                                                required
                                                             >
                                                                 <option defaultValue>---- Choose faculty: ----</option>
                                                                 {

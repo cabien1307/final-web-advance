@@ -64,6 +64,9 @@ textarea::-webkit-input-placeholder {
 .notify-item:hover {
     box-shadow: 1px 3px var(--heading);
 }
+.title-heading {
+    text-decoration: none !important;
+}
 
 .title-heading h1 {
     color: var(--heading);

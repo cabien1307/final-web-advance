@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import './toast.css'
+import "./toast.css"
 
 function Toast({ closeToast, toast }) {
 
@@ -14,7 +14,7 @@ function Toast({ closeToast, toast }) {
         }
         const icon = icons[toast.type]
         // Set type
-        toastRef.current.className = `toast toast--${toast.type}`
+        toastRef.current.className = `toastt toast--${toast.type}`
         toastRef.current.children[0].children[0].className = icon
 
         // Calc delay

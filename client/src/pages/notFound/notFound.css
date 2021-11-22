@@ -1,3 +1,11 @@
 .msg {
     max-width: 700px;
 }
+
+.btn-back {
+    text-decoration: none !important;
+}
+
+.btn-back:hover{
+    color: #fffffe;
+}

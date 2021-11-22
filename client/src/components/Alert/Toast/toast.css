@@ -1,4 +1,4 @@
-.toast {
+.toastt {
     position: fixed;
     background: #fff;
     top: 32px;
@@ -13,10 +13,10 @@
     padding: 20px 0;
     min-width: 400px;
     max-width: 450px;
-    animation: sildeInLeft ease-in 0.4s, fadeOut linear 1s 5s forwards;
+    animation: silde_In_Left ease-in 0.4s, fade_Out linear 1s 5s forwards;
 }
 
-@keyframes sildeInLeft {
+@keyframes silde_In_Left {
     from {
         opacity: 0;
         transform: translateX(calc(100% + 32px));
@@ -27,7 +27,7 @@
     }
 }
 
-@keyframes fadeOut {
+@keyframes fade_Out {
     to {
         opacity: 0;
     }
@@ -52,7 +52,7 @@
     font-size: 14px;
     color: rgb(146, 145, 145);
     margin-top: 4px;
-    line-height: 1.6;
+    line-height: 1.6rem;
 }
 
 .toast_close {

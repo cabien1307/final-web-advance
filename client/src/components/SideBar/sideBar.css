@@ -1,3 +1,6 @@
+.wrapper-link {
+    text-decoration: none !important;
+}
 .nav-link {
     display: flex;
     padding: 12px;

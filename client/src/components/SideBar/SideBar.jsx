@@ -19,7 +19,7 @@ function NavBar() {
                 exact={activeWhenExact}
                 children={({ match }) => {
                     return (
-                        <Link to={to} className="text-heading">
+                        <Link to={to} className="text-heading wrapper-link">
                             <div className={match ? 'nav-link text-active' : 'nav-link'}>
                                 <div className="relative">
                                     {
