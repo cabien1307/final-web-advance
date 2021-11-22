@@ -6,6 +6,7 @@ import homePosts from "./postReducer";
 import modal from "./modalReducer";
 import faculty from "./facultyReducer";
 import users from "./userReducer";
+import notify from "./notifyReducer";
 
 export default combineReducers({
     auth,
@@ -15,4 +16,5 @@ export default combineReducers({
     modal,
     faculty,
     users,
+    notify,
 });

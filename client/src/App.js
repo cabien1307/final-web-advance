@@ -9,6 +9,7 @@ import Alert from "./components/Alert/Alert";
 import { getPosts } from "./store/actions/postAction";
 import { getFaculties } from "./store/actions/facultyAction";
 import { getUsers } from "./store/actions/usersAction";
+import { getNotifications } from "./store/actions/notifyAction";
 
 function App() {
     const dispatch = useDispatch();
@@ -53,6 +54,11 @@ function App() {
     // Get users
     useEffect(() => {
         if (token) dispatch(getUsers(token));
+    }, [dispatch, token]);
+
+    // Get notifies
+    useEffect(() => {
+        if (token) dispatch(getNotifications(token));
     }, [dispatch, token]);
 
     return (

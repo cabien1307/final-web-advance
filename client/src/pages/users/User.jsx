@@ -144,16 +144,16 @@ function User() {
                                     <form onSubmit={handleUpdateRole}>
                                         {/* Heading */}
                                         <div className="heading_form mb-5">
-                                            <h1 className="text-card-heading text-3xl text-center">Update user role</h1>
+                                            <h1 className="text-card-heading text-2xl text-center">Update user role</h1>
                                             <i className="fas fa-times absolute right-3 top-3 text-2xl hover:text-active cursor-pointer" onClick={handleModal}></i>
                                         </div>
 
                                         {/* Content */}
-                                        <div className="content_form px-5 md:px-2 sm:px-2 space-y-5">
+                                        <div className="content_form px-5 md:px-2 sm:px-2 space-y-3">
 
                                             {/* ID */}
                                             <div className="title border-b-2 border-stroke">
-                                                <label htmlFor="txtTitle" className="block text-heading text-lg font-semibold">ID: </label>
+                                                <label htmlFor="txtTitle" className="block text-heading text-base font-semibold">ID: </label>
                                                 <input
                                                     type="text"
                                                     id="txtID"
@@ -167,7 +167,7 @@ function User() {
 
                                             {/* email */}
                                             <div className="title border-b-2 border-stroke">
-                                                <label htmlFor="txtTitle" className="block text-heading text-lg font-semibold">Email: </label>
+                                                <label htmlFor="txtTitle" className="block text-heading text-base font-semibold">Email: </label>
                                                 <input
                                                     type="email"
                                                     className="txtID w-full py-2 bg-transparent  rounded-sm text-secondary outline-none pointer-events-none"
@@ -180,7 +180,7 @@ function User() {
 
                                             {/* Username */}
                                             <div className="title border-b-2 border-stroke">
-                                                <label htmlFor="txtUsername" className="block text-heading text-lg font-semibold">Username: </label>
+                                                <label htmlFor="txtUsername" className="block text-heading text-base font-semibold">Username: </label>
                                                 <input
                                                     type="text"
                                                     id="txtUsername"
@@ -224,7 +224,7 @@ function User() {
 
                                         {/* Control */}
                                         <div className="control_form px-5 mt-4 flex justify-end space-x-3">
-                                            <button className="ctr_btn rounded-md md:w-full md:rounded-3xl sm:w-full sm:rounded-3xl">Update</button>
+                                            <button className="ctrl_btn rounded-md md:w-full md:rounded-3xl sm:w-full sm:rounded-3xl">Update</button>
                                         </div>
                                     </form>
                                 </div>

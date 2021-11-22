@@ -41,7 +41,7 @@
 }
 
 .create__form_container {
-    padding: 20px 30px;
+    padding: 15px 20px;
 }
 
 /* Check box */
@@ -109,6 +109,20 @@
     height: 350px;
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+.ctrl_btn {
+    background: transparent;
+    border: 2px solid var(--stroke);
+    padding: 5px 15px;
+    font-size: 20px;
+    line-height: 28px;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.ctrl_btn:hover {
+    box-shadow: 1px 3px var(--heading);
 }
 
 ::-webkit-scrollbar {
