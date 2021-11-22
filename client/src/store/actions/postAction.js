@@ -1,4 +1,4 @@
-import { getDataAPI, postDataAPI } from "../../utils/fetchData";
+import { getDataAPI, patchDataAPI, postDataAPI } from "../../utils/fetchData";
 import { imageUpload } from "../../utils/imageUpload";
 import { GLOBALTYPES } from "./globalTypes";
 
@@ -37,7 +37,7 @@ export const createPost =
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
             dispatch({
                 type: GLOBALTYPES.ALERT,
-                payload: { success: "Post sucess" },
+                payload: { success: "Post success" },
             });
         } catch (error) {
             dispatch({
@@ -61,3 +61,45 @@ export const getPosts = (token) => async (dispatch) => {
         });
     }
 };
+
+export const updatePost =
+    ({ title, images, auth, post }) =>
+    async (dispatch) => {
+        let media = [];
+        const imgNewUrl = images.filter((img) => !img.url);
+        const imgOldUrl = images.filter((img) => img.url);
+
+        if (
+            post.title === title &&
+            imgNewUrl.length === 0 &&
+            imgOldUrl.length === post.img.length
+        )
+            return;
+        try {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+            if (imgNewUrl.length > 0) media = await imageUpload(imgNewUrl);
+            const res = await patchDataAPI(
+                `post/${post._id}`,
+                {
+                    title,
+                    img: [...imgOldUrl, ...media],
+                    userID: post.userID._id,
+                },
+                auth.token
+            );
+
+            dispatch({
+                type: POST_TYPES.UPDATE_POST,
+                payload: res.data.newPost,
+            });
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { success: res.data.msg },
+            });
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };

@@ -94,14 +94,31 @@ class postController {
     // [PATCH] /post/:postID
     async updatePost(req, res, next) {
         const { postID } = req.value.params;
-        const { userID } = req.value.body;
-        const post = await Post.findById(postID);
+        const { userID, title, img } = req.value.body;
+        const post = await Post.findById(postID)
+            .populate("userID")
+            .populate("faculty")
+            .populate({
+                path: "comments",
+                populate: {
+                    path: "userID",
+                },
+                options: { sort: { createdAt: -1 } },
+            })
+            .sort({ createdAt: -1 });
 
         // console.log(postID, userID, post.userID.toString());
 
-        if (userID === post.userID.toString()) {
+        if (userID === post.userID._id.toString()) {
             await post.updateOne({ $set: req.value.body });
-            return res.status(200).json("The post has been updated !");
+            return res.status(200).json({
+                msg: "Updated Post!",
+                newPost: {
+                    ...post._doc,
+                    title,
+                    img,
+                },
+            });
         } else {
             return res.status(403).json("You can update only your post !");
         }

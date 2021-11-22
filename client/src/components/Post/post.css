@@ -12,3 +12,15 @@
     color: blue;
     font-weight: 500;
 }
+
+.show_images {
+    max-height: 270px;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    place-items: center;
+    padding: 10px;
+    grid-gap: 10px;
+}

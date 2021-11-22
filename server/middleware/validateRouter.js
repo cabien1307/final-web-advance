@@ -163,8 +163,8 @@ const schemas = {
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
         title: Joi.string(),
-        img: Joi.string(),
-        video: Joi.string(),
+        img: Joi.array(),
+        video: Joi.array(),
         faculty: Joi.string(),
         likes: Joi.string(),
         comments: Joi.string(),

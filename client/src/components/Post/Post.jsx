@@ -1,37 +1,81 @@
-// import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom"
 import { format } from "timeago.js";
+import { GLOBALTYPES } from "../../store/actions/globalTypes";
+import { updatePost } from "../../store/actions/postAction";
+import Carousel from "../Carousel/Carousel";
 import "./post.css"
 
 const Post = ({post}) => {
 
     const {auth} = useSelector(state => state)
+    const dispatch = useDispatch();
 
     // const [isLiked, setIsLiked] = useState(false)
-    // const [isEdit, setIsEdit] = useState(false)
+    const [isEdit, setIsEdit] = useState(false)
     // const [isShowComment, setIsShowComment] = useState(false)
     // const [contentComment, setContentComment] = useState("")
-    // const [titleUpdated, setTitleUpdated] = useState("")
+    const [titleEdit, setTitleEdit] = useState("")
+    const [imagesEdit, setImagesEdit] = useState([]);
 
+    const handleEditPost = () => {
+        setTitleEdit(post.title)
+        setImagesEdit(post.img)
+        setIsEdit(!isEdit)
+    }
+
+    const deleteImagesEdit = (index) => {
+        const newArr = [...imagesEdit];
+        newArr.splice(index, 1);
+        setImagesEdit(newArr);
+    };
+
+    const handleUpdatePost = (e) => {
+        e.preventDefault();
+
+        if(isEdit) dispatch(updatePost({ title: titleEdit, images: imagesEdit, auth, post }));
+        setTitleEdit("");
+        setImagesEdit([]);
+        setIsEdit(false)
+    }
+
+    const handleChangeImagesEdit = (e) => {
+        const files = [...e.target.files];
+        let err = "";
+        let newImages = [];
+
+        files.forEach((file) => {
+            if (!file) return (err = "File does not exist!");
+
+            if (file.type !== "image/jpeg" && file.type !== "image/png") {
+                return (err = "Image format is incorrect!");
+            }
+
+            return newImages.push(file);
+        });
+
+        if (err) if (err) dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err } });
+        setImagesEdit([...imagesEdit, ...newImages]);
+    };
 
     const timeAgo = (time) => {
         return format(time);
     }
     return (
-        <div className="wrapper w-full shadow-lg rounded-lg my-5">
+        <div className="wrapper shadow rounded-md border-2 my-4 mx-2">
         {/* <!-- Img createdAt --> */}
         <div className="top flex justify-between items-center mx-2 px-3 py-2 relative">
             <div className="profile h-12 flex justify-between items-center">
                 <img
-                src={   post.userID.profilePic 
-                            ? post.userID.profilePic 
-                            : process.env.PUBLIC_URL + '/images/male_avatar.svg'
-                    }
+                    src={   post.userID.profilePic 
+                                ? post.userID.profilePic 
+                                : process.env.PUBLIC_URL + '/images/male_avatar.svg'
+                        }
                     alt="avatar"
                     className="w-12 h-12 rounded-full object-cover border-2 shadow-lg"
                 />
-                <div className="owner ml-2">
+                <div className="owner ml-2 mt-2">
                     <Link
                         to={`/profile/${post.userID._id}`}
                         className="owner-post text-base font-semibold"
@@ -49,52 +93,99 @@ const Post = ({post}) => {
             </div>
 
             {/* <!-- Check post of user is a current user --> */}
-            <div v-if="getUser._id === post.userID._id" className="space-x-2">
-                <i
-                    className="fas fa-edit cursor-pointer text-blue-500"
-                    // @click="isEditForm"
-                ></i>
-                <i
-                    className="fas fa-trash cursor-pointer text-red-600"
-                    // @click="deletePost"
-                ></i>
-            </div>
+            {
+                auth.user._id === post.userID._id &&
+                <div className="space-x-2">
+                    <i
+                        className="fas fa-edit cursor-pointer text-blue-500"
+                        onClick={handleEditPost}
+                    ></i>
+                    <i
+                        className="fas fa-trash cursor-pointer text-red-600"
+                        // @click="deletePost"
+                    ></i>
+                </div>
+            }
         </div>
 
         {/* <!-- Content --> */}
-        <div className="content my-2 mx-2">
-            <h1 v-if="!isEdit" className="ml-3 mb-2 font-semibold">
-                { post.title }
-            </h1>
-            {/* <form 
-            // v-else 
-            // @submit.prevent="updateTitle"
-            >
-                <div className="title flex">
-                    <input
-                        type="text"
-                        className="px-3 py-2 bg-gray-300 w-full focus:outline-none rounded-2xl my-2"
-                        // v-model="titleUpdated"
-                    />
-                    <i
-                        className="fas fa-times cursor-pointer hover:text-red-500"
-                        // @click="isEdit = false"
-                    ></i>
-                </div>
-                <button
-                    type="submit"
-                    className="px-2 py-1 text-white text-sm font-semibold bg-blue-500 hover:bg-blue-400 rounded-md mb-2 float-right mx-2"
+        <div className="content my-2 mx-2 block">
+            {
+                !isEdit
+                ? <h1 v-if="!isEdit" className="ml-3 mb-2 font-semibold">
+                    { post.title }
+                </h1>
+                : <form onSubmit={handleUpdatePost}
                 >
-                    UPDATE
-                </button>
-            </form> */}
-            <div className="img-post w-full" v-if="post.img">
-                <img
-                    className="w-full h-auto rounded-lg"
-                    src={post.img[0].url}
-                    alt="post"
-                />
-            </div>
+                    <div className="title flex">
+                        <input
+                            type="text"
+                            className="px-3 py-2 bg-gray-300 w-full focus:outline-none rounded-2xl my-2"
+                            value={titleEdit}
+                            onChange={(e) => setTitleEdit(e.target.value)}
+                        />
+                        
+                        <i
+                            className="fas fa-times cursor-pointer hover:text-red-500"
+                            onClick={() => setIsEdit(false)}
+                        ></i>
+                    </div>
+                    {/* Preview image before share */}
+                    <div className="show_images">
+                        {
+                            imagesEdit.map((img, index) => (
+                                <div key={index} className="relative w-full h-full">
+                                    <img className="block object-contain w-full h-full max-h-24" 
+                                    src={
+                                        img.url
+                                            ? img.url
+                                            : URL.createObjectURL(img)
+                                    } 
+                                    alt="images" />
+                                    <i
+                                        className="fas fa-times-circle absolute -top-1 right-0 text-xl text-red-500 cursor-pointer"
+                                        onClick={() => deleteImagesEdit(index)}
+                                    />
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div className="img-post mt-2 px-3">
+                        <input
+                            type="file"
+                            multiple="multiple"
+                            id="isPhotoIdEdit"
+                            accept=".png,.jpeg,.jpg,.jfif"
+                            hidden
+                            onChange={handleChangeImagesEdit}
+                        />
+                        <ul className="flex justify-between items-center">
+                            <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
+                                <label htmlFor="isPhotoIdEdit" className="cursor-pointer">
+                                    <i className="fas fa-photo-video text-red-600 mx-2" />
+                                    <span className="md:hidden sm:hidden xs:hidden">
+                                        Photo or video
+                                    </span>
+                                </label>
+                            </li>
+                            <button
+                                type="submit"
+                                className="px-2 py-1 text-white text-sm font-semibold bg-blue-500 hover:bg-blue-400 rounded-md mb-2 float-right mx-2"
+                            >
+                                UPDATE
+                            </button>
+                        </ul>
+                    </div>
+                </form>
+            }
+            
+            {
+                post.img && 
+                <div className="img-post w-full" v-if="post.img">
+                    <Carousel images={post.img} id={post._id} />
+                </div>
+            }
         </div>
 
         {/* <!-- Interact --> */}
@@ -167,14 +258,12 @@ const Post = ({post}) => {
                         {
                             post.comments.map(comment => (
                                 <li
-                                    className="my-5 pl-2"
-                                    v-for="comment in post.comments"
-                                    key="comment._id"
-                                    // className={`
-                                    //     ${comment.userID._id === getUser._id
-                                    //         ? 'border-l-2 border-green-500'
-                                    //         : ''}
-                                    // `}
+                                    key={comment._id}
+                                    className={`my-5 pl-2
+                                        ${comment.userID._id === auth.user._id
+                                            ? 'border-l-2 border-green-500'
+                                            : ''}
+                                    `}
                                 >
                                     <div className="user-commemt flex items-center">
                                         <img
