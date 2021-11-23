@@ -179,6 +179,9 @@ const schemas = {
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
         content: Joi.string(),
+        postUserId: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
     }),
 
     // DELETE comment
