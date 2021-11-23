@@ -6,7 +6,7 @@ class postController {
     // [GET] /post/
     async getAllPost(req, res, next) {
         const posts = await Post.find()
-            .populate("userID")
+            .populate("userID likes")
             .populate("faculty")
             .populate({
                 path: "comments",
@@ -38,7 +38,7 @@ class postController {
     async getPostTimeline(req, res, next) {
         const { userID } = req.value.params;
         const postTimeLine = await Post.find({ userID })
-            .populate("userID")
+            .populate("userID likes")
             .populate({
                 path: "comments",
                 populate: {
@@ -57,7 +57,7 @@ class postController {
         const faculty = await Faculty.findOne({ slug: slug });
 
         const posts = await Post.find({ faculty: faculty._id })
-            .populate("userID")
+            .populate("userID likes")
             .populate({
                 path: "comments",
                 populate: {
@@ -96,7 +96,7 @@ class postController {
         const { postID } = req.value.params;
         const { userID, title, img } = req.value.body;
         const post = await Post.findById(postID)
-            .populate("userID")
+            .populate("userID likes")
             .populate("faculty")
             .populate({
                 path: "comments",

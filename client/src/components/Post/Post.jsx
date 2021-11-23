@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom"
 import { format } from "timeago.js";
+import { createComment } from "../../store/actions/commentAction";
 import { GLOBALTYPES } from "../../store/actions/globalTypes";
-import { updatePost } from "../../store/actions/postAction";
+import { likePost, unLikePost, updatePost } from "../../store/actions/postAction";
 import Carousel from "../Carousel/Carousel";
 import "./post.css"
 
@@ -12,10 +13,11 @@ const Post = ({ post }) => {
     const { auth } = useSelector(state => state)
     const dispatch = useDispatch();
 
-    // const [isLiked, setIsLiked] = useState(false)
+    const [isLiked, setIsLiked] = useState(false)
+    const [loadLike, setLoadLike] = useState(false);
     const [isEdit, setIsEdit] = useState(false)
-    // const [isShowComment, setIsShowComment] = useState(false)
-    // const [contentComment, setContentComment] = useState("")
+    const [isShowComment, setIsShowComment] = useState(false)
+    const [contentComment, setContentComment] = useState("")
     const [titleEdit, setTitleEdit] = useState("")
     const [imagesEdit, setImagesEdit] = useState([]);
 
@@ -58,6 +60,42 @@ const Post = ({ post }) => {
         if (err) if (err) dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err } });
         setImagesEdit([...imagesEdit, ...newImages]);
     };
+
+    const handleLiked = async () => {
+        if (loadLike) return;
+
+        setLoadLike(true);
+        if (isLiked){
+            await dispatch(unLikePost({ post, auth }))
+        } else {
+            await dispatch(likePost({ post, auth }))
+        }
+        setLoadLike(false);
+        setIsLiked(!isLiked)
+    }
+
+    useEffect(() => {
+        if (post.likes.find((like) => like._id === auth.user._id)) {
+            setIsLiked(true);
+        }
+    }, [post.likes, auth.user._id]);
+
+    const handleComment = (e) => {
+        e.preventDefault();
+
+        if (!contentComment.trim())
+            return;
+
+        const newComment = {
+            contentComment,
+            userID: auth.user,
+            createdAt: new Date().toISOString(),
+        };
+        
+        dispatch(createComment(post, newComment, auth))
+        
+        setContentComment("")
+    }
 
     const timeAgo = (time) => {
         return format(time);
@@ -132,7 +170,7 @@ const Post = ({ post }) => {
             <div className="content my-2 mx-2 block">
                 {
                     !isEdit
-                        ? <h1 v-if="!isEdit" className="ml-3 mb-2 font-semibold">
+                        ? <h1 className="ml-3 mb-2 font-semibold">
                             {post.title}
                         </h1>
                         : <form onSubmit={handleUpdatePost}
@@ -215,12 +253,10 @@ const Post = ({ post }) => {
                     <div className="like flex justify-between">
                         <div className="btn-like px-2 flex items-center">
                             <i
-                                // @click="handleLiked"
-                                className="cursor-pointer w-6 h-6 text-sm text-white flex justify-center items-center rounded-full fas fa-thumbs-up bg-blue-600"
+                                className="w-6 h-6 text-sm text-white flex justify-center items-center rounded-full fas fa-thumbs-up bg-blue-600"
                             ></i>
                             <i
-                                // @click="handleLiked"
-                                className="cursor-pointer w-6 h-6 mr-2 text-sm text-white flex justify-center items-center rounded-full fas fa-heart bg-red-600"
+                                className="w-6 h-6 mr-2 text-sm text-white flex justify-center items-center rounded-full fas fa-heart bg-red-600"
                             ></i>
                             <p>{post.likes.length} others</p>
                         </div>
@@ -233,9 +269,8 @@ const Post = ({ post }) => {
                 {/* <!-- Button like comment --> */}
                 <div className="interact-btn flex justify-between py-1">
                     <button
-                        className="mx-2 px-12 py-2 hover:bg-gray-100"
-                    // @click="handleLiked(post._id)"
-                    // className="[isLiked ? 'text-blue-800' : '']"
+                        onClick={handleLiked}
+                        className={`mx-2 px-12 py-2 hover:bg-gray-100 ${isLiked ? 'text-blue-800' : ''}`}
                     >
                         <div className="icon">
                             <i className="far fa-thumbs-up"></i>
@@ -243,7 +278,7 @@ const Post = ({ post }) => {
                         </div>
                     </button>
                     <button
-                        // @click="isShowCommentBox"
+                        onClick={() => setIsShowComment(!isShowComment)}
                         className="mx-2 px-12 py-2 hover:bg-gray-100"
                     >
                         <i className="fas fa-comment-alt"></i> Comments
@@ -251,86 +286,90 @@ const Post = ({ post }) => {
                 </div>
 
                 {/* <!-- Comment --> */}
-                <div className="comments px-2 border-t-2" v-if="isShowComment">
-                    {/* <!-- Write commet --> */}
-                    <div className="write-comment flex mb-5 mt-2">
-                        <img
-                            src={
-                                auth.user.profilePic
-                                    ? auth.user.profilePic
-                                    : process.env.PUBLIC_URL + '/images/male_avatar.svg'
-                            }
-                            alt=""
-                            className="avt w-10 h-10 rounded-full shadow-md"
-                        />
+                {
+                    isShowComment &&
+                    <div className="comments px-2 border-t-2" v-if="isShowComment">
+                        {/* <!-- Write commet --> */}
+                        <div className="write-comment flex mb-5 mt-2">
+                            <img
+                                src={
+                                    auth.user.profilePic
+                                        ? auth.user.profilePic
+                                        : process.env.PUBLIC_URL + '/images/male_avatar.svg'
+                                }
+                                alt=""
+                                className="avt w-10 h-10 rounded-full shadow-md"
+                            />
 
-                        <input
-                            // @keyup.enter.prevent="comment"
-                            type="text"
-                            className="flex-1 ml-3 border-none bg-gray-100 focus:outline-none rounded-3xl px-5"
-                            placeholder="Write your comment..."
-                            v-model="contentComment"
-                        />
-                    </div>
-                    {/* <!-- List comment --> */}
-                    <div className="list-comments pb-2">
-                        <ul>
-                            {
-                                post.comments.map(comment => (
-                                    <li
-                                        key={comment._id}
-                                        className={`my-5 pl-2
-                                        ${comment.userID._id === auth.user._id
-                                                ? 'border-l-2 border-green-500'
-                                                : ''}
-                                    `}
-                                    >
-                                        <div className="user-commemt flex items-center">
-                                            <img
-                                                className="w-8 h-8 mr-4 rounded-full"
-                                                // src="
-                                                //     comment.userID.authType === 'local'
-                                                //         ? comment.userID.profilePic
-                                                //             ? PF + comment.userID.profilePic
-                                                //             : PF + 'profile_pic.svg'
-                                                //         : comment.userID.authType ===
-                                                //               'google' &&
-                                                //           comment.userID.profilePic.includes(
-                                                //               'https://'
-                                                //           )
-                                                //         ? comment.userID.profilePic
-                                                //         : PF + comment.userID.profilePic //If wether gg/fb type
-                                                // "
-                                                alt=""
-                                            />
-                                            <div
-                                                className="content px-3 py-2 bg-blue-100 rounded-xl relative w-auto mb-1"
-                                            >
-                                                <div>
-                                                    <h5
-                                                        className="text-base font-semibold pr-5"
-                                                    >
-                                                        {comment.userID.username}
-                                                    </h5>
-                                                    {/* <!-- Comment --> */}
-                                                    <p className="text-sm">
-                                                        {comment.content}
-                                                    </p>
-                                                </div>
-                                                <span
-                                                    className="absolute italic text-xs right-0 -bottom-4"
+                            <input
+                                type="text"
+                                className="flex-1 ml-3 border-none bg-gray-100 focus:outline-none rounded-3xl px-3"
+                                placeholder="Write your comment..."
+                                value={contentComment}
+                                onChange={(e) => setContentComment(e.target.value)}
+                                onKeyUp={handleComment}
+                            />
+                        </div>
+                        {/* <!-- List comment --> */}
+                        <div className="list-comments pb-2">
+                            <ul>
+                                {
+                                    post.comments.map(comment => (
+                                        <li
+                                            key={comment._id}
+                                            className={`my-5 pl-2
+                                            ${comment.userID._id === auth.user._id
+                                                    ? 'border-l-2 border-green-500'
+                                                    : ''}
+                                        `}
+                                        >
+                                            <div className="user-commemt flex items-center">
+                                                <img
+                                                    className="w-8 h-8 mr-4 rounded-full"
+                                                    // src="
+                                                    //     comment.userID.authType === 'local'
+                                                    //         ? comment.userID.profilePic
+                                                    //             ? PF + comment.userID.profilePic
+                                                    //             : PF + 'profile_pic.svg'
+                                                    //         : comment.userID.authType ===
+                                                    //               'google' &&
+                                                    //           comment.userID.profilePic.includes(
+                                                    //               'https://'
+                                                    //           )
+                                                    //         ? comment.userID.profilePic
+                                                    //         : PF + comment.userID.profilePic //If wether gg/fb type
+                                                    // "
+                                                    alt=""
+                                                />
+                                                <div
+                                                    className="content px-3 py-2 bg-blue-100 rounded-xl relative w-auto mb-1"
                                                 >
-                                                    {timeAgo(comment.createdAt)}
-                                                </span>
+                                                    <div>
+                                                        <h5
+                                                            className="text-base font-semibold pr-5"
+                                                        >
+                                                            {comment.userID.username}
+                                                        </h5>
+                                                        {/* <!-- Comment --> */}
+                                                        <p className="text-sm">
+                                                            {comment.content}
+                                                        </p>
+                                                    </div>
+                                                    <span
+                                                        className="absolute italic text-xs right-0 -bottom-4"
+                                                    >
+                                                        {timeAgo(comment.createdAt)}
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
+                                        </li>
 
-                                ))
-                            }
-                        </ul>
+                                    ))
+                                }
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     )

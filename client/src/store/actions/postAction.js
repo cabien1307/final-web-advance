@@ -1,4 +1,9 @@
-import { getDataAPI, patchDataAPI, postDataAPI } from "../../utils/fetchData";
+import {
+    getDataAPI,
+    patchDataAPI,
+    postDataAPI,
+    putDataAPI,
+} from "../../utils/fetchData";
 import { imageUpload } from "../../utils/imageUpload";
 import { GLOBALTYPES } from "./globalTypes";
 
@@ -96,6 +101,49 @@ export const updatePost =
                 type: GLOBALTYPES.ALERT,
                 payload: { success: res.data.msg },
             });
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
+export const likePost =
+    ({ post, auth }) =>
+    async (dispatch) => {
+        const newPost = { ...post, likes: [...post.likes, auth.user] };
+        dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost });
+
+        try {
+            await putDataAPI(
+                `post/${post._id}/liked`,
+                { userID: auth.user._id },
+                auth.token
+            );
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
+export const unLikePost =
+    ({ post, auth }) =>
+    async (dispatch) => {
+        const newPost = {
+            ...post,
+            likes: post.likes.filter((like) => like._id !== auth.user._id),
+        };
+        dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost });
+
+        try {
+            await putDataAPI(
+                `post/${post._id}/liked`,
+                { userID: auth.user._id },
+                auth.token
+            );
         } catch (error) {
             dispatch({
                 type: GLOBALTYPES.ALERT,
