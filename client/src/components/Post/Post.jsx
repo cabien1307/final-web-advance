@@ -319,7 +319,7 @@ const Post = ({ post }) => {
                                         <CommentCart 
                                             comment={comment} 
                                             index={index} 
-                                            auth={auth}
+                                            post={post}
                                             timeAgo={timeAgo}
                                         />
                                     ))

@@ -1,4 +1,39 @@
-const CommentCart = ({ comment, index, auth, timeAgo }) => {
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    deleteComment,
+    updateComment,
+} from "../../store/actions/commentAction";
+
+const CommentCart = ({ comment, post, index, timeAgo }) => {
+    const { auth } = useSelector((state) => state);
+    const dispatch = useDispatch();
+
+    const [onEdit, setOnEdit] = useState(false);
+    const [content, setContent] = useState("");
+
+    useEffect(() => {
+        setContent(comment.content);
+    }, [comment.content]);
+
+    const handleUpdate = () => {
+        if (comment.content !== content) {
+            dispatch(updateComment({ comment, post, content, auth }));
+            setOnEdit(false);
+        } else {
+            setOnEdit(false);
+        }
+    };
+
+    const handleRemoveComment = () => {
+        if (
+            post.userID._id === auth.user._id ||
+            comment.userID._id === auth.user._id
+        ) {
+            dispatch(deleteComment({ post, comment, auth }));
+        }
+    };
+
     return (
         <li
             key={index}
@@ -25,16 +60,58 @@ const CommentCart = ({ comment, index, auth, timeAgo }) => {
                     alt=""
                 />
                 <div className="content px-3 py-2 bg-blue-100 rounded-xl relative mb-1 w-full">
-                    <div>
-                        <h5 className="text-base font-semibold pr-5">
-                            {comment.userID.username}
-                        </h5>
-                        {/* <!-- Comment --> */}
+                    <h5 className="text-base font-semibold pr-5">
+                        {comment.userID.username}
+                    </h5>
+                    {/* <!-- Comment --> */}
+                    {onEdit ? (
+                        <input
+                            className="rounded-3xl border-none focus:outline-none w-full bg-blue-200 pl-2"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                        />
+                    ) : (
                         <p className="text-sm">{comment.content}</p>
+                    )}
+                    <div className="cursor-pointer block absolute right-0 mt-1">
+                        <small className="italic text-xs mr-3">
+                            {timeAgo(comment.createdAt)}
+                        </small>
+                        {onEdit ? (
+                            <>
+                                <small
+                                    className="font-weight-bold mr-3"
+                                    onClick={handleUpdate}
+                                >
+                                    update
+                                </small>
+                                <small
+                                    className="font-weight-bold mr-3"
+                                    onClick={() => setOnEdit(false)}
+                                >
+                                    cancel
+                                </small>
+                            </>
+                        ) : (
+                            (post.userID._id === auth.user._id ||
+                                comment.userID._id === auth.user._id) && (
+                                <>
+                                    <small
+                                        className="font-weight-bold mr-3"
+                                        onClick={() => setOnEdit(true)}
+                                    >
+                                        edit
+                                    </small>
+                                    <small
+                                        className="font-weight-bold mr-3"
+                                        onClick={handleRemoveComment}
+                                    >
+                                        remove
+                                    </small>
+                                </>
+                            )
+                        )}
                     </div>
-                    <span className="absolute italic text-xs right-0 -bottom-4">
-                        {timeAgo(comment.createdAt)}
-                    </span>
                 </div>
             </div>
         </li>

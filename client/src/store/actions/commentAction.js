@@ -1,5 +1,9 @@
-import { postDataAPI } from "../../utils/fetchData";
-import { GLOBALTYPES } from "./globalTypes";
+import {
+    deleteDataAPI,
+    patchDataAPI,
+    postDataAPI,
+} from "../../utils/fetchData";
+import { EditData, GLOBALTYPES } from "./globalTypes";
 import { POST_TYPES } from "./postAction";
 
 export const createComment = (post, newComment, auth) => async (dispatch) => {
@@ -28,3 +32,57 @@ export const createComment = (post, newComment, auth) => async (dispatch) => {
         });
     }
 };
+
+export const updateComment =
+    ({ comment, post, content, auth }) =>
+    async (dispatch) => {
+        const newComments = EditData(post.comments, comment._id, {
+            ...comment,
+            content,
+        });
+        const newPost = { ...post, comments: newComments };
+
+        dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost });
+
+        try {
+            patchDataAPI(
+                `comment/${comment._id}`,
+                {
+                    content,
+                    userID: auth.user._id,
+                    postID: post._id,
+                    postUserId: post.userID._id,
+                },
+                auth.token
+            );
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
+export const deleteComment =
+    ({ post, comment, auth }) =>
+    async (dispatch) => {
+        const newPost = {
+            ...post,
+            comments: post.comments.filter((cm) => cm._id !== comment._id),
+        };
+
+        dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost });
+
+        try {
+            deleteDataAPI(
+                `comment/${comment._id}`,
+                { userID: auth.user._id, postID: post._id },
+                auth.token
+            );
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };

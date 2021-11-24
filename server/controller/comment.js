@@ -60,7 +60,7 @@ class commentController {
         const postOfComment = await Post.findById(postID);
 
         // Check whether user's comment
-        if (userID === comment.userID) {
+        if (userID === comment.userID.toString()) {
             // Check whether comment's post
             if (postOfComment) {
                 await comment.updateOne({ $set: req.value.body });
@@ -82,7 +82,7 @@ class commentController {
 
         const comment = await Comment.findById(commentID);
 
-        if (userID === comment.userID) {
+        if (userID === comment.userID.toString()) {
             //check whether user's comment
             const postOfComment = await Post.findById(postID);
 
