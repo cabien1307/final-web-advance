@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 
 const attachment = multer({ storage: storage });
 
-router.post("/", attachment.single("file"), (req, res, next) => {
+router.post("/", attachment.single("files"), (req, res, next) => {
     res.status(200).json("Attachment has been uploaded !");
 });
 

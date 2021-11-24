@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 import { GLOBALTYPES } from "../../store/actions/globalTypes"
 import { createNotify, deleteNotify, updateNotify } from "../../store/actions/notifyAction"
@@ -16,23 +17,12 @@ function Notify() {
 
     const dispatch = useDispatch();
 
-    // const [notifies, setNotifies] = useState([])
-    // useEffect(() => {
-    //     axios.get(`/notification`)
-    //         .then(res => {
-    //             setNotifies(res.data);
-    //         })
-    // }, [])
-
-
-
-
     const [data, setData] = useState({
         _id: '',
         title: '',
         content: '',
         faculty: '',
-        attachment: '',
+        attachment: null,
         isUpdate: false
     })
 
@@ -47,7 +37,8 @@ function Notify() {
         })
     }
 
-    const handleFormNotify = (e) => {
+
+    const handleFormNotify = async (e) => {
         e.preventDefault()
         if (!data.faculty)
             return false
@@ -66,6 +57,25 @@ function Notify() {
                 token
             }))
         } else {
+
+            if (data.attachment) {
+                const formData = new FormData()
+                const filename = Date.now() + ' - ' + data.attachment.name
+                formData.append("name", filename);
+                formData.append("files", data.attachment);
+
+                data.attachment = filename
+
+                try {
+                    await axios.post('/attachment', formData)
+                } catch (error) {
+                    dispatch({
+                        type: GLOBALTYPES.ALERT,
+                        error: "Something went wrong"
+                    })
+                }
+            }
+
             dispatch(createNotify({
                 _id: user._id,
                 data,
@@ -182,7 +192,6 @@ function Notify() {
                                             <Link
                                                 to={`/notify/${notify._id}`}
                                                 className="title-heading text-base sm:text-sm"
-                                                target="_blank"
                                             >
                                                 <h1>{notify.title}</h1>
                                             </Link>
@@ -314,17 +323,23 @@ function Notify() {
                                             }
 
                                             {/* Attachment */}
-                                            <div className="Attachment border-b-2 border-stroke">
-                                                <label htmlFor="txtAttachment" className="block text-heading text-lg font-semibold">Attachment:</label>
-                                                <input
-                                                    type="file"
-                                                    id="txtAttachment"
-                                                    className="w-full py-2 bg-transparent  rounded-sm text-card-heading outline-none"
-                                                    name="attachment"
-                                                    onChange={handleChangeInput}
-                                                    value={data.attachment}
-                                                />
-                                            </div>
+                                            {
+                                                !data.isUpdate &&
+                                                (
+                                                    <div className="Attachment border-b-2 border-stroke">
+                                                        <label htmlFor="txtAttachment" className="block text-heading text-lg font-semibold">Attachment:</label>
+                                                        <input
+                                                            type="file"
+                                                            id="txtAttachment"
+                                                            className="w-full py-2 bg-transparent  rounded-sm text-card-heading outline-none"
+                                                            name="attachment"
+                                                            accept=".pdf"
+                                                            onChange={(e) => setData({ ...data, attachment: e.target.files[0] })}
+                                                        />
+                                                    </div>
+                                                )
+                                            }
+
                                         </div>
 
                                         {/* Control */}

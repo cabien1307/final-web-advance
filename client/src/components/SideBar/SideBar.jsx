@@ -11,6 +11,7 @@ function NavBar() {
     const [isShow, setIsShow] = useState(false)
 
     const user = useSelector(state => state.auth.user)
+    const { unread } = useSelector(state => state.notify)
 
     const MenuLink = ({ label, to, activeWhenExact, icon }) => {
         return (
@@ -23,8 +24,13 @@ function NavBar() {
                             <div className={match ? 'nav-link text-active' : 'nav-link'}>
                                 <div className="relative">
                                     {
-                                        to === '/notify'
-                                        && (<span className="uncount">2</span>)
+                                        (to === '/notify' && user.role === 2) &&
+                                        (
+
+                                            <span className="uncount">{unread}</span>
+                                        )
+
+
                                     }
                                     <i className={icon}></i>
                                 </div>
@@ -94,15 +100,14 @@ function NavBar() {
                     <div className="info max-w-full flex-shrink xl:hidden lg:hidden md:hidden sm:hidden">
                         <div className="mx-3 max-w-full w-36">
                             {/* Username */}
-                            <div className="name">
-                                <span className="text-wrap text-md font-semibold">{user.username}</span>
+                            <div className="name text-wrapp">
+                                <span className="text-md font-semibold">{user.username}</span>
                             </div>
 
                             {/* Email*/}
-                            <div className="email">
-                                <div className="text-wrap">
-                                    <span className="text-sm italic text-paragraph min-w-0 max-w-full">{user.email}</span>
-                                </div>
+                            <div className="email text-wrapp">
+                                <span className="text-sm italic text-paragraph">{user.email}</span>
+
                             </div>
 
                         </div>

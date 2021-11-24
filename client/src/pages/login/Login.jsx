@@ -175,7 +175,7 @@ function Login() {
 
             <div className="login">
                 {/* Introduction */}
-                <div className="intro text-heading text-center space-y-4 lg:mt-10 mb-5 md:mt-10 sm:mt-10">
+                <div className="intro text-heading text-center space-y-4 lg:mt-10 md:mt-10 sm:mt-10">
                     <h1 className="text-5xl font-bold">Social App</h1>
                     <h1 className="text-3xl font-semibold">Welcome back to website !</h1>
                     <p className="text-base italic text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus quasi exercitationem cum libero soluta veritatis .</p>
@@ -183,13 +183,13 @@ function Login() {
 
                 <div className="w-full px-5 py-2 flex flex-col items-center">
                     <h1 className="text-3xl text-heading">Who are you ?</h1>
-                    <div className="my-5 flex justify-around w-full">
+                    <div className="my-3 flex justify-around w-full">
                         <button className="btn w-2/5" onClick={() => setType(1)}>Student</button>
                         <button className="btn w-2/5" onClick={() => setType(0)}>Teacher</button>
                     </div>
                 </div>
 
-                {isChoose && (<hr className="my-6" />)}
+                {isChoose && (<hr className="my-2" />)}
 
                 {
                     isChoose

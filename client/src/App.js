@@ -9,11 +9,11 @@ import Alert from "./components/Alert/Alert";
 import { getPosts } from "./store/actions/postAction";
 import { getFaculties } from "./store/actions/facultyAction";
 import { getUsers } from "./store/actions/usersAction";
-import { getNotifications } from "./store/actions/notifyAction";
+import { getNotifications, getNotifyUnread } from "./store/actions/notifyAction";
 
 function App() {
     const dispatch = useDispatch();
-    const { isLoggedIn } = useSelector((state) => state.auth);
+    const { isLoggedIn, user } = useSelector((state) => state.auth);
     const { token } = useSelector((state) => state);
 
     // Get Access Token
@@ -60,6 +60,14 @@ function App() {
     useEffect(() => {
         if (token) dispatch(getNotifications(token));
     }, [dispatch, token]);
+
+    // Get notify unread
+    useEffect(() => {
+        if (token && user) dispatch(getNotifyUnread({
+            _id: user._id,
+            token
+        }));
+    }, [dispatch, token, user]);
 
     return (
         <Router>

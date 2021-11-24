@@ -23,7 +23,7 @@ function RightBar() {
                                 <h3 className="date-create">{notify.createdAt}</h3>
                             </Link>
                         )
-                    })
+                })
                 }
 
 

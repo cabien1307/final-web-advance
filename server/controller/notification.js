@@ -53,13 +53,13 @@ class notificationController {
     // [PATCH] /notification/:notifyID/read
     async setNotificationRead(req, res, next) {
         const { notifyID } = req.value.params;
-        const { userID } = req.value.body;
-        const user = await User.findById(userID);
+        const { _id } = req.user;
+        const user = await User.findById(_id);
         const notify = await Notification.findById(notifyID);
 
         if (user && notify) {
-            await notify.update(
-                { $addToSet: { read: userID } },
+            const result = await notify.updateOne(
+                { $addToSet: { read: _id } },
                 {
                     upsert: true,
                     multi: true,
@@ -67,6 +67,7 @@ class notificationController {
             );
             res.status(200).json({
                 success: true,
+                result
             });
         } else {
             res.status(404).json("Notify/User not found !");

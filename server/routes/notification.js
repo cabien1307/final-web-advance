@@ -21,8 +21,8 @@ router.get(
 
 router.patch(
     "/:notifyID/read",
+    passport.authenticate("jwt", { session: false }),
     validateParams(schemas.idSchema, "notifyID"),
-    validateBody(schemas.notificationDeleteSchema),
     notificationController.setNotificationRead
 );
 

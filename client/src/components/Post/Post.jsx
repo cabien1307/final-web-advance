@@ -66,7 +66,7 @@ const Post = ({ post }) => {
         if (loadLike) return;
 
         setLoadLike(true);
-        if (isLiked){
+        if (isLiked) {
             await dispatch(unLikePost({ post, auth }))
         } else {
             await dispatch(likePost({ post, auth }))
@@ -92,9 +92,9 @@ const Post = ({ post }) => {
             userID: auth.user,
             createdAt: new Date().toISOString(),
         };
-        
+
         dispatch(createComment(post, newComment, auth))
-        
+
         setContentComment("")
     }
 
@@ -315,10 +315,11 @@ const Post = ({ post }) => {
                         <div className="list-comments pb-2">
                             <ul>
                                 {
-                                    post.comments.map((comment,index) => (
-                                        <CommentCart 
-                                            comment={comment} 
-                                            index={index} 
+                                    post.comments.map((comment, index) => (
+                                        <CommentCart
+                                            key={index}
+                                            comment={comment}
+                                            index={index}
                                             post={post}
                                             timeAgo={timeAgo}
                                         />
