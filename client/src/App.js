@@ -2,9 +2,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import SideBar from "./components/SideBar/SideBar";
 import Body from "./components/Body/Body";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import axios from "axios";
-import { io } from "socket.io-client"
 
 import { fetchUser, LoginSuccessfull } from "./store/actions/authAction";
 import Alert from "./components/Alert/Alert";
@@ -19,17 +18,12 @@ function App() {
     const dispatch = useDispatch();
     const { isLoggedIn, user } = useSelector((state) => state.auth);
     const { token } = useSelector((state) => state);
+    const { socket } = useSelector(state => state)
 
-    const socket = useRef();
-
-
-    useEffect(() => {
-        socket.current = io("ws://localhost:8080");
-    }, []);
 
     useEffect(() => {
-        
-        socket.current.on('broadcast-notify', () => {
+
+        socket.on('broadcast-notify', () => {
             getDataAPI('notification/new')
                 .then(res => {
                     dispatch({

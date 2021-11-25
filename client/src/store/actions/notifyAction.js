@@ -1,5 +1,5 @@
 import { GLOBALTYPES } from "../actions/globalTypes";
-import { io } from "socket.io-client"
+
 import {
     getDataAPI,
     postDataAPI,
@@ -11,11 +11,9 @@ export const NOTIFY_TYPES = {
     GET_NOTIFY: "GET_NOTIFY",
     DELETE_NOTIFY: "DELETE_NOTIFY",
     GET_UNREAD: "GET_UNREAD",
-    READ_NOTIFY: "READ_NOTIFY"
+    READ_NOTIFY: "READ_NOTIFY",
+    NEW_NOTIFY: "NEW_NOTIFY"
 };
-
-
-const socket = io("ws://localhost:8080")
 
 export const getNotifyUnread = ({ _id, token }) => async (dispatch) => {
     try {
@@ -93,7 +91,9 @@ export const createNotify =
                     payload: { success: "Add notify Successfull !" },
                 });
 
-                socket.emit('new-notify')
+                dispatch({
+                    type: NOTIFY_TYPES.NEW_NOTIFY,
+                });
 
             } catch (err) {
                 dispatch({

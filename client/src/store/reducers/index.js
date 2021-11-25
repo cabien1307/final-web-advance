@@ -7,6 +7,7 @@ import modal from "./modalReducer";
 import faculty from "./facultyReducer";
 import users from "./userReducer";
 import notify from "./notifyReducer";
+import socket from "./socketReducer"
 
 export default combineReducers({
     auth,
@@ -17,4 +18,5 @@ export default combineReducers({
     faculty,
     users,
     notify,
+    socket
 });
