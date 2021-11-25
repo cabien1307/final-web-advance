@@ -24,6 +24,8 @@ const UserSchema = new Schema(
         },
         coverPic: {
             type: String,
+            default:
+                "https://res.cloudinary.com/dlzptxhoe/image/upload/v1637827047/Images/tdtu_lg9z0h.jpg",
         },
         role: {
             type: Number,

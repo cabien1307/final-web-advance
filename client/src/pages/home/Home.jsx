@@ -20,7 +20,7 @@ function Home() {
                         alt="loading"
                         className="block mx-auto"
                     />
-                ) : homePosts.result === 0 ? (
+                ) : (homePosts.result === 0 || homePosts.posts.length === 0) ? (
                     <div
                         className="list-posts mx-7 my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
                     >

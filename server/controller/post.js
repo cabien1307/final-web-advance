@@ -1,6 +1,7 @@
 const Post = require("../model/Post");
 const User = require("../model/User");
 const Faculty = require("../model/Faculty");
+const Comments = require("../model/Comment");
 
 class postController {
     // [GET] /post/
@@ -139,7 +140,10 @@ class postController {
             await user.update({ $pull: { posts: post._id } });
 
             // Delete comment of post
-            await Comments.deleteMany({ postID: post._id });
+            const comment = await Comments.find({ postID: post._id });
+            if (comment.length > 0) {
+                await Comments.deleteMany({ postID: post._id });
+            }
 
             return res.status(200).json("The post has been deleted");
         } else {

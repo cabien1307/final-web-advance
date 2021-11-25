@@ -14,6 +14,7 @@
     min-width: 400px;
     max-width: 450px;
     animation: silde_In_Left ease-in 0.4s, fade_Out linear 1s 5s forwards;
+    z-index: 9;
 }
 
 @keyframes silde_In_Left {

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { format } from "timeago.js";
 import { createComment } from "../../store/actions/commentAction";
 import { GLOBALTYPES } from "../../store/actions/globalTypes";
-import { likePost, unLikePost, updatePost } from "../../store/actions/postAction";
+import { deletePost, likePost, unLikePost, updatePost } from "../../store/actions/postAction";
 import Carousel from "../Carousel/Carousel";
 import CommentCart from "../Comment/CommentCart";
 import "./post.css"
@@ -33,6 +33,14 @@ const Post = ({ post }) => {
         newArr.splice(index, 1);
         setImagesEdit(newArr);
     };
+
+    const handleDeletePost = () => {
+        if(window.confirm("Do you want to delete this post!!!")) {
+            dispatch(deletePost({post, auth}))
+        } else {
+            return;
+        }
+    }
 
     const handleUpdatePost = (e) => {
         e.preventDefault();
@@ -161,7 +169,7 @@ const Post = ({ post }) => {
                         ></i>
                         <i
                             className="fas fa-trash cursor-pointer text-red-600"
-                        // @click="deletePost"
+                        onClick={handleDeletePost}
                         ></i>
                     </div>
                 }
