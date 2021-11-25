@@ -7,6 +7,8 @@ import NoPost from "../../images/post.svg";
 
 function Home() {
     const { homePosts } = useSelector((state) => state);
+    const { notifications } = useSelector((state) => state.notify)
+
 
     return (
         <>
@@ -35,7 +37,7 @@ function Home() {
                     homePosts.posts.map((post, index) => <Post key={index} post={post} />)
                 )}
             </div>
-            <RightBar />
+            <RightBar notifications={notifications} />
         </>
     );
 }

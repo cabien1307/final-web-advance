@@ -5,7 +5,8 @@ export const GLOBALTYPES = {
     LOGOUT: "LOGOUT",
     GET_TOKEN: "GET_TOKEN",
     ALERT: "ALERT",
-    MODAL: "MODAL"
+    MODAL: "MODAL",
+    NEWS: "NEWS"
 };
 
 export const EditData = (data, id, post) => {

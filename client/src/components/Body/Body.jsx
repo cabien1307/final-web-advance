@@ -2,6 +2,7 @@ import { Switch, Route } from "react-router-dom";
 import routes from "../../routes/routes";
 import Login from "../../pages/login/Login";
 import { useSelector } from 'react-redux';
+import NotFound from "../../pages/notFound/not-found";
 
 function Body() {
     const { isLoggedIn } = useSelector(state => state.auth)
@@ -19,18 +20,20 @@ function Body() {
                         <Route
                             key={index}
                             path={route.path}
-                            component={
+                            exact={route.exact}
+                        >
+                            {
                                 route.authRequired
                                     ? !isLoggedIn
-                                        ? Login
+                                        ? <Login />
                                         : route.main
                                     : route.main
                             }
-                            exact={route.exact}
-                        />
+                        </Route>
                     )
                 })
             }
+            <Route component={NotFound} to="*"/>
         </Switch>
     )
 }

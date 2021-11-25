@@ -19,3 +19,8 @@ export const isMatch = (pwd, cf_pwd) => {
     }
     return false;
 }
+
+export const isId = (id) => {
+    const regexId = /^.{24,24}$/
+    return regexId.test(id);
+}

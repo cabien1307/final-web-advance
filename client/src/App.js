@@ -2,19 +2,50 @@ import { BrowserRouter as Router } from "react-router-dom";
 import SideBar from "./components/SideBar/SideBar";
 import Body from "./components/Body/Body";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import axios from "axios";
+import { io } from "socket.io-client"
+
 import { fetchUser, LoginSuccessfull } from "./store/actions/authAction";
 import Alert from "./components/Alert/Alert";
 import { getPosts } from "./store/actions/postAction";
 import { getFaculties } from "./store/actions/facultyAction";
 import { getUsers } from "./store/actions/usersAction";
 import { getNotifications, getNotifyUnread } from "./store/actions/notifyAction";
+import { getDataAPI } from "./utils/fetchData"
+import { GLOBALTYPES } from "./store/actions/globalTypes"
 
 function App() {
     const dispatch = useDispatch();
     const { isLoggedIn, user } = useSelector((state) => state.auth);
     const { token } = useSelector((state) => state);
+
+    const socket = useRef();
+
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:8080");
+    }, []);
+
+    useEffect(() => {
+        
+        socket.current.on('broadcast-notify', () => {
+            getDataAPI('notification/new')
+                .then(res => {
+                    dispatch({
+                        type: GLOBALTYPES.ALERT,
+                        payload: { news: res.data },
+                    });
+                })
+                .catch((err) => {
+                    dispatch({
+                        type: GLOBALTYPES.ALERT,
+                        error: err
+                    })
+                })
+
+        })
+    }, [dispatch, socket])
 
     // Get Access Token
     useEffect(() => {

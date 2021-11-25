@@ -144,7 +144,7 @@ function Notify() {
                     {/* Button new */}
                     <div className="flex justify-between items-center space-x-2">
                         <h1 className="text-heading text-2xl font-semibold">List notifications</h1>
-                        {user.role !== 2 &&
+                        {user.role === 1 &&
                             (<button className="px-3 py-2 bg-btn-bg rounded-md text-btn-text hover:bg-btn-hover" onClick={handleModal}>
                                 <i className="fas fa-plus mr-2"></i>
                                 <span className="font-semibold">New</span>
@@ -190,7 +190,7 @@ function Notify() {
                                         {/* Heading notify */}
                                         <div className="heading flex">
                                             <Link
-                                                to={`/notify/${notify._id}`}
+                                                to={`/notify/${notify._id}/detail`}
                                                 className="title-heading text-base sm:text-sm"
                                             >
                                                 <h1>{notify.title}</h1>
@@ -295,32 +295,29 @@ function Notify() {
                                             </div>
 
                                             {/* Facalty */}
-                                            {
-                                                user.role === 1 &&
-                                                (
-                                                    <div className="facalty border-b-2 border-stroke">
-                                                        <label htmlFor="txtFacalty" className="block text-heading text-lg font-semibold">Facalty:</label>
-                                                        <div className="flex items-center">
-                                                            <i className="fas fa-braille"></i>
-                                                            <select
-                                                                id="faculty"
-                                                                className="appearance-none bg-transparent"
-                                                                name="faculty"
-                                                                onChange={handleChangeInput}
-                                                                value={data.faculty}
-                                                                required
-                                                            >
-                                                                <option defaultValue>---- Choose faculty: ----</option>
-                                                                {
-                                                                    user.listRolePost.map((item, index) => (
-                                                                        <option key={index} value={item._id}>{item.name}</option>
-                                                                    ))
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
+
+                                            <div className="facalty border-b-2 border-stroke">
+                                                <label htmlFor="txtFacalty" className="block text-heading text-lg font-semibold">Facalty:</label>
+                                                <div className="flex items-center">
+                                                    <i className="fas fa-braille"></i>
+                                                    <select
+                                                        id="faculty"
+                                                        className="appearance-none bg-transparent"
+                                                        name="faculty"
+                                                        onChange={handleChangeInput}
+                                                        value={data.faculty}
+                                                        required
+                                                    >
+                                                        <option defaultValue>---- Choose faculty: ----</option>
+                                                        {
+                                                            user.listRolePost.map((item, index) => (
+                                                                <option key={index} value={item._id}>{item.name}</option>
+                                                            ))
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
 
                                             {/* Attachment */}
                                             {

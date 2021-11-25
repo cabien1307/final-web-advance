@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { GLOBALTYPES } from "../../store/actions/globalTypes";
 import Loading from "./Loading";
 import Toast from "./Toast/index";
+import News from "./News/News";
 
 const Alert = () => {
     const { alert } = useSelector((state) => state);
@@ -65,6 +66,12 @@ const Alert = () => {
                     }
                 />
             )}
+
+            {
+                alert.news && (
+                    <News news={alert.news} />
+                )
+            }
         </div>
     );
 };

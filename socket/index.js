@@ -8,7 +8,11 @@ io.on("connection", (socket) => {
     console.log("Socket is connected !", socket.id);
 
     socket.on("new-notify", () => {
-        console.log(socket.id);
         socket.broadcast.emit("broadcast-notify");
+    });
+
+    // Disconnect
+    socket.on("disconnect", () => {
+        console.log(socket.id, "is disconnected !!!");
     });
 });

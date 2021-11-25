@@ -1,0 +1,12 @@
+.news {
+    animation: top_to_bot .5s;
+}
+
+@keyframes top_to_bot {
+    0% {
+        transform: translateY(-110%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

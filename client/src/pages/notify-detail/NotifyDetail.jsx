@@ -1,38 +1,57 @@
 import { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom"
+import { useParams, Redirect } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import axios from "axios"
+
+import { getDataAPI } from "../../utils/fetchData"
+import { isId } from "../../utils/validation"
 import './notify-detail.css'
 import { readNotify } from "../../store/actions/notifyAction"
-
 const PUBLIC_ATTACHMENT = 'http://localhost:5000/files/'
 
+
 function NotifyDetail() {
+
     const dispatch = useDispatch()
     const params = useParams();
-    const history = useHistory()
     const [notify, setNotify] = useState({})
 
     const { user } = useSelector(state => state.auth)
     const { token } = useSelector(state => state)
 
-    useEffect(() => {
-        axios.get(`/notification/${params.id}`)
-            .then(res => {
-                setNotify(res.data);
-            })
-            .catch(err => {
-                history.push('/*')
-            })
-    }, [params.id, history])
 
     useEffect(() => {
-        dispatch(readNotify({
-            _id: user._id,
-            params: params.id,
-            token
+        if (isId(params.id)) {
+            getDataAPI(`notification/${params.id}`)
+                .then(res => {
+                    if (res.data) {
+                        setNotify(res.data);
+                    } else {
+                        <Redirect to="*" />
+                    }
+                })
+                .catch(err => {
+                    <Redirect to="*" />
 
-        }))
+                })
+        } else {
+            <Redirect to="*" />
+        }
+
+    }, [params.id, dispatch])
+
+    useEffect(() => {
+        if (isId(params.id)) {
+            dispatch(readNotify({
+                _id: user._id,
+                params: params.id,
+                token
+
+            }))
+        } else {
+            <Redirect to="*" />
+        }
+
+
     }, [dispatch, params.id, token, user])
 
     return (

@@ -10,7 +10,6 @@ const NotifyReducer = (state = initialState, action) => {
     switch (action.type) {
         case NOTIFY_TYPES.GET_NOTIFY:
             return {
-                ...state,
                 notifications: action.payload,
             };
         case NOTIFY_TYPES.DELETE_NOTIFY:

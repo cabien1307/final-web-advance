@@ -52,6 +52,7 @@ class postController {
         return res.status(200).json(postTimeLine);
     }
 
+    // [GET] /faculty/:slug
     async getPostBySlug(req, res, next) {
         const { slug } = req.params;
         const faculty = await Faculty.findOne({ slug: slug });

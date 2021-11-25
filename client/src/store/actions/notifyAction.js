@@ -1,4 +1,5 @@
 import { GLOBALTYPES } from "../actions/globalTypes";
+import { io } from "socket.io-client"
 import {
     getDataAPI,
     postDataAPI,
@@ -12,6 +13,9 @@ export const NOTIFY_TYPES = {
     GET_UNREAD: "GET_UNREAD",
     READ_NOTIFY: "READ_NOTIFY"
 };
+
+
+const socket = io("ws://localhost:8080")
 
 export const getNotifyUnread = ({ _id, token }) => async (dispatch) => {
     try {
@@ -74,8 +78,6 @@ export const createNotify =
                     newBody.attachment = data.attachment;
                 }
 
-                console.log(newBody);
-
                 await postDataAPI(`notification/${_id}/create`, newBody, token);
 
                 const res = await getDataAPI("notification", token);
@@ -90,6 +92,9 @@ export const createNotify =
                     type: GLOBALTYPES.ALERT,
                     payload: { success: "Add notify Successfull !" },
                 });
+
+                socket.emit('new-notify')
+
             } catch (err) {
                 dispatch({
                     type: GLOBALTYPES.ALERT,
