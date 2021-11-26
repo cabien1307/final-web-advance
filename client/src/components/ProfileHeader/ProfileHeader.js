@@ -132,7 +132,7 @@ const ProfileHeader = ({ user }) => {
                 {/* <!-- Profile picture --> */}
                 <div className="profilePic bg-white absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 w-44 h-44 rounded-full ">
                     <img
-                        className="w-44 h-44 rounded-full object-cover border-4"
+                        className="w-44 h-44 rounded-full object-contain border-4"
                         src={
                             user.profilePic
                                 ? user.profilePic

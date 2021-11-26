@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { Link } from 'react-router-dom'
 import axios from 'axios'
+
 
 import { GLOBALTYPES } from "../../store/actions/globalTypes"
 import { createNotify, deleteNotify, updateNotify } from "../../store/actions/notifyAction"
+import PaginatedItems from "./Paginate/PaginatedItems"
 
 import './notify.css'
 
@@ -134,6 +135,7 @@ function Notify() {
     }
 
     return (
+
         <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 py-3">
 
             <div className="wrapper">
@@ -179,65 +181,15 @@ function Notify() {
                 </div>
 
                 {/* List notify */}
-                {
-                    (notifications && notifications.length > 0) &&
-                    (
-                        <div className="list-notify mt-5">
 
-                            {
-                                notifications.map((notify, index) => (
-                                    <div className="notify-item my-3 px-3 py-2 border-l-2 border-stroke space-y-6" key={index}>
-                                        {/* Heading notify */}
-                                        <div className="heading flex">
-                                            <Link
-                                                to={`/notify/${notify._id}/detail`}
-                                                className="title-heading text-base sm:text-sm"
-                                            >
-                                                <h1>{notify.title}</h1>
-                                            </Link>
-                                            <div className="space-x-3 flex items-center ml-4">
-                                                {
-                                                    (user.role !== 2 && notify.userID === user._id) &&
-                                                    (
-                                                        <>
-                                                            <i
-                                                                className="far fa-edit cursor-pointer text-blue-500"
-                                                                title="Edit"
-                                                                onClick={() => handleEdit(notify)}
-                                                            >
-                                                            </i>
-                                                            <i
-                                                                className="far fa-trash-alt cursor-pointer text-red-500"
-                                                                title="Delete"
-                                                                onClick={() => handleDelete(notify)}
-                                                            >
-                                                            </i>
-                                                        </>
-                                                    )
-
-                                                }
-
-                                                {(!notify.read.includes(user._id) && user.role === 2) &&
-                                                    (
-                                                        <i className="far fa-bookmark cursor-pointer text-yellow-500" title="Unread"></i>
-                                                    )
-                                                }
+                <div className="mt-2">
 
 
-                                            </div>
-                                        </div>
-                                        {/* Footer */}
-                                        <div className="footer-notify flex justify-end italic">
-                                            <span className="text-paragraph text-sm sm:text-xs">{notify.faculty.name} | Date created: {new Date(
-                                                notify.createdAt
-                                            ).toLocaleDateString()}</span>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    )
-                }
+                    <PaginatedItems itemsPerPage={10} items={notifications} edit={handleEdit} deleted={handleDelete} />
+
+                </div>
+
+
 
             </div>
 
@@ -355,7 +307,9 @@ function Notify() {
             }
 
         </div>
+
     )
 }
+
 
 export default Notify

@@ -82,11 +82,6 @@ textarea::-webkit-input-placeholder {
     color: var(--tertiary);
 }
 
-.list-notify {
-    height: calc(80vh - 50px);
-    overflow-y: scroll;
-}
-
 
 ::-webkit-scrollbar {
     width: 5px;
@@ -115,3 +110,4 @@ textarea::-webkit-input-placeholder {
         padding: 20px;
     }
 }
+

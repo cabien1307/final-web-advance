@@ -63,7 +63,7 @@ const Status = () => {
                 <div className="content flex justify-between px-3">
                     <img
                         src={auth.user.profilePic ? auth.user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'}
-                        className="w-12 h-12 rounded-full"
+                        className="w-12 h-12 rounded-full border-2"
                         alt=""
                     />
                     <input

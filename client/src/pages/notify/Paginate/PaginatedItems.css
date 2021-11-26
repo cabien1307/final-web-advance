@@ -1,0 +1,46 @@
+.list-notify {
+    height: calc(70vh - 50px);
+    overflow-y: scroll;
+}
+
+.paginate {
+    text-decoration: none;
+}
+
+.paginate li {
+    padding: 2px;
+    border-radius: 5px;
+    border: 1px solid var(--stroke);
+    cursor: pointer;
+    color: var(--heading);
+}
+.paginate li a {
+    padding: 6px 12px;
+}
+
+.paginate .selected {
+    background: var(--btn-bg);
+    color: var(--btn-text);
+}
+
+.previous a,
+.next a {
+    text-decoration: none !important;
+    color: var(--heading);
+}
+
+.paginate li:hover,
+.previous:hover,
+.next:hover {
+    box-shadow: 1px 3px var(--heading);
+}
+
+.paginate li.disabled a {
+    color: #acacac;
+    cursor: text;
+}
+
+.paginate li.disabled {
+    cursor: text;
+    box-shadow: none;
+}

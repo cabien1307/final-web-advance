@@ -168,7 +168,7 @@ function Login() {
     }
 
     return (
-        <div className="login-page col-span-12 items-center">
+        <div className="login-page col-span-12 flex items-center">
             <div className="brand my-auto px-10  border-r-2">
                 <img src={process.env.PUBLIC_URL + '/images/login.svg'} alt="" className="w-3/4 mx-auto" />
             </div>

@@ -2,7 +2,6 @@ import RightBar from "../../components/RightBar/RightBar"
 import "./FacultyDetail"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 import { getDataAPI } from "../../utils/fetchData"
 import LoadIcon from "../../images/loading.gif";
@@ -13,7 +12,6 @@ import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 function FacultyDetail() {
 
     const params = useParams()
-    const { homePosts } = useSelector((state) => state);
 
     const [notifies, setNotifies] = useState([])
     const [faculty, setFaculty] = useState({})
@@ -42,17 +40,16 @@ function FacultyDetail() {
         const getPosts = () => {
             setLoadingPosts(true)
             getDataAPI(`post/faculty/${params.id}`)
-            .then(res => {
-                setPost(res.data)
-            })
-            .catch(err => {
-                console.log(err);
-            })
+                .then(res => {
+                    setPost(res.data)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
             setLoadingPosts(false)
         }
         getPosts()
     }, [params.id])
-    console.log(homePosts);
 
 
     return (
