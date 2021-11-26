@@ -17,9 +17,8 @@ function Home() {
         {
             hasMore: true,
             items:
-                (homePosts.result === 0 || homePosts.posts.length === 0)
-                    ? homePosts.posts.slice(0, 1)
-                    : []
+                (homePosts.result !== 0 || homePosts.posts.length !== 0)
+                && homePosts.posts.slice(0, 1)
         }
     )
 
@@ -41,14 +40,14 @@ function Home() {
                     ...homePosts.posts.slice(posts.items.length, posts.items.length + 1)
                 ]
             })
-        }, 500);
+        }, 1500);
     };
 
     return (
         <>
             <div className="col-span-6 2xl:col-span-6 xl:col-span-6 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 border-r-2">
                 <Status />
-                <div className="pppp">
+                <div id="load-infinite">
 
                     {homePosts.loading ? (
                         <img
@@ -56,7 +55,7 @@ function Home() {
                             alt="loading"
                             className="block mx-auto"
                         />
-                    ) : (homePosts.result === 0 || homePosts.posts.length === 0) ? (
+                    ) : (posts.items.length === 0) ? (
                         <div
                             className="list-posts mx-7 my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
                         >
@@ -69,26 +68,32 @@ function Home() {
                                 Publish new post to see something !
                             </h1>
                         </div>
-                    ) : (
-                        <InfiniteScroll
-                            dataLength={posts.items.length}
-                            next={fetchMoreData}
-                            hasMore={posts.hasMore}
-                            loader={<h4>Loading...</h4>}
-                            endMessage={
-                                <p style={{ textAlign: "center" }}>
-                                    <b>Yay! You have seen it all</b>
-                                </p>
-                            }
-                        >
-                            {
-                                posts.items.map((post, index) =>
-                                    <Post key={index} post={post} />
-                                )
-                            }
-                        </InfiniteScroll>
-
-                    )}
+                    ) :
+                        posts.items && (
+                            <InfiniteScroll
+                                dataLength={posts.items.length}
+                                next={fetchMoreData}
+                                hasMore={posts.hasMore}
+                                loader={
+                                    <h4 className="text-center font-semibold text-xl">
+                                        Loading...
+                                    </h4>
+                                }
+                                scrollableTarget="load-infinite"
+                                endMessage={
+                                    <p className="text-center font-semibold text-xl">
+                                        <b>Yay! You have seen it all</b>
+                                    </p>
+                                }
+                            >
+                                {
+                                    posts.items.map((post, index) =>
+                                        <Post key={index} post={post} />
+                                    )
+                                }
+                            </InfiniteScroll>
+                        )
+                    }
                 </div>
             </div>
             <RightBar notifications={notifications} />

@@ -1,4 +1,4 @@
-.pppp{
-    height: 500px;
+#load-infinite{
+    height: 75vh;
     overflow-y: scroll;
 }
