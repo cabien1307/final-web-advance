@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { updateCover, updateProfile } from "../../store/actions/authAction";
 import { GLOBALTYPES } from "../../store/actions/globalTypes";
 
 const ProfileHeader = ({ user }) => {
@@ -41,6 +42,20 @@ const ProfileHeader = ({ user }) => {
         setUrlProfilePic(file);
     };
 
+    const updateCoverPic = (e) => {
+        e.preventDefault();
+
+        dispatch(updateCover({ user, images: [urlCoverPic] }));
+        closePreview();
+    };
+
+    const updateProfilePic = (e) => {
+        e.preventDefault();
+
+        dispatch(updateProfile({ user, images: [urlProfilePic] }));
+        closePreview();
+    };
+
     const closePreview = () => {
         setUrlCoverPic(null);
         setUrlProfilePic(null);
@@ -77,7 +92,7 @@ const ProfileHeader = ({ user }) => {
                 {/* <!-- Update cover picture --> */}
                 {auth.user._id === user._id && (
                     <form
-                        // @submit.prevent="updateCoverPic"
+                        onSubmit={updateCoverPic}
                         v-if="$route.params.id === getUser._id"
                         className="update-cover absolute right-2 bottom-2 flex py-2 px-4 bg-white rounded-lg items-center text-base font-semibold cursor-pointer"
                     >
@@ -146,7 +161,7 @@ const ProfileHeader = ({ user }) => {
                     {auth.user._id === user._id && (
                         <form
                             v-if="$route.params.id === getUser._id"
-                            // @submit.prevent="updateProfilePic"
+                            onSubmit={updateProfilePic}
                             className="update-profile absolute right-4 bottom-2 text-xl w-9 h-9 bg-gray-300 hover:bg-gray-100 rounded-full flex justify-center items-center cursor-pointer"
                         >
                             {!urlProfilePic ? (

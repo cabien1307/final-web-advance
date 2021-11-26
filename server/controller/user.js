@@ -80,7 +80,6 @@ class UserController {
             .populate("faculty");
         const {
             password,
-            posts,
             authFacebookID,
             authTwitterID,
             authGoogleID,
@@ -180,7 +179,6 @@ class UserController {
             .populate("faculty");
         const {
             password,
-            posts,
             authFacebookID,
             authTwitterID,
             authGoogleID,
@@ -213,7 +211,7 @@ class UserController {
         const result = await User.findByIdAndDelete(userID);
         return res.status(200).json({
             action: "success",
-            result
+            result,
         });
     }
 

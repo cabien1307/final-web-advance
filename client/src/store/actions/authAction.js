@@ -1,5 +1,11 @@
 import axios from "axios";
+import { patchDataAPI } from "../../utils/fetchData";
+import { imageUpload } from "../../utils/imageUpload";
 import { GLOBALTYPES } from "./globalTypes";
+
+export const USER_TYPES = {
+    UPDATE_USER: "UPDATE_USER",
+};
 
 export const LoginSuccessfull = (user) => ({
     type: GLOBALTYPES.LOGIN_SUCCESS,
@@ -29,3 +35,41 @@ export const dispatchGetUser = (res) => {
         },
     };
 };
+
+export const updateCover =
+    ({ user, images }) =>
+    async (dispatch) => {
+        let media = [];
+        try {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+
+            if (images.length > 0) media = await imageUpload(images);
+
+            const res = await patchDataAPI(`user/${user._id}/update`, {
+                coverPic: media[0].url,
+            });
+
+            dispatch({ type: USER_TYPES.UPDATE_USER, payload: res.data.data });
+
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+        } catch (error) {}
+    };
+
+export const updateProfile =
+    ({ user, images }) =>
+    async (dispatch) => {
+        let media = [];
+        try {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+
+            if (images.length > 0) media = await imageUpload(images);
+
+            const res = await patchDataAPI(`user/${user._id}/update`, {
+                profilePic: media[0].url,
+            });
+
+            dispatch({ type: USER_TYPES.UPDATE_USER, payload: res.data.data });
+
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+        } catch (error) {}
+    };

@@ -1,3 +1,4 @@
+import { USER_TYPES } from "../actions/authAction";
 import { GLOBALTYPES } from "../actions/globalTypes";
 
 const initialState = {
@@ -23,6 +24,11 @@ const authReducer = (state = initialState, action) => {
             return {
                 user: null,
                 isLoggedIn: false,
+            };
+        case USER_TYPES.UPDATE_USER:
+            return {
+                ...state,
+                user: action.payload,
             };
         default:
             return state;

@@ -1,20 +1,28 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import Post from "../../components/Post/Post";
 import RightBar from "../../components/RightBar/RightBar";
 import LoadIcon from "../../images/loading.gif";
 import { getDataAPI } from "../../utils/fetchData";
 import NoPost from "../../images/post.svg";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
+import { useParams } from "react-router";
+import EditForm from "../../components/EditForm";
+import Status from "../../components/Status/Status";
+import { useSelector } from "react-redux";
 
 function Profile(){
     const { auth } = useSelector((state) => state);
+    const params = useParams()
+
     const [notifies, setNotifies] = useState([])
     const [loadingPosts, setLoadingPosts] = useState(false)
     const [posts, setPost] = useState([])
+    const [user, setUser] = useState([])
 
     useEffect(() => {
-        getDataAPI(`notification/${auth.user.faculty.slug}/faculty`)
+        getDataAPI(`user/${params.id}/getByID`)
+        .then(res => {
+            getDataAPI(`notification/${res.data.faculty.slug}/faculty`)
             .then(res => {
                 setNotifies(res.data)
             })
@@ -22,9 +30,16 @@ function Profile(){
                 console.log(err);
             })
 
+            setUser(res.data)
+            
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
         const getPosts = () => {
             setLoadingPosts(true)
-            getDataAPI(`post/${auth.user._id}/timeline`)
+            getDataAPI(`post/${params.id}/timeline`)
             .then(res => {
                 setPost(res.data)
             })
@@ -34,16 +49,27 @@ function Profile(){
             setLoadingPosts(false)
         }
         getPosts()
-    }, [auth.user.faculty, auth.user._id])
+    }, [params.id])
 
     return (
         <>
             <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 grid grid-cols-12 space-y-3">
                 <div className="col-span-12">
-                    <ProfileHeader user={auth.user} />
+                    <ProfileHeader user={user} />
+                    {/* <!-- Introduction --> */}
+                    <div
+                        class="introduction col-span-4 xl:col-span-4 lg:col-span-5 md:col-span-12 sm:col-span-12 xs:col-span-12 rounded-lg px-1"
+                    >
+                        <EditForm user={user} />
+                    </div>
                 </div>
 
+
                 <div className="col-start-1 col-span-8 border-l-2">
+                    {
+                        auth.user._id === params.id &&
+                        <Status />
+                    }
                     {loadingPosts ? (
                         <img
                             src={LoadIcon}
