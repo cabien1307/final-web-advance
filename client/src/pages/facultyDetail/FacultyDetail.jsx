@@ -116,7 +116,7 @@ function FacultyDetail() {
                             </h1>
                         </div>
                     ) : (
-                        postsView.items &&
+                        homePosts.post.length !== 0 && postsView.items &&
                         <InfiniteScroll
                             dataLength={postsView.items.length}
                             next={fetchMoreData}
