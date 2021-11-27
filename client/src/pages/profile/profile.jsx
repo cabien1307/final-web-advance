@@ -9,15 +9,18 @@ import { useParams } from "react-router";
 import EditForm from "../../components/EditForm";
 import Status from "../../components/Status/Status";
 import { useSelector } from "react-redux";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function Profile(){
-    const { auth } = useSelector((state) => state);
+    const { auth, homePosts } = useSelector((state) => state);
     const params = useParams()
 
     const [notifies, setNotifies] = useState([])
     const [loadingPosts, setLoadingPosts] = useState(false)
     const [posts, setPost] = useState([])
     const [user, setUser] = useState([])
+
+    const [postsView, setPostsView] = useState({})
 
     useEffect(() => {
         getDataAPI(`user/${params.id}/getByID`)
@@ -30,26 +33,63 @@ function Profile(){
                 console.log(err);
             })
 
-            setUser(res.data)
+            if(auth.user._id === params.id){
+                setUser(auth.user)
+            } else {
+                setUser(res.data)
+            }
             
         })
         .catch(err => {
             console.log(err);
         })
 
-        const getPosts = () => {
+        const getPosts = async () => {
             setLoadingPosts(true)
-            getDataAPI(`post/${params.id}/timeline`)
-            .then(res => {
-                setPost(res.data)
+            const posts = homePosts.posts.filter((post) => post.userID._id === params.id)
+            setPost(posts)
+            setPostsView({
+                hasMore: true,
+                items:
+                    (posts.length !== 0) && posts.slice(0, 5)
             })
-            .catch(err => {
-                console.log(err);
-            })
+            // await getDataAPI(`post/${params.id}/timeline`)
+            // .then(res => {
+            //     setPost(res.data)
+            //     setPostsView({
+            //         hasMore: true,
+            //         items:
+            //             (res.data.length !== 0) && res.data.slice(0, 1)
+            //     })
+            // })
+            // .catch(err => {
+            //     console.log(err);
+            // })
             setLoadingPosts(false)
         }
         getPosts()
-    }, [params.id])
+
+    }, [params.id, auth.user, homePosts])
+
+    const fetchMoreData = async () => {
+        if (postsView.items.length >= posts.length) {
+            setPostsView({
+                hasMore: false,
+                items: [...postsView.items]
+            })
+            return;
+        }
+
+        setTimeout(() => {
+            setPostsView({
+                hasMore: true,
+                items: [
+                    ...postsView.items,
+                    ...posts.slice(postsView.items.length, postsView.items.length + 5)
+                ]
+            })
+        }, 1000);
+    };
 
     return (
         <>
@@ -90,7 +130,29 @@ function Profile(){
                             </h1>
                         </div>
                     ) : (
-                        posts.map((post, index) => <Post key={index} post={post} />)
+                        postsView.items &&
+                        <InfiniteScroll
+                                dataLength={postsView.items.length}
+                                next={fetchMoreData}
+                                hasMore={postsView.hasMore}
+                                loader={
+                                    <h4 className="text-center font-semibold text-xl">
+                                        Loading...
+                                    </h4>
+                                }
+                                scrollableTarget="load-infinite"
+                                endMessage={
+                                    <p className="text-center font-semibold text-xl">
+                                        <b>Yay! You have seen it all</b>
+                                    </p>
+                                }
+                            >
+                                {
+                                    postsView.items.map((post, index) =>
+                                        <Post key={index} post={post} />
+                                    )
+                                }
+                            </InfiniteScroll>
                     )}
                 </div>
 

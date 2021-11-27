@@ -8,15 +8,20 @@ import LoadIcon from "../../images/loading.gif";
 import Post from "../../components/Post/Post";
 import NoPost from "../../images/post.svg";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useSelector } from "react-redux";
 
 function FacultyDetail() {
 
+    const { homePosts } = useSelector((state) => state);
     const params = useParams()
 
     const [notifies, setNotifies] = useState([])
     const [faculty, setFaculty] = useState({})
     const [loadingPosts, setLoadingPosts] = useState(false)
     const [posts, setPost] = useState([])
+
+    const [postsView, setPostsView] = useState({})
 
     useEffect(() => {
         getDataAPI(`notification/${params.id}/faculty`)
@@ -39,9 +44,21 @@ function FacultyDetail() {
 
         const getPosts = () => {
             setLoadingPosts(true)
+            const posts = homePosts.posts.filter((post) => post.userID._id === params.id)
+            setPost(posts)
+            setPostsView({
+                hasMore: true,
+                items:
+                    (posts.length !== 0) && posts.slice(0, 1)
+            })
             getDataAPI(`post/faculty/${params.id}`)
                 .then(res => {
                     setPost(res.data)
+                    setPostsView({
+                        hasMore: true,
+                        items:
+                            (res.data.length !== 0) && res.data.slice(0, 5)
+                    })
                 })
                 .catch(err => {
                     console.log(err);
@@ -49,8 +66,27 @@ function FacultyDetail() {
             setLoadingPosts(false)
         }
         getPosts()
-    }, [params.id])
+    }, [params.id, homePosts])
 
+    const fetchMoreData = async () => {
+        if (postsView.items.length >= posts.length) {
+            setPostsView({
+                hasMore: false,
+                items: [...postsView.items]
+            })
+            return;
+        }
+
+        setTimeout(() => {
+            setPostsView({
+                hasMore: true,
+                items: [
+                    ...postsView.items,
+                    ...posts.slice(postsView.items.length, postsView.items.length + 5)
+                ]
+            })
+        }, 1000);
+    };
 
     return (
         <>
@@ -80,7 +116,29 @@ function FacultyDetail() {
                             </h1>
                         </div>
                     ) : (
-                        posts.map((post, index) => <Post key={index} post={post} />)
+                        postsView.items &&
+                        <InfiniteScroll
+                            dataLength={postsView.items.length}
+                            next={fetchMoreData}
+                            hasMore={postsView.hasMore}
+                            loader={
+                                <h4 className="text-center font-semibold text-xl">
+                                    Loading...
+                                </h4>
+                            }
+                            scrollableTarget="load-infinite"
+                            endMessage={
+                                <p className="text-center font-semibold text-xl">
+                                    <b>Yay! You have seen it all</b>
+                                </p>
+                            }
+                        >
+                            {
+                                postsView.items.map((post, index) =>
+                                    <Post key={index} post={post} />
+                                )
+                            }
+                        </InfiniteScroll>
                     )}
                 </div>
 

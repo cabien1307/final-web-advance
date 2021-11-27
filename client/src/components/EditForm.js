@@ -1,10 +1,13 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../store/actions/authAction";
 import { getDataAPI } from "../utils/fetchData";
 
 const EditForm = ({ user }) => {
     const { auth } = useSelector((state) => state);
+    const dispatch = useDispatch();
+
     const [isEdit, setIsEdit] = useState(false);
     const [faculties, setFaculties] = useState(null);
 
@@ -26,6 +29,9 @@ const EditForm = ({ user }) => {
 
     const updateInfo = (e) => {
         e.preventDefault();
+
+        dispatch(updateUser({ user: auth.user, data: userData }));
+        setIsEdit(false);
     };
 
     useEffect(() => {
@@ -36,7 +42,7 @@ const EditForm = ({ user }) => {
                 .then((res) => setFaculties(res.data))
                 .catch((err) => console.log(err));
         }
-    }, [user]);
+    }, [auth.user, user]);
     return (
         <form
             onSubmit={updateInfo}
@@ -126,11 +132,7 @@ const EditForm = ({ user }) => {
                         {user.role === 1 && (
                             <select
                                 className="w-full focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center"
-                                v-if=""
-                                required
                                 value={faculty}
-                                name="faculty"
-                                onChange={handleChangeInput}
                             >
                                 <option value="" disabled hidden selected>
                                     ---List role---
@@ -210,7 +212,7 @@ const EditForm = ({ user }) => {
                             }`}
                             // :className="[isEdit ? 'hidden' : '']"
                         >
-                            {user.classID}
+                            {user.class}
                         </h1>
                         {isEdit && (
                             <input
@@ -237,12 +239,12 @@ const EditForm = ({ user }) => {
                             Update
                         </button>
                     ) : (
-                        <button
+                        <div
                             onClick={() => setIsEdit(!isEdit)}
-                            className="text-lg font-semibold w-full mt-5 px-5 py-2 bg-gray-200 rounded-xl hover:bg-gray-300"
+                            className="text-lg text-center cursor-pointer font-semibold w-full mt-5 px-5 py-2 bg-gray-200 rounded-xl hover:bg-gray-300"
                         >
                             Edit detail
-                        </button>
+                        </div>
                     )}
                 </div>
             )}

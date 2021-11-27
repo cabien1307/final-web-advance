@@ -10,22 +10,23 @@ import Alert from "./components/Alert/Alert";
 import { getPosts } from "./store/actions/postAction";
 import { getFaculties } from "./store/actions/facultyAction";
 import { getUsers } from "./store/actions/usersAction";
-import { getNotifications, getNotifyUnread } from "./store/actions/notifyAction";
-import { getDataAPI } from "./utils/fetchData"
-import { GLOBALTYPES } from "./store/actions/globalTypes"
+import {
+    getNotifications,
+    getNotifyUnread,
+} from "./store/actions/notifyAction";
+import { getDataAPI } from "./utils/fetchData";
+import { GLOBALTYPES } from "./store/actions/globalTypes";
 
 function App() {
     const dispatch = useDispatch();
     const { isLoggedIn, user } = useSelector((state) => state.auth);
     const { token } = useSelector((state) => state);
-    const { socket } = useSelector(state => state)
-
+    const { socket } = useSelector((state) => state);
 
     useEffect(() => {
-
-        socket.on('broadcast-notify', () => {
-            getDataAPI('notification/new')
-                .then(res => {
+        socket.on("broadcast-notify", () => {
+            getDataAPI("notification/new")
+                .then((res) => {
                     dispatch({
                         type: GLOBALTYPES.ALERT,
                         payload: { news: res.data },
@@ -34,12 +35,11 @@ function App() {
                 .catch((err) => {
                     dispatch({
                         type: GLOBALTYPES.ALERT,
-                        error: err
-                    })
-                })
-
-        })
-    }, [dispatch, socket])
+                        error: err,
+                    });
+                });
+        });
+    }, [dispatch, socket]);
 
     // Get Access Token
     useEffect(() => {
@@ -69,7 +69,7 @@ function App() {
     // Get posts
     useEffect(() => {
         if (token) dispatch(getPosts(token));
-    }, [dispatch, token]);
+    }, [dispatch, token, user]);
 
     // Get faculty
     useEffect(() => {
@@ -88,10 +88,13 @@ function App() {
 
     // Get notify unread
     useEffect(() => {
-        if (token && user) dispatch(getNotifyUnread({
-            _id: user._id,
-            token
-        }));
+        if (token && user)
+            dispatch(
+                getNotifyUnread({
+                    _id: user._id,
+                    token,
+                })
+            );
     }, [dispatch, token, user]);
 
     return (

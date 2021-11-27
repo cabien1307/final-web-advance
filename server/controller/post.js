@@ -3,10 +3,27 @@ const User = require("../model/User");
 const Faculty = require("../model/Faculty");
 const Comments = require("../model/Comment");
 
+// class APIfeatures {
+//     constructor(query, queryString) {
+//         this.query = query;
+//         this.queryString = queryString;
+//     }
+
+//     paginating() {
+//         const page = this.queryString.page * 1 || 1;
+//         const limit = this.queryString.limit * 1 || 3;
+//         const skip = (page - 1) * limit;
+//         this.query = this.query.skip(skip).limit(limit);
+//         return this;
+//     }
+// }
+
 class postController {
     // [GET] /post/
     async getAllPost(req, res, next) {
-        const posts = await Post.find()
+        // const features = new APIfeatures(Post.find(), req.query).paginating();
+
+        const posts = await Post.find() //features.query
             .populate("userID likes")
             .populate("faculty")
             .populate({

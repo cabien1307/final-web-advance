@@ -52,7 +52,12 @@ export const updateCover =
             dispatch({ type: USER_TYPES.UPDATE_USER, payload: res.data.data });
 
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
-        } catch (error) {}
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
     };
 
 export const updateProfile =
@@ -71,5 +76,39 @@ export const updateProfile =
             dispatch({ type: USER_TYPES.UPDATE_USER, payload: res.data.data });
 
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
-        } catch (error) {}
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
+export const updateUser =
+    ({ user, data }) =>
+    async (dispatch) => {
+        try {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+
+            const dataUser = {
+                username: data.username,
+                birthday: data.birthday,
+                faculty: data.faculty._id ? data.faculty._id : data.faculty,
+                major: data.major,
+                class: data.class,
+            };
+
+            if (user.role === 1) delete data.faculty;
+
+            const res = await patchDataAPI(`user/${user._id}/update`, dataUser);
+
+            dispatch({ type: USER_TYPES.UPDATE_USER, payload: res.data.data });
+
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: error.response.data.msg },
+            });
+        }
     };
