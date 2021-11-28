@@ -40,6 +40,11 @@ const postReducer = (state = initialState, action) => {
                 ...state,
                 posts: DeleteData(state.posts, action.payload._id),
             };
+        case POST_TYPES.ADDED_POSTS:
+            return {
+                ...state,
+                posts: [...action.payload, ...state.posts],
+            };
         default:
             return state;
     }

@@ -7,7 +7,6 @@ import axios from "axios";
 
 import { fetchUser, LoginSuccessfull } from "./store/actions/authAction";
 import Alert from "./components/Alert/Alert";
-import { getPosts } from "./store/actions/postAction";
 import { getFaculties } from "./store/actions/facultyAction";
 import { getUsers } from "./store/actions/usersAction";
 import {
@@ -65,11 +64,6 @@ function App() {
             getUser();
         }
     }, [token, dispatch]);
-
-    // Get posts
-    useEffect(() => {
-        if (token) dispatch(getPosts(token));
-    }, [dispatch, token, user]);
 
     // Get faculty
     useEffect(() => {

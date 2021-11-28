@@ -9,19 +9,22 @@ import Post from "../../components/Post/Post";
 import NoPost from "../../images/post.svg";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { POST_TYPES } from "../../store/actions/postAction";
 
 function FacultyDetail() {
 
     const { homePosts } = useSelector((state) => state);
+    const dispatch = useDispatch()
     const params = useParams()
 
     const [notifies, setNotifies] = useState([])
     const [faculty, setFaculty] = useState({})
     const [loadingPosts, setLoadingPosts] = useState(false)
-    const [posts, setPost] = useState([])
 
-    const [postsView, setPostsView] = useState({})
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(2);
+    const [oldResult, setOldResult] = useState(0)
 
     useEffect(() => {
         getDataAPI(`notification/${params.id}/faculty`)
@@ -42,50 +45,38 @@ function FacultyDetail() {
                 console.log(err);
             })
 
-        const getPosts = () => {
+        const getPosts = async () => {
             setLoadingPosts(true)
-            const posts = homePosts.posts.filter((post) => post.userID._id === params.id)
-            setPost(posts)
-            setPostsView({
-                hasMore: true,
-                items:
-                    (posts.length !== 0) && posts.slice(0, 1)
-            })
-            getDataAPI(`post/faculty/${params.id}`)
-                .then(res => {
-                    setPost(res.data)
-                    setPostsView({
-                        hasMore: true,
-                        items:
-                            (res.data.length !== 0) && res.data.slice(0, 5)
-                    })
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            const res = await getDataAPI(`post/faculty/${params.id}?limit=3`)
+
+            dispatch({ type: POST_TYPES.GET_POSTS, payload: res.data });
+                
             setLoadingPosts(false)
         }
         getPosts()
-    }, [params.id, homePosts])
+    }, [params.id, dispatch])
+
+    const fetchPosts = async () => {
+        const res = await getDataAPI(`post/faculty/${params.id}?limit=${page*3}`);
+        return res.data;
+    };
 
     const fetchMoreData = async () => {
-        if (postsView.items.length >= posts.length) {
-            setPostsView({
-                hasMore: false,
-                items: [...postsView.items]
-            })
-            return;
+
+        const posts = await fetchPosts();
+        dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
+
+        if(homePosts.result < 3 * (page - 1)) {
+            setHasMore(false)
         }
 
-        setTimeout(() => {
-            setPostsView({
-                hasMore: true,
-                items: [
-                    ...postsView.items,
-                    ...posts.slice(postsView.items.length, postsView.items.length + 5)
-                ]
-            })
-        }, 1000);
+        if(oldResult === posts.result) {
+            setHasMore(false)
+        }
+
+        setPage(page + 1)
+        setOldResult(posts.result)
+
     };
 
     return (
@@ -102,7 +93,7 @@ function FacultyDetail() {
                             alt="loading"
                             className="block mx-auto"
                         />
-                    ) : posts.length === 0 ? (
+                    ) : homePosts.posts.length === 0 ? (
                         <div
                             className="list-posts mx-7 my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
                         >
@@ -116,11 +107,10 @@ function FacultyDetail() {
                             </h1>
                         </div>
                     ) : (
-                        homePosts.post.length !== 0 && postsView.items &&
                         <InfiniteScroll
-                            dataLength={postsView.items.length}
+                            dataLength={homePosts.posts.length}
                             next={fetchMoreData}
-                            hasMore={postsView.hasMore}
+                            hasMore={hasMore}
                             loader={
                                 <h4 className="text-center font-semibold text-xl">
                                     Loading...
@@ -134,7 +124,7 @@ function FacultyDetail() {
                             }
                         >
                             {
-                                postsView.items.map((post, index) =>
+                                homePosts.posts.map((post, index) =>
                                     <Post key={index} post={post} />
                                 )
                             }

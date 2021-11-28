@@ -99,7 +99,7 @@ const ProfileHeader = ({ user }) => {
                         {!urlCoverPic ? (
                             <label
                                 className="flex items-center cursor-pointer"
-                                for="isCoverId"
+                                htmlFor="isCoverId"
                                 v-if="!urlCoverPic"
                             >
                                 <i className="fas fa-camera mr-2"></i>
@@ -165,7 +165,10 @@ const ProfileHeader = ({ user }) => {
                             className="update-profile absolute right-4 bottom-2 text-xl w-9 h-9 bg-gray-300 hover:bg-gray-100 rounded-full flex justify-center items-center cursor-pointer"
                         >
                             {!urlProfilePic ? (
-                                <label for="isProfileId" v-if="!urlProfilePic">
+                                <label
+                                    htmlFor="isProfileId"
+                                    v-if="!urlProfilePic"
+                                >
                                     <i className="fas fa-camera cursor-pointer"></i>
                                 </label>
                             ) : (

@@ -3,27 +3,27 @@ const User = require("../model/User");
 const Faculty = require("../model/Faculty");
 const Comments = require("../model/Comment");
 
-// class APIfeatures {
-//     constructor(query, queryString) {
-//         this.query = query;
-//         this.queryString = queryString;
-//     }
+class APIfeatures {
+    constructor(query, queryString) {
+        this.query = query;
+        this.queryString = queryString;
+    }
 
-//     paginating() {
-//         const page = this.queryString.page * 1 || 1;
-//         const limit = this.queryString.limit * 1 || 3;
-//         const skip = (page - 1) * limit;
-//         this.query = this.query.skip(skip).limit(limit);
-//         return this;
-//     }
-// }
+    paginating() {
+        const page = this.queryString.page * 1 || 1;
+        const limit = this.queryString.limit * 1 || 3;
+        const skip = (page - 1) * limit;
+        this.query = this.query.skip(skip).limit(limit);
+        return this;
+    }
+}
 
 class postController {
     // [GET] /post/
     async getAllPost(req, res, next) {
-        // const features = new APIfeatures(Post.find(), req.query).paginating();
+        const features = new APIfeatures(Post.find(), req.query).paginating();
 
-        const posts = await Post.find() //features.query
+        const posts = await features.query
             .populate("userID likes")
             .populate("faculty")
             .populate({
@@ -55,7 +55,11 @@ class postController {
     // [GET] /post/:userID/timeline
     async getPostTimeline(req, res, next) {
         const { userID } = req.value.params;
-        const postTimeLine = await Post.find({ userID })
+        const features = new APIfeatures(
+            Post.find({ userID }),
+            req.query
+        ).paginating();
+        const posts = await features.query
             .populate("userID likes")
             .populate({
                 path: "comments",
@@ -67,7 +71,9 @@ class postController {
             .sort({ createdAt: -1 }); //other case User.findOne({ userID: userID })
 
         // const posts = await Post.find({ userID: user._id })
-        return res.status(200).json(postTimeLine);
+        return res
+            .status(200)
+            .json({ msg: "Success!", result: posts.length, posts });
     }
 
     // [GET] /faculty/:slug
@@ -75,7 +81,12 @@ class postController {
         const { slug } = req.params;
         const faculty = await Faculty.findOne({ slug: slug });
 
-        const posts = await Post.find({ faculty: faculty._id })
+        const features = new APIfeatures(
+            Post.find({ faculty: faculty._id }),
+            req.query
+        ).paginating();
+
+        const posts = await features.query
             .populate("userID likes")
             .populate({
                 path: "comments",
@@ -87,7 +98,9 @@ class postController {
             .populate("faculty")
             .sort({ createdAt: -1 });
 
-        return res.status(200).json(posts);
+        return res
+            .status(200)
+            .json({ msg: "Success!", result: posts.length, posts });
     }
 
     // [POST] /post/

@@ -134,13 +134,12 @@ const EditForm = ({ user }) => {
                                 className="w-full focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center"
                                 value={faculty}
                             >
-                                <option value="" disabled hidden selected>
+                                <option value="" disabled hidden>
                                     ---List role---
                                 </option>
 
                                 {user.listRolePost.map((faculty) => (
                                     <option
-                                        v-for="faculty in getUser.listRolePost"
                                         key={faculty._id}
                                         value={faculty._id}
                                     >
@@ -158,13 +157,12 @@ const EditForm = ({ user }) => {
                                 onChange={handleChangeInput}
                                 name="faculty"
                             >
-                                <option value="" disabled hidden selected>
+                                <option value="" disabled hidden>
                                     ---List faculty---
                                 </option>
 
                                 {faculties.map((faculty) => (
                                     <option
-                                        v-for="faculty in getAllFaculties"
                                         key={faculty._id}
                                         value={faculty._id}
                                     >

@@ -1,6 +1,6 @@
 import RightBar from "../../components/RightBar/RightBar";
 import Status from "../../components/Status/Status";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadIcon from "../../images/loading.gif";
 import Post from "../../components/Post/Post";
 import NoPost from "../../images/post.svg";
@@ -8,48 +8,44 @@ import './home.css'
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useState } from "react";
+import { getDataAPI } from "../../utils/fetchData";
+import { getPosts, POST_TYPES } from "../../store/actions/postAction";
 import { useEffect } from "react";
 
 function Home() {
-    const { homePosts } = useSelector((state) => state);
+    const { homePosts, token } = useSelector((state) => state);
+    const dispatch = useDispatch()
     const { notifications } = useSelector((state) => state.notify)
 
-    const [posts, setPosts] = useState({
-        hasMore: true,
-        items:
-            (homePosts.result !== 0 || homePosts.posts.length !== 0)
-            && homePosts.posts.slice(0, 5)
-    })
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(2);
+    const [oldResult, setOldResult] = useState(0)
 
+    // Get posts
     useEffect(() => {
-        setPosts({
-            hasMore: true,
-            items:
-                (homePosts.result !== 0 || homePosts.posts.length !== 0)
-                && homePosts.posts.slice(0, 5)
-        })
-        
-    },[homePosts.result, homePosts.posts])
+        if (token) dispatch(getPosts(token));
+    }, [dispatch, token]);
 
-    const fetchMoreData = () => {
+    const fetchPosts = async () => {
+        const res = await getDataAPI(`post?limit=${page*3}`);
+        return res.data;
+    };
 
-        if (posts.items.length >= homePosts.posts.length) {
-            setPosts({
-                hasMore: false,
-                items: [...posts.items]
-            })
-            return;
+    const fetchMoreData = async () => {
+
+        const posts = await fetchPosts();
+        dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
+
+        if(homePosts.result < 3 * (page - 1)) {
+            setHasMore(false)
         }
 
-        setTimeout(() => {
-            setPosts({
-                hasMore: true,
-                items: [
-                    ...posts.items,
-                    ...homePosts.posts.slice(posts.items.length, posts.items.length + 5)
-                ]
-            })
-        }, 1000);
+        if(oldResult === posts.result) {
+            setHasMore(false)
+        }
+
+        setPage(page + 1)
+        setOldResult(posts.result)
     };
 
     return (
@@ -78,11 +74,11 @@ function Home() {
                             </h1>
                         </div>
                     ) :
-                        homePosts.posts.length !== 0 && posts.items && (
+                        (
                             <InfiniteScroll
-                                dataLength={posts.items.length}
+                                dataLength={homePosts.posts.length}
                                 next={fetchMoreData}
-                                hasMore={posts.hasMore}
+                                hasMore={hasMore}
                                 loader={
                                     <h4 className="text-center font-semibold text-xl">
                                         Loading...
@@ -96,7 +92,7 @@ function Home() {
                                 }
                             >
                                 {
-                                    posts.items.map((post, index) =>
+                                    homePosts.posts.map((post, index) =>
                                         <Post key={index} post={post} />
                                     )
                                 }

@@ -8,19 +8,22 @@ import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import { useParams } from "react-router";
 import EditForm from "../../components/EditForm";
 import Status from "../../components/Status/Status";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { POST_TYPES } from "../../store/actions/postAction";
 
 function Profile(){
     const { auth, homePosts } = useSelector((state) => state);
+    const dispatch = useDispatch()
     const params = useParams()
 
     const [notifies, setNotifies] = useState([])
     const [loadingPosts, setLoadingPosts] = useState(false)
-    const [posts, setPost] = useState([])
     const [user, setUser] = useState([])
 
-    const [postsView, setPostsView] = useState({})
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(2);
+    const [oldResult, setOldResult] = useState(0)
 
     useEffect(() => {
         getDataAPI(`user/${params.id}/getByID`)
@@ -46,49 +49,36 @@ function Profile(){
 
         const getPosts = async () => {
             setLoadingPosts(true)
-            const posts = homePosts.posts.filter((post) => post.userID._id === params.id)
-            setPost(posts)
-            setPostsView({
-                hasMore: true,
-                items:
-                    (posts.length !== 0) && posts.slice(0, 5)
-            })
-            // await getDataAPI(`post/${params.id}/timeline`)
-            // .then(res => {
-            //     setPost(res.data)
-            //     setPostsView({
-            //         hasMore: true,
-            //         items:
-            //             (res.data.length !== 0) && res.data.slice(0, 1)
-            //     })
-            // })
-            // .catch(err => {
-            //     console.log(err);
-            // })
+            const res = await getDataAPI(`post/${params.id}/timeline?limit=3`)
+
+            dispatch({ type: POST_TYPES.GET_POSTS, payload: res.data });
+
             setLoadingPosts(false)
         }
         getPosts()
 
-    }, [params.id, auth.user, homePosts])
+    }, [params.id, auth.user, dispatch])
+
+    const fetchPosts = async () => {
+        const res = await getDataAPI(`post/${params.id}/timeline?limit=${page*3}`);
+        return res.data;
+    };
 
     const fetchMoreData = async () => {
-        if (postsView.items.length >= posts.length) {
-            setPostsView({
-                hasMore: false,
-                items: [...postsView.items]
-            })
-            return;
+
+        const posts = await fetchPosts();
+        dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
+
+        if(homePosts.result < 3 * (page - 1)) {
+            setHasMore(false)
         }
 
-        setTimeout(() => {
-            setPostsView({
-                hasMore: true,
-                items: [
-                    ...postsView.items,
-                    ...posts.slice(postsView.items.length, postsView.items.length + 5)
-                ]
-            })
-        }, 1000);
+        if(oldResult === posts.result) {
+            setHasMore(false)
+        }
+
+        setPage(page + 1)
+        setOldResult(posts.result)
     };
 
     return (
@@ -98,7 +88,7 @@ function Profile(){
                     <ProfileHeader user={user} />
                     {/* <!-- Introduction --> */}
                     <div
-                        class="introduction col-span-4 xl:col-span-4 lg:col-span-5 md:col-span-12 sm:col-span-12 xs:col-span-12 rounded-lg px-1"
+                        className="introduction col-span-4 xl:col-span-4 lg:col-span-5 md:col-span-12 sm:col-span-12 xs:col-span-12 rounded-lg px-1"
                     >
                         <EditForm user={user} />
                     </div>
@@ -116,7 +106,7 @@ function Profile(){
                             alt="loading"
                             className="block mx-auto"
                         />
-                    ) : posts.length === 0 ? (
+                    ) : homePosts.posts.length === 0 ? (
                         <div
                             className="list-posts mx-7 my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
                         >
@@ -130,11 +120,10 @@ function Profile(){
                             </h1>
                         </div>
                     ) : (
-                        postsView.items &&
                         <InfiniteScroll
-                                dataLength={postsView.items.length}
+                                dataLength={homePosts.posts.length}
                                 next={fetchMoreData}
-                                hasMore={postsView.hasMore}
+                                hasMore={hasMore}
                                 loader={
                                     <h4 className="text-center font-semibold text-xl">
                                         Loading...
@@ -148,7 +137,7 @@ function Profile(){
                                 }
                             >
                                 {
-                                    postsView.items.map((post, index) =>
+                                    homePosts.posts.map((post, index) =>
                                         <Post key={index} post={post} />
                                     )
                                 }
