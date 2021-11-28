@@ -38,10 +38,9 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
         <li
             key={index}
             className={`my-3 pl-2 w-full
-                ${
-                    comment.userID._id === auth.user._id
-                        ? "border-l-2 border-green-500"
-                        : ""
+                ${comment.userID._id === auth.user._id
+                    ? "border-l-2 border-green-500"
+                    : ""
                 }
             `}
             style={{
@@ -93,7 +92,7 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
                                 </small>
                             </>
                         ) : (
-                            (post.userID._id === auth.user._id ||
+                            (
                                 comment.userID._id === auth.user._id) && (
                                 <>
                                     <small
@@ -101,6 +100,7 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
                                         onClick={() => setOnEdit(true)}
                                     >
                                         edit
+
                                     </small>
                                     <small
                                         className="font-weight-bold mr-3"
