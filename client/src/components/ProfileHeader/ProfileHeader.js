@@ -94,20 +94,15 @@ const ProfileHeader = ({ user }) => {
                     <form
                         onSubmit={updateCoverPic}
                         v-if="$route.params.id === getUser._id"
-                        className="update-cover absolute right-2 bottom-2 flex py-2 px-4 bg-white rounded-lg items-center text-base font-semibold cursor-pointer"
+                        className="update-cover absolute right-2 bottom-2 py-2 px-4 bg-white rounded-lg text-base font-semibold cursor-pointer"
                     >
                         {!urlCoverPic ? (
-                            <label
-                                className="flex items-center cursor-pointer"
-                                htmlFor="isCoverId"
-                                v-if="!urlCoverPic"
-                            >
+                            <label className="flex items-center justify-center cursor-pointer">
                                 <i className="fas fa-camera mr-2"></i>
                                 <h3>Update cover picture</h3>
                             </label>
                         ) : (
                             <button
-                                v-else
                                 type="submit"
                                 className="flex items-center space-x-2 font-semibold"
                             >
@@ -160,15 +155,11 @@ const ProfileHeader = ({ user }) => {
                     {/* <!--Form Update profile picture --> */}
                     {auth.user._id === user._id && (
                         <form
-                            v-if="$route.params.id === getUser._id"
                             onSubmit={updateProfilePic}
                             className="update-profile absolute right-4 bottom-2 text-xl w-9 h-9 bg-gray-300 hover:bg-gray-100 rounded-full flex justify-center items-center cursor-pointer"
                         >
                             {!urlProfilePic ? (
-                                <label
-                                    htmlFor="isProfileId"
-                                    v-if="!urlProfilePic"
-                                >
+                                <label>
                                     <i className="fas fa-camera cursor-pointer"></i>
                                 </label>
                             ) : (

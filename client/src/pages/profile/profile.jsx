@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Post from "../../components/Post/Post";
-import RightBar from "../../components/RightBar/RightBar";
 import LoadIcon from "../../images/loading.gif";
 import { getDataAPI } from "../../utils/fetchData";
 import NoPost from "../../images/post.svg";
@@ -12,12 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { POST_TYPES } from "../../store/actions/postAction";
 
-function Profile(){
+function Profile() {
     const { auth, homePosts } = useSelector((state) => state);
     const dispatch = useDispatch()
     const params = useParams()
 
-    const [notifies, setNotifies] = useState([])
     const [loadingPosts, setLoadingPosts] = useState(false)
     const [user, setUser] = useState([])
 
@@ -27,25 +25,18 @@ function Profile(){
 
     useEffect(() => {
         getDataAPI(`user/${params.id}/getByID`)
-        .then(res => {
-            getDataAPI(`notification/${res.data.faculty.slug}/faculty`)
             .then(res => {
-                setNotifies(res.data)
+
+                if (auth.user._id === params.id) {
+                    setUser(auth.user)
+                } else {
+                    setUser(res.data)
+                }
+
             })
             .catch(err => {
                 console.log(err);
             })
-
-            if(auth.user._id === params.id){
-                setUser(auth.user)
-            } else {
-                setUser(res.data)
-            }
-            
-        })
-        .catch(err => {
-            console.log(err);
-        })
 
         const getPosts = async () => {
             setLoadingPosts(true)
@@ -60,7 +51,7 @@ function Profile(){
     }, [params.id, auth.user, dispatch])
 
     const fetchPosts = async () => {
-        const res = await getDataAPI(`post/${params.id}/timeline?limit=${page*3}`);
+        const res = await getDataAPI(`post/${params.id}/timeline?limit=${page * 3}`);
         return res.data;
     };
 
@@ -69,11 +60,11 @@ function Profile(){
         const posts = await fetchPosts();
         dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
 
-        if(homePosts.result < 3 * (page - 1)) {
+        if (homePosts.result < 3 * (page - 1)) {
             setHasMore(false)
         }
 
-        if(oldResult === posts.result) {
+        if (oldResult === posts.result) {
             setHasMore(false)
         }
 
@@ -86,16 +77,11 @@ function Profile(){
             <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 grid grid-cols-12 space-y-3">
                 <div className="col-span-12">
                     <ProfileHeader user={user} />
-                    {/* <!-- Introduction --> */}
-                    <div
-                        className="introduction col-span-4 xl:col-span-4 lg:col-span-5 md:col-span-12 sm:col-span-12 xs:col-span-12 rounded-lg px-1"
-                    >
-                        <EditForm user={user} />
-                    </div>
+
                 </div>
 
 
-                <div className="col-start-1 col-span-8 border-l-2">
+                <div className="col-start-1 col-span-8 lg:col-span-12 md:col-span-12 sm:col-span-12 border-l-2">
                     {
                         auth.user._id === params.id &&
                         <Status />
@@ -121,32 +107,33 @@ function Profile(){
                         </div>
                     ) : (
                         <InfiniteScroll
-                                dataLength={homePosts.posts.length}
-                                next={fetchMoreData}
-                                hasMore={hasMore}
-                                loader={
-                                    <h4 className="text-center font-semibold text-xl">
-                                        Loading...
-                                    </h4>
-                                }
-                                scrollableTarget="load-infinite"
-                                endMessage={
-                                    <p className="text-center font-semibold text-xl">
-                                        <b>Yay! You have seen it all</b>
-                                    </p>
-                                }
-                            >
-                                {
-                                    homePosts.posts.map((post, index) =>
-                                        <Post key={index} post={post} />
-                                    )
-                                }
-                            </InfiniteScroll>
+                            dataLength={homePosts.posts.length}
+                            next={fetchMoreData}
+                            hasMore={hasMore}
+                            loader={
+                                <h4 className="text-center font-semibold text-xl">
+                                    Loading...
+                                </h4>
+                            }
+                            scrollableTarget="load-infinite"
+                            endMessage={
+                                <p className="text-center font-semibold text-xl">
+                                    <b>Yay! You have seen it all</b>
+                                </p>
+                            }
+                        >
+                            {
+                                homePosts.posts.map((post, index) =>
+                                    <Post key={index} post={post} />
+                                )
+                            }
+                        </InfiniteScroll>
                     )}
                 </div>
 
-                <div className="col-start-9 col-span-4 border-l-2">
-                    <RightBar notifications={notifies} />
+                {/* <!-- Introduction --> */}
+                <div className="col-start-9 col-span-4 lg:hidden md:hidden sm:hidden border-l-2">
+                    <EditForm user={user} />
                 </div>
 
             </div>

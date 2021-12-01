@@ -1,4 +1,4 @@
-import moment from "moment";
+// import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../store/actions/authAction";
@@ -13,14 +13,13 @@ const EditForm = ({ user }) => {
 
     const initialState = {
         username: "",
-        birthday: "",
         faculty: "",
         major: "",
         class: "",
     };
 
     const [userData, setUserData] = useState(initialState);
-    const { username, birthday, faculty, major, class: classID } = userData;
+    const { username, faculty, major, class: classID } = userData;
 
     const handleChangeInput = (e) => {
         const { name, value } = e.target;
@@ -43,31 +42,32 @@ const EditForm = ({ user }) => {
                 .catch((err) => console.log(err));
         }
     }, [auth.user, user]);
+
     return (
         <form
             onSubmit={updateInfo}
-            className="detail w-full relative px-3 rounded-lg"
+            className="detail w-full relative px-2 rounded-lg"
         >
             <h1 className="text-2xl font-bold my-3 xl:text-left lg:text-center md:text-center sm:text-center">
                 Introduction
             </h1>
             {isEdit && (
                 <i
-                    v-if="isEdit"
-                    className="fas fa-times-circle absolute top-12 right-0 text-xl text-black cursor-pointer"
+                    className="fas fa-times-circle absolute top-0 right-0 text-xl text-black cursor-pointer"
                     title="Close"
                     onClick={() => setIsEdit(!isEdit)}
                 ></i>
             )}
-            <ul className="flex flex-col text-sm">
+            <ul className="flex flex-col text-sm space-y-2">
+                {/* Username */}
                 <li className="flex items-center">
-                    <div className="key w-1/3">
-                        <i className="w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/6 sm:w-1/6 fas fa-user"></i>
-                        <span className="text-base italic">Name:</span>
+                    <div className="key flex items-center max-w-0">
+                        <i className="max-w-0 fas fa-user"></i>
+                        <span className="text-base italic ml-4">Name:</span>
                     </div>
-                    <div className="value">
+                    <div className="value ml-20">
                         <h1
-                            className={`text-lg font-semibold ${
+                            className={`text-sm font-semibold ${
                                 isEdit ? "hidden" : ""
                             }`}
                         >
@@ -77,7 +77,7 @@ const EditForm = ({ user }) => {
                             <input
                                 v-if="isEdit"
                                 type="text"
-                                className="focus:outline-none text-base px-5 py-2 border-b-2 border-gray-800 w-60"
+                                className="focus:outline-none text-base px-2 py-2 border-b-2 border-gray-800 w-full"
                                 value={username}
                                 onChange={handleChangeInput}
                                 name="username"
@@ -85,59 +85,29 @@ const EditForm = ({ user }) => {
                         )}
                     </div>
                 </li>
+
+                {/* Faculty */}
                 <li className="flex items-center">
-                    <div className="key w-1/3">
-                        <i className="w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/6 sm:w-1/6 fas fa-birthday-cake"></i>
-                        <span className="text-base italic">Birth:</span>
+                    <div className="key flex items-center max-w-0">
+                        <i className="max-w-0 fas fa-graduation-cap"></i>
+                        <span className="text-base italic ml-4">Faculty:</span>
                     </div>
-                    <div className="value">
-                        <h1
-                            className={`text-lg font-semibold ${
-                                isEdit ? "hidden" : ""
-                            }`}
-                        >
-                            {moment(user.birthday).format("YYYY-MM-DD")}
-                        </h1>
-                        {isEdit && (
-                            <input
-                                v-if="isEdit"
-                                type="date"
-                                className="focus:outline-none text-sm px-3 py-2 border-b-2 border-gray-800 w-60
-                            "
-                                // @input="onDateSelected"
-                                value={moment(birthday).format("YYYY-MM-DD")}
-                                onChange={handleChangeInput}
-                                name="birthday"
-                            />
-                        )}
-                    </div>
-                </li>
-                <li className="flex items-center">
-                    <div className="key w-1/3">
-                        <i className="w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/6 sm:w-1/6 fas fa-graduation-cap"></i>
-                        <span className="text-base italic">Faculty:</span>
-                    </div>
-                    <div className="value">
+                    <div className="value ml-20">
                         {user.role === 2 && (
                             <h1
-                                className={`text-lg font-semibold ${
-                                    isEdit ? "hidden" : ""
+                                className={`text-sm font-semibold ${
+                                    isEdit && "hidden"
                                 }`}
-                                v-if=""
                             >
-                                {user.faculty ? user.faculty.name : ""}
+                                {user.faculty && user.faculty.name}
                             </h1>
                         )}
 
                         {user.role === 1 && (
                             <select
-                                className="w-full focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center"
-                                value={faculty}
+                                className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center"
+                                value={user.faculty}
                             >
-                                <option value="" disabled hidden>
-                                    ---List role---
-                                </option>
-
                                 {user.listRolePost.map((faculty) => (
                                     <option
                                         key={faculty._id}
@@ -151,13 +121,11 @@ const EditForm = ({ user }) => {
 
                         {user.role === 2 && isEdit && (
                             <select
-                                className="w-60 focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center "
-                                // v-if="user.role === 2 && isEdit"
+                                className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md text-left w-full"
                                 value={faculty}
                                 onChange={handleChangeInput}
-                                name="faculty"
                             >
-                                <option value="" disabled hidden>
+                                <option defaultValue disabled>
                                     ---List faculty---
                                 </option>
 
@@ -173,14 +141,16 @@ const EditForm = ({ user }) => {
                         )}
                     </div>
                 </li>
-                <li className="flex items-center" v-if="getUser.role === 2">
-                    <div className="key w-1/3">
-                        <i className="w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/6 sm:w-1/6 fas fa-book-open"></i>
-                        <span className="text-base italic">Major:</span>
+
+                {/* Major */}
+                <li className="flex items-center">
+                    <div className="key flex items-center max-w-0">
+                        <i className="max-w-0 fas fa-book-open"></i>
+                        <span className="text-base italic ml-4">Major:</span>
                     </div>
-                    <div className="value">
+                    <div className="value ml-20">
                         <h1
-                            className={`text-lg font-semibold ${
+                            className={`text-sm font-semibold ${
                                 isEdit ? "hidden" : ""
                             }`}
                         >
@@ -190,7 +160,7 @@ const EditForm = ({ user }) => {
                             <input
                                 v-if="isEdit"
                                 type="text"
-                                className="focus:outline-none border-b-2 border-gray-800 w-60 text-base px-5 py-2"
+                                className="focus:outline-none border-b-2 border-gray-800 text-base px-2 py-2 w-full"
                                 value={major}
                                 onChange={handleChangeInput}
                                 name="major"
@@ -198,25 +168,25 @@ const EditForm = ({ user }) => {
                         )}
                     </div>
                 </li>
-                <li className="flex items-center" v-if="getUser.role === 2">
-                    <div className="key w-1/3">
-                        <i className="w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/6 sm:w-1/6 fas fa-user-graduate"></i>
-                        <span className="text-base italic">Class:</span>
+
+                {/* Class */}
+                <li className="flex items-center">
+                    <div className="key flex items-center max-w-0">
+                        <i className="max-w-0 fas fa-user-graduate"></i>
+                        <span className="text-base italic ml-4">Class:</span>
                     </div>
-                    <div className="value">
+                    <div className="value ml-20">
                         <h1
-                            className={`text-lg font-semibold ${
-                                isEdit ? "hidden" : ""
+                            className={`text-sm font-semibold ${
+                                isEdit && "hidden"
                             }`}
-                            // :className="[isEdit ? 'hidden' : '']"
                         >
                             {user.class}
                         </h1>
                         {isEdit && (
                             <input
-                                v-if="isEdit"
                                 type="text"
-                                className="focus:outline-none border-b-2 border-gray-800 w-60 text-base px-5 py-2"
+                                className="focus:outline-none border-b-2 border-gray-800 text-base px-2 py-2 w-full"
                                 onChange={handleChangeInput}
                                 value={classID}
                                 name="class"
@@ -227,19 +197,19 @@ const EditForm = ({ user }) => {
             </ul>
             {/* <!-- btn edit --> */}
             {auth.user._id === user._id && (
-                <div v-if="$route.params.id === getUser._id">
+                <div>
                     {isEdit ? (
                         <button
                             v-if="isEdit"
                             type="submit"
-                            className="text-lg font-semibold w-full mt-5 px-5 py-2 bg-blue-200 rounded-xl hover:bg-blue-300"
+                            className="text-base font-semibold w-full mt-2 px-5 py-2 bg-btn-bg text-btn-text rounded-xl hover:bg-btn-hover"
                         >
                             Update
                         </button>
                     ) : (
                         <div
                             onClick={() => setIsEdit(!isEdit)}
-                            className="text-lg text-center cursor-pointer font-semibold w-full mt-5 px-5 py-2 bg-gray-200 rounded-xl hover:bg-gray-300"
+                            className="text-base text-center cursor-pointer font-semibold w-full mt-2 px-5 py-2 bg-gray-200 rounded-xl hover:bg-gray-300"
                         >
                             Edit detail
                         </div>

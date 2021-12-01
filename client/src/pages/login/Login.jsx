@@ -114,7 +114,7 @@ function Login() {
         } catch (error) {
             dispatch({
                 type: GLOBALTYPES.ALERT,
-                payload: { error: error.response.data.msg },
+                payload: { error: "Something went wrong !" },
             });
             dispatch(LoginFailure())
         }

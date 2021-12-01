@@ -87,49 +87,53 @@ passport.use(
             clientSecret: auth.google.CLIENT_SECRET,
         },
         async (accessToken, refreshToken, profile, done) => {
-            try {
-                // Check whether this current user exist in db
-                const user = await User.findOne({
-                    authGoogleID: profile.id,
-                    authType: "google",
-                });
+            if (!profile.emails[0].value.includes("@student.tdtu.edu.vn")) {
+                done(null, false);
+            } else {
+                try {
+                    // Check whether this current user exist in db
+                    const user = await User.findOne({
+                        authGoogleID: profile.id,
+                        authType: "google",
+                    });
 
-                // user has logged in before
-                if (user) {
+                    // user has logged in before
+                    if (user) {
+                        const {
+                            posts,
+                            listRolePost,
+                            authType,
+                            authFacebookID,
+                            authTwitterID,
+                            authGoogleID,
+                            ...others
+                        } = user._doc;
+                        return done(null, others);
+                    }
+
+                    // user first logged in  (new account)
+                    const newUser = new User({
+                        authType: "google",
+                        username: profile.displayName,
+                        email: profile.emails[0].value,
+                        authGoogleID: profile.id,
+                        profilePic: profile._json.picture,
+                    });
+
+                    await newUser.save();
                     const {
-                        posts,
                         listRolePost,
                         authType,
                         authFacebookID,
                         authTwitterID,
                         authGoogleID,
                         ...others
-                    } = user._doc;
-                    return done(null, others);
+                    } = newUser._doc;
+
+                    done(null, others);
+                } catch (error) {
+                    done(error, false);
                 }
-
-                // user first logged in  (new account)
-                const newUser = new User({
-                    authType: "google",
-                    username: profile.displayName,
-                    email: profile.emails[0].value,
-                    authGoogleID: profile.id,
-                    profilePic: profile._json.picture,
-                });
-
-                await newUser.save();
-                const {
-                    listRolePost,
-                    authType,
-                    authFacebookID,
-                    authTwitterID,
-                    authGoogleID,
-                    ...others
-                } = newUser._doc;
-
-                done(null, others);
-            } catch (error) {
-                done(error, false);
             }
         }
     )
