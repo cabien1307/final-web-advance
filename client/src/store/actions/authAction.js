@@ -103,7 +103,6 @@ export const updateUser =
             const res = await patchDataAPI(`user/${user._id}/update`, dataUser);
 
             dispatch({ type: USER_TYPES.UPDATE_USER, payload: res.data.data });
-
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
         } catch (error) {
             dispatch({

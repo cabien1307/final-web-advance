@@ -55,6 +55,10 @@ export const updateComment =
                 },
                 auth.token
             );
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { success: "Update comment success !" },
+            });
         } catch (error) {
             dispatch({
                 type: GLOBALTYPES.ALERT,
@@ -79,6 +83,10 @@ export const deleteComment =
                 { userID: auth.user._id, postID: post._id },
                 auth.token
             );
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { success: "Delete comment success !" },
+            });
         } catch (error) {
             dispatch({
                 type: GLOBALTYPES.ALERT,

@@ -27,8 +27,10 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
 
     const handleRemoveComment = () => {
         if (
-            post.userID._id === auth.user._id ||
-            comment.userID._id === auth.user._id
+            (post.userID._id === auth.user._id ||
+                comment.userID._id === auth.user._id) &&
+            // eslint-disable-next-line no-restricted-globals
+            confirm("Are you sure to delete this comment ?")
         ) {
             dispatch(deleteComment({ post, comment, auth }));
         }
@@ -38,9 +40,10 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
         <li
             key={index}
             className={`my-3 pl-2 w-full
-                ${comment.userID._id === auth.user._id
-                    ? "border-l-2 border-green-500"
-                    : ""
+                ${
+                    comment.userID._id === auth.user._id
+                        ? "border-l-2 border-green-500"
+                        : ""
                 }
             `}
             style={{
@@ -92,15 +95,13 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
                                 </small>
                             </>
                         ) : (
-                            (
-                                comment.userID._id === auth.user._id) && (
+                            comment.userID._id === auth.user._id && (
                                 <>
                                     <small
                                         className="font-weight-bold mr-3"
                                         onClick={() => setOnEdit(true)}
                                     >
                                         edit
-
                                     </small>
                                     <small
                                         className="font-weight-bold mr-3"

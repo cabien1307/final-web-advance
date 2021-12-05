@@ -28,7 +28,7 @@ const EditForm = ({ user }) => {
 
     const updateInfo = (e) => {
         e.preventDefault();
-
+        console.log(userData);
         dispatch(updateUser({ user: auth.user, data: userData }));
         setIsEdit(false);
     };
