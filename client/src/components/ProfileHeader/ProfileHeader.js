@@ -93,11 +93,10 @@ const ProfileHeader = ({ user }) => {
                 {auth.user._id === user._id && (
                     <form
                         onSubmit={updateCoverPic}
-                        v-if="$route.params.id === getUser._id"
                         className="update-cover absolute right-2 bottom-2 py-2 px-4 bg-white rounded-lg text-base font-semibold cursor-pointer"
                     >
                         {!urlCoverPic ? (
-                            <label className="flex items-center justify-center cursor-pointer">
+                            <label htmlFor="isCoverId" className="flex items-center justify-center cursor-pointer">
                                 <i className="fas fa-camera mr-2"></i>
                                 <h3>Update cover picture</h3>
                             </label>
@@ -127,7 +126,7 @@ const ProfileHeader = ({ user }) => {
                 {/* <!-- Profile picture --> */}
                 <div className="profilePic bg-white absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 w-44 h-44 rounded-full ">
                     <img
-                        className="w-44 h-44 rounded-full object-contain border-4"
+                        className="w-44 h-44 rounded-full object-cover border-4"
                         src={
                             user.profilePic
                                 ? user.profilePic
@@ -139,7 +138,7 @@ const ProfileHeader = ({ user }) => {
 
                     {/* <!-- Preview profile --> */}
                     {urlProfilePic && (
-                        <div className="absolute top-0" v-if="urlProfilePic">
+                        <div className="absolute top-0">
                             <img
                                 className="w-44 h-44 object-cover rounded-full"
                                 src={URL.createObjectURL(urlProfilePic)}
@@ -159,11 +158,11 @@ const ProfileHeader = ({ user }) => {
                             className="update-profile absolute right-4 bottom-2 text-xl w-9 h-9 bg-gray-300 hover:bg-gray-100 rounded-full flex justify-center items-center cursor-pointer"
                         >
                             {!urlProfilePic ? (
-                                <label>
+                                <label htmlFor="isProfileId">
                                     <i className="fas fa-camera cursor-pointer"></i>
                                 </label>
                             ) : (
-                                <button v-else type="submit">
+                                <button type="submit">
                                     <i
                                         className="fas fa-check cursor-pointer"
                                         title="Update"

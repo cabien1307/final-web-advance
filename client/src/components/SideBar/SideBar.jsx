@@ -151,7 +151,7 @@ function NavBar() {
                     {/* Image */}
                     <div className="profilePic">
                         <div className="h-10 w-10">
-                            <img src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} className="rounded-full border-2 border-stroke" alt="" />
+                            <img src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} className="rounded-full border-2 border-stroke object-cover h-10 w-10" alt="" />
                         </div>
                     </div>
 

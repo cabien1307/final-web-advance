@@ -27,7 +27,7 @@ function HoverLogout() {
                 {/* Image */}
                 <div className="profilePic">
                     <div className="h-12 w-12">
-                        <img src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} className="rounded-full border-2 border-stroke" alt="" />
+                        <img src={user.profilePic ? user.profilePic : process.env.PUBLIC_URL + '/images/male_avatar.svg'} className="h-12 w-12 rounded-full object-cover border-2 border-stroke" alt="" />
                     </div>
                 </div>
 
