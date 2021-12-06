@@ -19,14 +19,20 @@ export const POST_TYPES = {
 };
 
 export const createPost =
-    ({ title, images, faculty, auth, token }) =>
+    ({ title, images, faculty, auth, token, videos }) =>
     async (dispatch) => {
         let media = [];
         try {
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
             if (images.length > 0) media = await imageUpload(images);
 
-            const data = { userID: auth.user._id, title, img: media, faculty };
+            const data = {
+                userID: auth.user._id,
+                title,
+                img: media,
+                faculty,
+                videos,
+            };
 
             if (auth.user.role === 2 || auth.user.role === 0) {
                 delete data.faculty;
@@ -88,30 +94,39 @@ export const getPostsByFaculty =
     };
 
 export const updatePost =
-    ({ title, images, auth, post }) =>
+    ({ title, images, auth, post, videos }) =>
     async (dispatch) => {
         let media = [];
         const imgNewUrl = images.filter((img) => !img.url);
         const imgOldUrl = images.filter((img) => img.url);
 
+        const videoNewUrl = videos.filter((video) => !video);
+        const videoOldUrl = videos.filter((video) => video);
+
         if (
             post.title === title &&
             imgNewUrl.length === 0 &&
-            imgOldUrl.length === post.img.length
+            imgOldUrl.length === post.img.length &&
+            videoNewUrl.length === 0 &&
+            videoOldUrl.length === post.videos.length
         )
             return;
         try {
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
             if (imgNewUrl.length > 0) media = await imageUpload(imgNewUrl);
+
             const res = await patchDataAPI(
                 `post/${post._id}`,
                 {
                     title,
                     img: [...imgOldUrl, ...media],
                     userID: post.userID._id,
+                    videos: [...videoOldUrl, ...videoNewUrl],
                 },
                 auth.token
             );
+
+            console.log(res.data);
 
             dispatch({
                 type: POST_TYPES.UPDATE_POST,

@@ -1,6 +1,9 @@
 import { useSelector } from "react-redux";
+import YoutubeEmbed from "../YoutubeEmbed/YoutubeEmbed";
+import "./caroursel.css";
 
-const Carousel = ({ images, id }) => {
+const Carousel = ({ images, id, videos }) => {
+    const newArr = [...images, ...videos];
     const isActive = (index) => {
         if (index === 0) return "active";
     };
@@ -10,7 +13,7 @@ const Carousel = ({ images, id }) => {
     return (
         <div id={`image${id}`} className="carousel slide" data-ride="carousel">
             <ol className="carousel-indicators">
-                {images.map((img, index) => (
+                {newArr.map((img, index) => (
                     <li
                         key={index}
                         data-target={`#image${id}`}
@@ -20,19 +23,25 @@ const Carousel = ({ images, id }) => {
                 ))}
             </ol>
             <div className="carousel-inner">
-                {images.map((img, index) => (
+                {newArr.map((item, index) => (
                     <div
                         key={index}
                         className={`carousel-item ${isActive(index)}`}
                     >
-                        <img
-                            src={img.url}
-                            className="d-block w-full"
-                            alt={img.url}
-                            style={{
-                                filter: theme ? "invert(1)" : "invert(0)",
-                            }}
-                        />
+                        {item.public_id ? (
+                            <img
+                                src={item.url}
+                                className="d-block w-full"
+                                alt={item.url}
+                                style={{
+                                    filter: theme ? "invert(1)" : "invert(0)",
+                                }}
+                            />
+                        ) : (
+                            <div className="w-full ytb">
+                                <YoutubeEmbed embedId={item} />
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>

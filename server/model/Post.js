@@ -11,7 +11,7 @@ const PostSchema = new Schema(
         img: {
             type: Array,
         },
-        video: {
+        videos: {
             type: Array,
         },
         faculty: {

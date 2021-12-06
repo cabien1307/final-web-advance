@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom"
 import { format } from "timeago.js";
@@ -7,12 +7,14 @@ import { GLOBALTYPES } from "../../store/actions/globalTypes";
 import { deletePost, likePost, unLikePost, updatePost } from "../../store/actions/postAction";
 import Carousel from "../Carousel/Carousel";
 import CommentCart from "../Comment/CommentCart";
+import YoutubeEmbed from "../YoutubeEmbed/YoutubeEmbed";
 import "./post.css"
-
+import { matchYoutubeUrl } from "../../utils/validation"
 const Post = ({ post }) => {
 
     const { auth } = useSelector(state => state)
     const dispatch = useDispatch();
+    const inputEmbedRef = useRef()
 
     const [isLiked, setIsLiked] = useState(false)
     const [loadLike, setLoadLike] = useState(false);
@@ -21,10 +23,13 @@ const Post = ({ post }) => {
     const [contentComment, setContentComment] = useState("")
     const [titleEdit, setTitleEdit] = useState("")
     const [imagesEdit, setImagesEdit] = useState([]);
+    const [videosEdit, setVideosEdit] = useState([]);
+    const [showEmbed, setShowEmbed] = useState(false);
 
     const handleEditPost = () => {
         setTitleEdit(post.title)
         setImagesEdit(post.img)
+        setVideosEdit(post.videos)
         setIsEdit(!isEdit)
     }
 
@@ -35,8 +40,8 @@ const Post = ({ post }) => {
     };
 
     const handleDeletePost = () => {
-        if(window.confirm("Do you want to delete this post!!!")) {
-            dispatch(deletePost({post, auth}))
+        if (window.confirm("Do you want to delete this post!!!")) {
+            dispatch(deletePost({ post, auth }))
         } else {
             return;
         }
@@ -45,7 +50,13 @@ const Post = ({ post }) => {
     const handleUpdatePost = (e) => {
         e.preventDefault();
 
-        if (isEdit) dispatch(updatePost({ title: titleEdit, images: imagesEdit, auth, post }));
+        if (isEdit) dispatch(updatePost({
+            title: titleEdit,
+            images: imagesEdit,
+            auth,
+            post,
+            videos: videosEdit
+        }));
         setTitleEdit("");
         setImagesEdit([]);
         setIsEdit(false)
@@ -109,6 +120,23 @@ const Post = ({ post }) => {
     const timeAgo = (time) => {
         return format(time);
     }
+
+    const addEmbed = () => {
+        const url = matchYoutubeUrl(inputEmbedRef.current.value)
+        const isDuplicate = videosEdit.some((video) => video === url)
+
+        if (url && !isDuplicate) {
+            setVideosEdit([...videosEdit, url])
+        } else {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: {
+                    warning: "The video isn't in the queue or the url isn't available yet !"
+                }
+            })
+        }
+        inputEmbedRef.current.value = ''
+    }
     return (
         <div className="wrapper shadow rounded-md border-2 my-4 mx-2">
             {/* <!-- Img createdAt --> */}
@@ -169,7 +197,7 @@ const Post = ({ post }) => {
                         ></i>
                         <i
                             className="fas fa-trash cursor-pointer text-red-600"
-                        onClick={handleDeletePost}
+                            onClick={handleDeletePost}
                         ></i>
                     </div>
                 }
@@ -197,6 +225,36 @@ const Post = ({ post }) => {
                                     onClick={() => setIsEdit(false)}
                                 ></i>
                             </div>
+
+                            {/* Youtube */}
+                            {
+                                showEmbed &&
+                                (
+                                    <div className="px-3 mt-4 block space-y-2 relative">
+
+                                        <div className="list-embed">
+                                            <div className="flex items-end justify-between">
+                                                <input
+                                                    className="w-3/4 px-3 py-2 focus:outline-none border-b-2 border-gray-700"
+                                                    type="text"
+                                                    placeholder="Enter link youtube video ..."
+                                                    ref={inputEmbedRef}
+                                                />
+                                                <div className="space-x-2 cursor-pointer text-xl hover:text-btn-hover" onClick={addEmbed}>
+                                                    <span>Add</span>
+                                                    <i className="fab fa-telegram-plane"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <i
+                                            className="fas fa-times-circle absolute -top-5 right-3 text-red-500 cursor-pointer"
+                                            onClick={() => setShowEmbed(false)}
+                                        />
+
+                                    </div>
+                                )
+                            }
                             {/* Preview image before share */}
                             <div className="show_images">
                                 {
@@ -209,6 +267,18 @@ const Post = ({ post }) => {
                                                         : URL.createObjectURL(img)
                                                 }
                                                 alt="images" />
+                                            <i
+                                                className="fas fa-times-circle absolute -top-1 right-0 text-xl text-red-500 cursor-pointer"
+                                                onClick={() => deleteImagesEdit(index)}
+                                            />
+                                        </div>
+                                    ))
+                                }
+
+                                {
+                                    videosEdit.map((video, index) => (
+                                        <div key={index} className="relative w-full h-20">
+                                            <YoutubeEmbed embedId={video} />
                                             <i
                                                 className="fas fa-times-circle absolute -top-1 right-0 text-xl text-red-500 cursor-pointer"
                                                 onClick={() => deleteImagesEdit(index)}
@@ -230,9 +300,19 @@ const Post = ({ post }) => {
                                 <ul className="flex justify-between items-center">
                                     <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
                                         <label htmlFor="isPhotoIdEdit" className="cursor-pointer">
-                                            <i className="fas fa-photo-video text-red-600 mx-2" />
+                                            <i className="far fa-images text-red-600 mx-2" />
                                             <span className="md:hidden sm:hidden xs:hidden">
-                                                Photo or video
+                                                Photos
+                                            </span>
+                                        </label>
+                                    </li>
+                                    <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
+                                        <label className="cursor-pointer"
+                                            onClick={() => setShowEmbed(!showEmbed)}
+                                        >
+                                            <i className="fab fa-youtube text-red-600 mx-2" />
+                                            <span className="md:hidden sm:hidden xs:hidden">
+                                                Videos
                                             </span>
                                         </label>
                                     </li>
@@ -250,7 +330,7 @@ const Post = ({ post }) => {
                 {
                     post.img &&
                     <div className="img-post w-full" v-if="post.img">
-                        <Carousel images={post.img} id={post._id} />
+                        <Carousel images={post.img} id={post._id} videos={post.videos} />
                     </div>
                 }
             </div>

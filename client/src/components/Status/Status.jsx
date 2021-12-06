@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import YoutubeEmbed from "../YoutubeEmbed/YoutubeEmbed";
+
+import './status.css'
 import { GLOBALTYPES } from "../../store/actions/globalTypes";
 import { createPost } from "../../store/actions/postAction";
-import { LIST_ICONS_POST } from "../../utils/staticData";
-import './status.css'
+import { matchYoutubeUrl } from "../../utils/validation"
 
 const Status = () => {
     const { auth, token } = useSelector((state) => state);
@@ -12,6 +14,10 @@ const Status = () => {
     const [faculty, setFaculty] = useState("");
     const [title, setTitle] = useState("");
     const [images, setImages] = useState([]);
+    const [videos, setVideos] = useState([]);
+    const [showEmbed, setShowEmbed] = useState(false);
+
+    const inputEmbedRef = useRef()
 
 
     const handleChangeImages = (e) => {
@@ -42,17 +48,36 @@ const Status = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // if (images.length === 0)
-        //     return dispatch({
-        //         type: GLOBALTYPES.ALERT,
-        //         payload: { error: "Please add your photo!" },
-        //     });
-
-        dispatch(createPost({ title, images, faculty, auth, token }));
+        dispatch(createPost({ title, images, faculty, auth, token, videos }));
 
         setTitle("");
         setImages([]);
+        setVideos([])
+        setShowEmbed(false)
     };
+
+    const deleteVideo = (index) => {
+        const newArr = [...videos];
+        newArr.splice(index, 1);
+        setVideos(newArr);
+    }
+
+    const addEmbed = () => {
+        const url = matchYoutubeUrl(inputEmbedRef.current.value)
+        const isDuplicate = videos.some((video) => video === url)
+
+        if (url && !isDuplicate) {
+            setVideos([...videos, url])
+        } else {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: {
+                    warning: "The video isn't in the queue or the url isn't available yet !"
+                }
+            })
+        }
+        inputEmbedRef.current.value = ''
+    }
 
     return (
         <div>
@@ -72,18 +97,60 @@ const Status = () => {
                         placeholder={`What's on your mind ${auth.user.username} ?`}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        required
                     />
                 </div>
+
+                {
+                    showEmbed &&
+                    (
+                        <div className="px-3 mt-4 block space-y-2 relative">
+
+                            <div className="list-embed">
+                                <div className="flex items-end justify-between">
+                                    <input
+                                        className="w-3/4 px-3 py-2 focus:outline-none border-b-2 border-gray-700"
+                                        type="text"
+                                        placeholder="Enter link youtube video ..."
+                                        ref={inputEmbedRef}
+                                    />
+                                    <div className="space-x-2 cursor-pointer text-xl hover:text-btn-hover" onClick={addEmbed}>
+                                        <span>Add</span>
+                                        <i className="fab fa-telegram-plane"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <i
+                                className="fas fa-times-circle absolute -top-5 right-3 text-red-500 cursor-pointer"
+                                onClick={() => setShowEmbed(false)}
+                            />
+
+                        </div>
+                    )
+                }
 
                 {/* Preview image before share */}
                 <div className="show_images">
                     {
                         images.map((img, index) => (
-                            <div key={index} className="relative w-full h-full">
+                            <div key={index} className="relative w-full h-20">
                                 <img className="block object-contain w-full h-full max-h-24" src={URL.createObjectURL(img)} alt="images" />
                                 <i
                                     className="fas fa-times-circle absolute -top-1 right-0 text-xl text-red-500 cursor-pointer"
                                     onClick={() => deleteImages(index)}
+                                />
+                            </div>
+                        ))
+                    }
+
+                    {
+                        videos.map((video, index) => (
+                            <div key={index} className="relative w-full h-20">
+                                <YoutubeEmbed embedId={video} />
+                                <i
+                                    className="fas fa-times-circle absolute -top-1 right-0 text-xl text-red-500 cursor-pointer"
+                                    onClick={() => deleteVideo(index)}
                                 />
                             </div>
                         ))
@@ -103,31 +170,49 @@ const Status = () => {
                     <ul className="flex justify-around items-center">
                         <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
                             <label htmlFor="isPhotoId" className="cursor-pointer">
-                                <i className="fas fa-photo-video text-red-600 mx-2" />
+                                <i className="far fa-images text-red-600 mx-2" />
                                 <span className="md:hidden sm:hidden xs:hidden">
-                                    Photo or video
+                                    Photos
                                 </span>
                             </label>
                         </li>
 
-                        {
-                            (auth.user.role === 2 || auth.user.role === 0 )&&
-                            <div className="flex" >
-                                {
-                                    LIST_ICONS_POST.map((item, index) => (
-                                        <li
-                                            key={index}
-                                            className="cursor-pointer py-2 px-2 rounded-xl hover:bg-blue-100"
-                                        >
-                                            <label className="cursor-pointer">
-                                                <i className={`mx-1 ${item.icon}`}></i>
-                                                <span className="md:hidden sm:hidden xs:hidden">{item.name}</span>
-                                            </label>
-                                        </li>
-                                    ))
-                                }
+                        <li
+                            className="py-2 px-2 rounded-xl hover:bg-blue-100"
+                            onClick={() => setShowEmbed(!showEmbed)}>
+                            <label className="cursor-pointer">
+                                <i className="fab fa-youtube text-red-600 mx-2" />
+                                <span className="md:hidden sm:hidden xs:hidden">
+                                    Videos
+                                </span>
+                            </label>
+                        </li>
 
-                            </div>
+
+
+                        {
+                            (auth.user.role === 2 || auth.user.role === 0) &&
+                            (
+                                <>
+                                    <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
+                                        <label className="cursor-pointer">
+                                            <i className="fas fa-location-arrow text-green-600 mx-2" />
+                                            <span className="md:hidden sm:hidden xs:hidden">
+                                                Location
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
+                                        <label className="cursor-pointer">
+                                            <i className="fas fa-tags text-blue-600" />
+                                            <span className="md:hidden sm:hidden xs:hidden">
+                                                Tag
+                                            </span>
+                                        </label>
+                                    </li>
+                                </>
+                            )
                         }
 
                         {
@@ -157,7 +242,7 @@ const Status = () => {
 
                         <li className="cursor-pointer py-2">
                             <button
-                                className="py-2 px-3 text-white font-semibold rounded-lg shadow-lg bg-green-400 hover:bg-green-500"
+                                className="py-2 px-3 text-white font-semibold rounded-lg shadow-md bg-green-500 hover:bg-green-400"
                                 type="submit"
                             >
                                 Share

@@ -126,7 +126,7 @@ class postController {
     // [PATCH] /post/:postID
     async updatePost(req, res, next) {
         const { postID } = req.value.params;
-        const { userID, title, img } = req.value.body;
+        const { userID, title, img, videos } = req.value.body;
         const post = await Post.findById(postID)
             .populate("userID likes")
             .populate("faculty")
@@ -142,13 +142,17 @@ class postController {
         // console.log(postID, userID, post.userID.toString());
 
         if (userID === post.userID._id.toString()) {
-            await post.updateOne({ $set: req.value.body });
+            await post.updateOne(
+                { $set: req.value.body },
+                { returnOriginal: false }
+            );
             return res.status(200).json({
                 msg: "Updated Post!",
                 newPost: {
                     ...post._doc,
                     title,
                     img,
+                    videos,
                 },
             });
         } else {
