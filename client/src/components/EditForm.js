@@ -28,7 +28,6 @@ const EditForm = ({ user }) => {
 
     const updateInfo = (e) => {
         e.preventDefault();
-        console.log(userData);
         dispatch(updateUser({ user: auth.user, data: userData }));
         setIsEdit(false);
     };
@@ -124,6 +123,7 @@ const EditForm = ({ user }) => {
                                 className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md text-left w-full"
                                 value={faculty}
                                 onChange={handleChangeInput}
+                                name="faculty"
                             >
                                 <option defaultValue disabled>
                                     ---List faculty---
@@ -199,11 +199,7 @@ const EditForm = ({ user }) => {
             {auth.user._id === user._id && (
                 <div>
                     {isEdit ? (
-                        <button
-                            v-if="isEdit"
-                            type="submit"
-                            className="text-base font-semibold w-full mt-2 px-5 py-2 bg-btn-bg text-btn-text rounded-xl hover:bg-btn-hover"
-                        >
+                        <button className="text-base font-semibold w-full mt-2 px-5 py-2 bg-btn-bg text-btn-text rounded-xl hover:bg-btn-hover">
                             Update
                         </button>
                     ) : (
