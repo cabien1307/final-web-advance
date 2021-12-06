@@ -39,6 +39,12 @@ const Post = ({ post }) => {
         setImagesEdit(newArr);
     };
 
+    const deleteVideoEdit = (index) => {
+        const newArr = [...videosEdit];
+        newArr.splice(index, 1);
+        setVideosEdit(newArr);
+    };
+
     const handleDeletePost = () => {
         if (window.confirm("Do you want to delete this post!!!")) {
             dispatch(deletePost({ post, auth }))
@@ -281,7 +287,7 @@ const Post = ({ post }) => {
                                             <YoutubeEmbed embedId={video} />
                                             <i
                                                 className="fas fa-times-circle absolute -top-1 right-0 text-xl text-red-500 cursor-pointer"
-                                                onClick={() => deleteImagesEdit(index)}
+                                                onClick={() => deleteVideoEdit(index)}
                                             />
                                         </div>
                                     ))
