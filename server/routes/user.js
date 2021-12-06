@@ -108,4 +108,12 @@ router.patch(
     userController.setRoleTeacher
 );
 
+// Change password
+router.patch(
+    "/change-password",
+    passport.authenticate("jwt", { session: false }),
+    validateBody(schemas.userChangePassword),
+    userController.changePassword
+);
+
 module.exports = router;

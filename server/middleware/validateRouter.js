@@ -88,7 +88,11 @@ const schemas = {
     userListRolePost: Joi.object().keys({
         listRolePost: Joi.array(),
     }),
-
+    // PATCH change-password
+    userChangePassword: Joi.object().keys({
+        oldPassword: Joi.string().min(6).max(20).required(),
+        newPassword: Joi.string().min(6).max(20).required(),
+    }),
     // POST faculty (create)
     facultySchema: Joi.object().keys({
         name: Joi.string().required(),

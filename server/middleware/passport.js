@@ -35,6 +35,7 @@ passport.use(
                     updatedAt,
                     ...others
                 } = user._doc;
+                
                 done(null, others);
             } catch (error) {
                 done(error, false);

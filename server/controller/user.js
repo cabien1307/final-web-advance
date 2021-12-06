@@ -1,6 +1,7 @@
 const User = require("../model/User");
 const Faculty = require("../model/Faculty");
 const JWT = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const {
     JWT_SECRET,
@@ -160,7 +161,6 @@ class UserController {
     // [PUT] /:id/replace
     async replaceUser(req, res, next) {
         const { id } = req.value.params;
-        console.log(id);
         const newUser = req.value.body;
         const result = await User.findOneAndReplace(id, newUser, { new: true });
 
@@ -239,6 +239,39 @@ class UserController {
         } else {
             return res.status(404).json("Teacher not found !");
         }
+    }
+
+    // [PATCH] /change-password
+    async changePassword(req, res, next) {
+        const { oldPassword, newPassword } = req.value.body;
+        const { _id } = req.user;
+
+        const user = await User.findOne({
+            $and: [{ _id }, { authType: "local" }],
+        });
+
+        const isValidPassword = await user.isValidPassword(oldPassword);
+
+        if (!isValidPassword)
+            return res.status(500).json({
+                msg: "Password doesn't match !!",
+            });
+
+        // Generate salt
+        const salt = await bcrypt.genSalt(10);
+
+        // Hash password
+        const passwordHash = await bcrypt.hash(newPassword, salt);
+
+        await user.updateOne({
+            $set: {
+                password: passwordHash,
+            },
+        });
+
+        return res.status(200).json({
+            msg: "Change password success! Please login again !",
+        });
     }
 }
 
