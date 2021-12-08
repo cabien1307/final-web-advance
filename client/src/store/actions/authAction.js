@@ -92,13 +92,16 @@ export const updateUser =
 
             const dataUser = {
                 username: data.username,
-                birthday: data.birthday,
-                faculty: data.faculty._id ? data.faculty._id : data.faculty,
+                faculty: data.faculty && data.faculty,
                 major: data.major,
                 class: data.class,
             };
 
-            if (user.role === 1) delete data.faculty;
+            if (user.role === 1) {
+                delete dataUser.faculty;
+                delete dataUser.class;
+                delete dataUser.major;
+            }
 
             const res = await patchDataAPI(`user/${user._id}/update`, dataUser);
 
@@ -108,6 +111,27 @@ export const updateUser =
             dispatch({
                 type: GLOBALTYPES.ALERT,
                 payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
+export const changePassword =
+    ({ data, token }) =>
+    async (dispatch) => {
+        try {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+
+            const res = await patchDataAPI(`user/change-password`, data, token);
+
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { success: res.data.msg },
+            });
+        } catch (err) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: err.response.data.msg },
             });
         }
     };

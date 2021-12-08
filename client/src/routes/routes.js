@@ -6,8 +6,9 @@ import NotifyDetail from "../pages/notify-detail/NotifyDetail";
 import User from "../pages/users/User";
 import Faculty from "../pages/faculty/Faculty";
 import FacultyDetail from "../pages/facultyDetail/FacultyDetail";
-import { isId } from "../utils/validation"
+import { isId } from "../utils/validation";
 import NotFound from "../pages/notFound/not-found";
+import ChangePwd from "../pages/ChangePassword/ChangePwd";
 
 const routes = [
     {
@@ -38,7 +39,11 @@ const routes = [
         path: "/notify/:id/detail",
         exact: true,
         main: ({ match }) => {
-            return isId(match.params.id) ? <NotifyDetail match={match} /> : <NotFound />
+            return isId(match.params.id) ? (
+                <NotifyDetail match={match} />
+            ) : (
+                <NotFound />
+            );
         },
         authRequired: true,
     },
@@ -58,6 +63,12 @@ const routes = [
         path: "/register",
         exact: true,
         main: () => <Register />,
+        authRequired: true,
+    },
+    {
+        path: "/change-password",
+        exact: true,
+        main: () => <ChangePwd />,
         authRequired: true,
     },
 ];

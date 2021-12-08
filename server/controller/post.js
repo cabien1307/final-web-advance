@@ -113,10 +113,21 @@ class postController {
             await newPost.save();
 
             await user.update({ $push: { posts: newPost._id } });
+            const post = await Post.findById({ _id: newPost._id })
+                .populate("userID likes")
+                .populate("faculty")
+                .populate({
+                    path: "comments",
+                    populate: {
+                        path: "userID",
+                    },
+                    options: { sort: { createdAt: -1 } },
+                })
+                .sort({ createdAt: -1 });
 
             return res.status(201).json({
                 success: true,
-                newPost,
+                newPost: post,
             });
         } else {
             return res.status(404).json("user not found");

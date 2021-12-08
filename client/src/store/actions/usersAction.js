@@ -93,10 +93,7 @@ export const deleteUser =
         try {
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
 
-            const res = await deleteDataAPI(
-                `user/${_id}/delete`,
-                token
-            );
+            const res = await deleteDataAPI(`user/${_id}/delete`, token);
 
             dispatch({
                 type: USERS_TYPES.DELETE_USER,

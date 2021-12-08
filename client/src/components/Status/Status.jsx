@@ -158,7 +158,7 @@ const Status = () => {
 
                 </div>
 
-                <div className="img-post mt-2 px-3">
+                <div className="img-post mt-2 px-2">
                     <input
                         type="file"
                         multiple="multiple"
@@ -168,7 +168,7 @@ const Status = () => {
                         onChange={handleChangeImages}
                     />
                     <ul className="flex justify-around items-center">
-                        <li className="py-2 px-2 rounded-xl hover:bg-blue-100">
+                        <li className="flex py-2 px-2 rounded-xl hover:bg-blue-100">
                             <label htmlFor="isPhotoId" className="cursor-pointer">
                                 <i className="far fa-images text-red-600 mx-2" />
                                 <span className="md:hidden sm:hidden xs:hidden">
@@ -187,8 +187,6 @@ const Status = () => {
                                 </span>
                             </label>
                         </li>
-
-
 
                         {
                             (auth.user.role === 2 || auth.user.role === 0) &&
@@ -217,9 +215,9 @@ const Status = () => {
 
                         {
                             (auth.user.role === 1) &&
-                            <li className="w-52">
+                            <li className="w-44">
                                 <select
-                                    className="w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent py-1 px-2"
+                                    className="w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent py-1"
                                     required
                                     value={faculty}
                                     onChange={(e) => setFaculty(e.target.value)}

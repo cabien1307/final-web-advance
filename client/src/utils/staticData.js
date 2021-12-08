@@ -27,8 +27,8 @@ export const SIDEBAR_ITEMS = [
         path: "/register",
     },
     {
-        name: "About",
-        icon: "fas fa-info-circle",
-        path: "/about",
+        name: "Change password",
+        icon: "fas fa-key",
+        path: "/change-password",
     },
 ];

@@ -253,8 +253,8 @@ class UserController {
         const isValidPassword = await user.isValidPassword(oldPassword);
 
         if (!isValidPassword)
-            return res.status(500).json({
-                msg: "Password doesn't match !!",
+            return res.status(401).json({
+                msg: "Old password doesn't match. Please try again !",
             });
 
         // Generate salt

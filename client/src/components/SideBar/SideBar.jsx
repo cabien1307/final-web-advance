@@ -54,11 +54,11 @@ function NavBar() {
             role: [1, 2],
         },
         {
-            name: "More",
-            to: "/more",
+            name: "Change password",
+            to: "/change-password",
             exact: false,
-            icon: "fas fa-ellipsis-h",
-            role: [3],
+            icon: "fas fa-key",
+            role: [0, 1],
         },
     ];
     

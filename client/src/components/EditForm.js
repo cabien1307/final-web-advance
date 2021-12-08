@@ -103,10 +103,7 @@ const EditForm = ({ user }) => {
                         )}
 
                         {user.role === 1 && (
-                            <select
-                                className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center"
-                                value={user.faculty}
-                            >
+                            <select className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center">
                                 {user.listRolePost.map((faculty) => (
                                     <option
                                         key={faculty._id}
@@ -121,7 +118,7 @@ const EditForm = ({ user }) => {
                         {user.role === 2 && isEdit && (
                             <select
                                 className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md text-left w-full"
-                                value={faculty}
+                                value={faculty._id || ""}
                                 onChange={handleChangeInput}
                                 name="faculty"
                             >
@@ -143,57 +140,63 @@ const EditForm = ({ user }) => {
                 </li>
 
                 {/* Major */}
-                <li className="flex items-center">
-                    <div className="key flex items-center max-w-0">
-                        <i className="max-w-0 fas fa-book-open"></i>
-                        <span className="text-base italic ml-4">Major:</span>
-                    </div>
-                    <div className="value ml-20">
-                        <h1
-                            className={`text-sm font-semibold ${
-                                isEdit ? "hidden" : ""
-                            }`}
-                        >
-                            {user.major}
-                        </h1>
-                        {isEdit && (
-                            <input
-                                v-if="isEdit"
-                                type="text"
-                                className="focus:outline-none border-b-2 border-gray-800 text-base px-2 py-2 w-full"
-                                value={major}
-                                onChange={handleChangeInput}
-                                name="major"
-                            />
-                        )}
-                    </div>
-                </li>
-
-                {/* Class */}
-                <li className="flex items-center">
-                    <div className="key flex items-center max-w-0">
-                        <i className="max-w-0 fas fa-user-graduate"></i>
-                        <span className="text-base italic ml-4">Class:</span>
-                    </div>
-                    <div className="value ml-20">
-                        <h1
-                            className={`text-sm font-semibold ${
-                                isEdit && "hidden"
-                            }`}
-                        >
-                            {user.class}
-                        </h1>
-                        {isEdit && (
-                            <input
-                                type="text"
-                                className="focus:outline-none border-b-2 border-gray-800 text-base px-2 py-2 w-full"
-                                onChange={handleChangeInput}
-                                value={classID}
-                                name="class"
-                            />
-                        )}
-                    </div>
-                </li>
+                {user.role !== 1 && (
+                    <>
+                        <li className="flex items-center">
+                            <div className="key flex items-center max-w-0">
+                                <i className="max-w-0 fas fa-book-open"></i>
+                                <span className="text-base italic ml-4">
+                                    Major:
+                                </span>
+                            </div>
+                            <div className="value ml-20">
+                                <h1
+                                    className={`text-sm font-semibold ${
+                                        isEdit ? "hidden" : ""
+                                    }`}
+                                >
+                                    {user.major}
+                                </h1>
+                                {isEdit && (
+                                    <input
+                                        v-if="isEdit"
+                                        type="text"
+                                        className="focus:outline-none border-b-2 border-gray-800 text-base px-2 py-2 w-full"
+                                        value={major}
+                                        onChange={handleChangeInput}
+                                        name="major"
+                                    />
+                                )}
+                            </div>
+                        </li>
+                        <li className="flex items-center">
+                            <div className="key flex items-center max-w-0">
+                                <i className="max-w-0 fas fa-user-graduate"></i>
+                                <span className="text-base italic ml-4">
+                                    Class:
+                                </span>
+                            </div>
+                            <div className="value ml-20">
+                                <h1
+                                    className={`text-sm font-semibold ${
+                                        isEdit && "hidden"
+                                    }`}
+                                >
+                                    {user.class}
+                                </h1>
+                                {isEdit && (
+                                    <input
+                                        type="text"
+                                        className="focus:outline-none border-b-2 border-gray-800 text-base px-2 py-2 w-full"
+                                        onChange={handleChangeInput}
+                                        value={classID}
+                                        name="class"
+                                    />
+                                )}
+                            </div>
+                        </li>
+                    </>
+                )}
             </ul>
             {/* <!-- btn edit --> */}
             {auth.user._id === user._id && (
