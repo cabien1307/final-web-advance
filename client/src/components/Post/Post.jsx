@@ -213,7 +213,7 @@ const Post = ({ post }) => {
             <div className="content my-2 mx-2 block">
                 {
                     !isEdit
-                        ? <h1 className="ml-3 mb-2 font-semibold">
+                        ? <h1 className="ml-3 mb-2 font-semibold break-words">
                             {post.title}
                         </h1>
                         : <form onSubmit={handleUpdatePost}
