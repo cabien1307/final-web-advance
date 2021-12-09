@@ -74,10 +74,9 @@ function Profile() {
 
     return (
         <>
-            <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 grid grid-cols-12 space-y-3">
-                <div className="col-span-12">
+            <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 grid grid-cols-12">
+                <div className="col-span-12 pb-3 border-b-2">
                     <ProfileHeader user={user} />
-
                 </div>
 
 
@@ -94,7 +93,7 @@ function Profile() {
                         />
                     ) : homePosts.posts.length === 0 ? (
                         <div
-                            className="list-posts mx-7 my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
+                            className="list-posts my-5 xl:mx-auto lg:mx-2 md:mx-2 sm:mx-1 xs:mx-1"
                         >
                             <img
                                 src={NoPost}

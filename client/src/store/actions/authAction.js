@@ -97,7 +97,7 @@ export const updateUser =
                 class: data.class,
             };
 
-            if (user.role === 1) {
+            if (user.role === 1 || user.role === 0) {
                 delete dataUser.faculty;
                 delete dataUser.class;
                 delete dataUser.major;

@@ -219,12 +219,12 @@ const Post = ({ post }) => {
                         : <form onSubmit={handleUpdatePost}
                         >
                             <div className="title flex">
-                                <input
+                                <textarea
                                     type="text"
-                                    className="px-3 py-2 bg-gray-300 w-full focus:outline-none rounded-2xl my-2"
+                                    className="px-3 py-2 h-28 bg-gray-300 w-full focus:outline-none rounded-2xl my-2"
                                     value={titleEdit}
                                     onChange={(e) => setTitleEdit(e.target.value)}
-                                />
+                                ></textarea>
 
                                 <i
                                     className="fas fa-times cursor-pointer hover:text-red-500"
@@ -367,16 +367,17 @@ const Post = ({ post }) => {
                         onClick={handleLiked}
                         className={`mx-2 px-12 py-2 hover:bg-gray-100 ${isLiked ? 'text-blue-800' : ''}`}
                     >
-                        <div className="icon">
+                        <div className="icon space-x-2">
                             <i className="far fa-thumbs-up"></i>
-                            Like
+                            <span className="md:hidden sm:hidden">Like</span>
                         </div>
                     </button>
                     <button
                         onClick={() => setIsShowComment(!isShowComment)}
-                        className="mx-2 px-12 py-2 hover:bg-gray-100"
+                        className="mx-2 px-12 py-2 hover:bg-gray-100 space-x-2"
                     >
-                        <i className="fas fa-comment-alt"></i> Comments
+                        <i className="fas fa-comment-alt"></i>
+                        <span className="md:hidden sm:hidden">Comments</span>
                     </button>
                 </div>
 

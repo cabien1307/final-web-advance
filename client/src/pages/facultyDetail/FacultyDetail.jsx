@@ -7,7 +7,7 @@ import { getDataAPI } from "../../utils/fetchData"
 import LoadIcon from "../../images/loading.gif";
 import Post from "../../components/Post/Post";
 import NoPost from "../../images/post.svg";
-import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
+import HeaderFacultyDetail from "./HeaderFacultyDetail/HeaderFacultyDetail";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import { POST_TYPES } from "../../store/actions/postAction";
@@ -38,7 +38,7 @@ function FacultyDetail() {
 
         getDataAPI(`faculty/${params.id}`)
             .then(res => {
-
+                console.log(res.data);
                 setFaculty(res.data)
             })
             .catch(err => {
@@ -50,14 +50,14 @@ function FacultyDetail() {
             const res = await getDataAPI(`post/faculty/${params.id}?limit=3`)
 
             dispatch({ type: POST_TYPES.GET_POSTS, payload: res.data });
-                
+
             setLoadingPosts(false)
         }
         getPosts()
     }, [params.id, dispatch])
 
     const fetchPosts = async () => {
-        const res = await getDataAPI(`post/faculty/${params.id}?limit=${page*3}`);
+        const res = await getDataAPI(`post/faculty/${params.id}?limit=${page * 3}`);
         return res.data;
     };
 
@@ -66,11 +66,11 @@ function FacultyDetail() {
         const posts = await fetchPosts();
         dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
 
-        if(homePosts.result < 3 * (page - 1)) {
+        if (homePosts.result < 3 * (page - 1)) {
             setHasMore(false)
         }
 
-        if(oldResult === posts.result) {
+        if (oldResult === posts.result) {
             setHasMore(false)
         }
 
@@ -82,11 +82,11 @@ function FacultyDetail() {
     return (
         <>
             <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 sm:gap-0 grid grid-cols-12 space-y-3">
-                <div className="col-span-12">
-                    <ProfileHeader user={faculty} />
+                <div className="col-span-12 mb-20">
+                    <HeaderFacultyDetail user={faculty} />
                 </div>
 
-                <div className="col-start-1 col-span-8 border-l-2">
+                <div className="col-start-1 col-span-8 border-l-2 lg:col-span-12 md:col-span-12 sm:col-span-12">
                     {loadingPosts ? (
                         <img
                             src={LoadIcon}
@@ -132,7 +132,7 @@ function FacultyDetail() {
                     )}
                 </div>
 
-                <div className="col-start-9 col-span-4 border-l-2">
+                <div className="col-start-9 col-span-4 border-l-2 lg:hidden md:hidden sm:hidden">
                     <RightBar notifications={notifies} />
                 </div>
 

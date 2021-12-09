@@ -86,61 +86,65 @@ const EditForm = ({ user }) => {
                 </li>
 
                 {/* Faculty */}
-                <li className="flex items-center">
-                    <div className="key flex items-center max-w-0">
-                        <i className="max-w-0 fas fa-graduation-cap"></i>
-                        <span className="text-base italic ml-4">Faculty:</span>
-                    </div>
-                    <div className="value ml-20">
-                        {user.role === 2 && (
-                            <h1
-                                className={`text-sm font-semibold ${
-                                    isEdit && "hidden"
-                                }`}
-                            >
-                                {user.faculty && user.faculty.name}
-                            </h1>
-                        )}
+                {user.role !== 0 && (
+                    <li className="flex items-center">
+                        <div className="key flex items-center max-w-0">
+                            <i className="max-w-0 fas fa-graduation-cap"></i>
+                            <span className="text-base italic ml-4">
+                                Faculty:
+                            </span>
+                        </div>
+                        <div className="value ml-20">
+                            {user.role === 2 && (
+                                <h1
+                                    className={`text-sm font-semibold ${
+                                        isEdit && "hidden"
+                                    }`}
+                                >
+                                    {user.faculty && user.faculty.name}
+                                </h1>
+                            )}
 
-                        {user.role === 1 && (
-                            <select className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center">
-                                {user.listRolePost.map((faculty) => (
-                                    <option
-                                        key={faculty._id}
-                                        value={faculty._id}
-                                    >
-                                        {faculty.name}
+                            {user.role === 1 && (
+                                <select className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md px-2 text-center">
+                                    {user.listRolePost.map((faculty) => (
+                                        <option
+                                            key={faculty._id}
+                                            value={faculty._id}
+                                        >
+                                            {faculty.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+
+                            {user.role === 2 && isEdit && (
+                                <select
+                                    className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md text-left w-full"
+                                    value={faculty._id || ""}
+                                    onChange={handleChangeInput}
+                                    name="faculty"
+                                >
+                                    <option defaultValue disabled>
+                                        ---List faculty---
                                     </option>
-                                ))}
-                            </select>
-                        )}
 
-                        {user.role === 2 && isEdit && (
-                            <select
-                                className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md text-left w-full"
-                                value={faculty._id || ""}
-                                onChange={handleChangeInput}
-                                name="faculty"
-                            >
-                                <option defaultValue disabled>
-                                    ---List faculty---
-                                </option>
-
-                                {faculties.map((faculty) => (
-                                    <option
-                                        key={faculty._id}
-                                        value={faculty._id}
-                                    >
-                                        {faculty.name}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
-                    </div>
-                </li>
+                                    {faculties.map((faculty) => (
+                                        <option
+                                            key={faculty._id}
+                                            value={faculty._id}
+                                        >
+                                            {faculty.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+                        </div>
+                    </li>
+                )}
 
                 {/* Major */}
-                {user.role !== 1 && (
+                {user.role === 2 && (
                     <>
                         <li className="flex items-center">
                             <div className="key flex items-center max-w-0">

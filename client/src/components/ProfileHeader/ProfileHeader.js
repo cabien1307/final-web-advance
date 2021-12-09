@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCover, updateProfile } from "../../store/actions/authAction";
 import { GLOBALTYPES } from "../../store/actions/globalTypes";
+import "./ProfileHeader.css";
 
 const ProfileHeader = ({ user }) => {
     const { auth } = useSelector((state) => state);
@@ -62,8 +63,8 @@ const ProfileHeader = ({ user }) => {
     };
     return (
         // <!-- Avatar -->
-        <div className="col-span-12 h-auto pb-24 border-b-2">
-            <div className="coverPic relative right-0 xs:px-2">
+        <>
+            <div className="coverPic relative">
                 {/* <!-- Cover picture --> */}
                 <img
                     src={
@@ -93,23 +94,28 @@ const ProfileHeader = ({ user }) => {
                 {auth.user._id === user._id && (
                     <form
                         onSubmit={updateCoverPic}
-                        className="update-cover absolute right-2 bottom-2 py-2 px-4 bg-white rounded-lg text-base font-semibold cursor-pointer"
+                        className="update-cover"
                     >
                         {!urlCoverPic ? (
-                            <label htmlFor="isCoverId" className="flex items-center justify-center cursor-pointer">
-                                <i className="fas fa-camera mr-2"></i>
-                                <h3>Update cover picture</h3>
+                            <label
+                                htmlFor="isCoverId"
+                                className="cursor-pointer flex items-center space-x-2"
+                            >
+                                <i className="fas fa-camera"></i>
+                                <h3 className="md:hidden sm:hidden">
+                                    Update cover picture
+                                </h3>
                             </label>
                         ) : (
                             <button
                                 type="submit"
-                                className="flex items-center space-x-2 font-semibold"
+                                className="flex items-center space-x-2 font-semibold "
                             >
                                 <i
                                     className="fas fa-check cursor-pointer"
                                     title="Update"
                                 ></i>
-                                <h3>Update</h3>
+                                <h3 className="md:hidden sm:hidden">Update</h3>
                             </button>
                         )}
                         <input
@@ -124,7 +130,7 @@ const ProfileHeader = ({ user }) => {
                 )}
 
                 {/* <!-- Profile picture --> */}
-                <div className="profilePic bg-white absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 w-44 h-44 rounded-full ">
+                <div className="profilePic bg-white absolute left-1/2 transform -translate-x-1/2 bottom-12 w-44 h-44 rounded-full">
                     <img
                         className="w-44 h-44 rounded-full object-cover border-4"
                         src={
@@ -155,16 +161,16 @@ const ProfileHeader = ({ user }) => {
                     {auth.user._id === user._id && (
                         <form
                             onSubmit={updateProfilePic}
-                            className="update-profile absolute right-4 bottom-2 text-xl w-9 h-9 bg-gray-300 hover:bg-gray-100 rounded-full flex justify-center items-center cursor-pointer"
+                            className="update-profile"
                         >
                             {!urlProfilePic ? (
                                 <label htmlFor="isProfileId">
-                                    <i className="fas fa-camera cursor-pointer"></i>
+                                    <i className="fas fa-camera"></i>
                                 </label>
                             ) : (
                                 <button type="submit">
                                     <i
-                                        className="fas fa-check cursor-pointer"
+                                        className="fas fa-check"
                                         title="Update"
                                     ></i>
                                 </button>
@@ -181,12 +187,12 @@ const ProfileHeader = ({ user }) => {
                         </form>
                     )}
                 </div>
-                {/* <!-- Name of user --> */}
-                <h1 className="text-center text-3xl font-semibold w-full absolute -bottom-20 xl:-bottom-20 lg:-bottom-20 md:-bottom-24 sm:-bottom-28 xs:-bottom-28 left-1/2 transform -translate-x-1/2 ">
+
+                <h1 className="text-center text-3xl font-semibold mt-3">
                     {user.username ? user.username : user.name}
                 </h1>
             </div>
-        </div>
+        </>
     );
 };
 
