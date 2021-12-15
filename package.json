@@ -6,12 +6,12 @@
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
-    "client": "cd client && yarn start",
-    "server-install": "yarn install",
-    "client-install": "cd client && yarn install",
+    "client": "cd client && npm run start",
+    "server-install": "npm install",
+    "client-install": "cd client && npm install",
     "install-all": "concurrently \"npm run server-install\" \"npm run client-install\"",
-    "dev": "concurrently \"yarn server\" \"yarn client\"",
-    "heroku-postbuild": "cd client && yarn install && yarn build"
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
