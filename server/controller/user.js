@@ -115,6 +115,7 @@ class UserController {
         return res.status(200).json({ resource: req.user });
     }
 
+    //[POST] /user/get-access-token
     async getAccessToken(req, res, next) {
         const rf_token = req.cookies.refreshtoken;
 

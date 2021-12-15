@@ -8,19 +8,40 @@ const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+
+
 // Module
 const route = require("./routes");
 const db = require("./config/database");
 
 const app = express();
 
-app.disable("etag");
 // cors
 const corsOptions = {
     exposedHeaders: "Authorization",
 };
 
 app.use(cors(corsOptions));
+
+// Socket.io
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+
+io.on("connection", (socket) => {
+    console.log("Socket is connected !", socket.id);
+
+    socket.on("new-notify", () => {
+        socket.broadcast.emit("broadcast-notify");
+    });
+
+    // Disconnect
+    socket.on("disconnect", () => {
+        console.log(socket.id, "is disconnected !!!");
+    });
+});
+
+app.disable("etag");
+
 
 // Cookies
 app.use(cookieParser());
@@ -45,6 +66,6 @@ route(app);
 
 // Start server
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
+http.listen(port, () => {
     console.log(`Server is running on port ${port} !`);
 });

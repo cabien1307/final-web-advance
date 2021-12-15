@@ -1,6 +1,6 @@
 import { io } from "socket.io-client"
 import { NOTIFY_TYPES } from "../actions/notifyAction"
-const initSocket = io("ws://localhost:8080");
+const initSocket = io();
 
 const socketReducer = (state = initSocket, action) => {
     switch (action.type) {
