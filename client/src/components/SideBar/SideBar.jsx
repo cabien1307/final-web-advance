@@ -117,7 +117,7 @@ function NavBar() {
 
 
     return (
-        <div className="col-span-3 2xl:col-span-3 xl:col-span-3 lg:col-span-2 md:col-span-2 sm:col-span-2 flex flex-col px-2 py-4 border-r-2">
+        <div className="col-span-3 2xl:col-span-3 xl:col-span-3 lg:col-span-2 md:col-span-2 sm:col-span-2 flex flex-col space-y-40 px-2 py-4 border-r-2">
 
             {/* Main */}
             <div className="main">

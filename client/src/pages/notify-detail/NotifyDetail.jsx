@@ -6,7 +6,7 @@ import { getDataAPI } from "../../utils/fetchData"
 import { isId } from "../../utils/validation"
 import './notify-detail.css'
 import { readNotify } from "../../store/actions/notifyAction"
-const PUBLIC_ATTACHMENT = 'http://localhost:5000/files/'
+const PUBLIC_ATTACHMENT = 'https://final-web-advance.herokuapp.com/files/'
 
 
 function NotifyDetail() {
