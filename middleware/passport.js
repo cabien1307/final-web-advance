@@ -3,7 +3,6 @@ const JWTStrategy = require("passport-jwt").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
 const { ExtractJwt } = require("passport-jwt");
 const GGToken = require("passport-google-token").Strategy;
-const FacebookeTokenStrategy = require("passport-facebook-token");
 
 const User = require("../model/User");
 
@@ -135,43 +134,6 @@ passport.use(
                 } catch (error) {
                     done(error, false);
                 }
-            }
-        }
-    )
-);
-
-// Passport Facebook
-passport.use(
-    new FacebookeTokenStrategy(
-        {
-            clientID: auth.facebook.CLIENT_ID,
-            clientSecret: auth.facebook.CLIENT_SECRET,
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            try {
-                // Check whether this current user exist in db
-                const user = await User.findOne({
-                    authGoogleID: profile.id,
-                    authType: "facebook",
-                });
-
-                // user has loggedin before
-                if (user) return done(null, user);
-
-                // user fisrt logged in  (new account)
-                const newUser = new User({
-                    authType: "facebook",
-                    username: profile.displayName,
-                    email: profile.emails[0].value,
-                    authGoogleID: profile.id,
-                    profilePic: profile.photos[0].value,
-                });
-
-                await newUser.save();
-
-                done(null, newUser);
-            } catch (error) {
-                done(error, false);
             }
         }
     )
