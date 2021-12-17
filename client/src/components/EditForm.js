@@ -33,7 +33,16 @@ const EditForm = ({ user }) => {
     };
 
     useEffect(() => {
-        setUserData({ ...user });
+
+        if (user || user.length) {
+            setUserData({
+                username: user.username,
+                faculty: user.faculty ? user.faculty : "",
+                major: user.major || "",
+                class: user.class || ""
+            });
+        }
+
 
         if (user.role === 2) {
             getDataAPI(`faculty`)
@@ -66,9 +75,8 @@ const EditForm = ({ user }) => {
                     </div>
                     <div className="value ml-20">
                         <h1
-                            className={`text-sm font-semibold ${
-                                isEdit ? "hidden" : ""
-                            }`}
+                            className={`text-sm font-semibold ${isEdit ? "hidden" : ""
+                                }`}
                         >
                             {user.username}
                         </h1>
@@ -97,9 +105,8 @@ const EditForm = ({ user }) => {
                         <div className="value ml-20">
                             {user.role === 2 && (
                                 <h1
-                                    className={`text-sm font-semibold ${
-                                        isEdit && "hidden"
-                                    }`}
+                                    className={`text-sm font-semibold ${isEdit && "hidden"
+                                        }`}
                                 >
                                     {user.faculty && user.faculty.name}
                                 </h1>
@@ -118,10 +125,10 @@ const EditForm = ({ user }) => {
                                 </select>
                             )}
 
-                            {user.role === 2 && isEdit && (
+                            {(user.role === 2 && isEdit) && (
                                 <select
                                     className="focus:outline-none focus:ring-2 focus:ring-primary py-1 rounded-md text-left w-full"
-                                    value={faculty._id || ""}
+                                    value={faculty || ""}
                                     onChange={handleChangeInput}
                                     name="faculty"
                                 >
@@ -155,9 +162,8 @@ const EditForm = ({ user }) => {
                             </div>
                             <div className="value ml-20">
                                 <h1
-                                    className={`text-sm font-semibold ${
-                                        isEdit ? "hidden" : ""
-                                    }`}
+                                    className={`text-sm font-semibold ${isEdit ? "hidden" : ""
+                                        }`}
                                 >
                                     {user.major}
                                 </h1>
@@ -182,9 +188,8 @@ const EditForm = ({ user }) => {
                             </div>
                             <div className="value ml-20">
                                 <h1
-                                    className={`text-sm font-semibold ${
-                                        isEdit && "hidden"
-                                    }`}
+                                    className={`text-sm font-semibold ${isEdit && "hidden"
+                                        }`}
                                 >
                                     {user.class}
                                 </h1>

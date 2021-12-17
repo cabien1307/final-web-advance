@@ -22,8 +22,8 @@ function Profile() {
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(2);
     const [oldResult, setOldResult] = useState(0)
-
     useEffect(() => {
+        
         getDataAPI(`user/${params.id}/getByID`)
             .then(res => {
 
