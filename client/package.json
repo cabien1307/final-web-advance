@@ -7,9 +7,11 @@
         "@testing-library/jest-dom": "^5.11.4",
         "@testing-library/react": "^11.1.0",
         "@testing-library/user-event": "^12.1.10",
+        "autoprefixer": "^9",
         "axios": "^0.24.0",
         "caniuse-lite": "^1.0.30001286",
         "moment": "^2.29.1",
+        "postcss": "^7",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-google-login": "^5.2.2",
@@ -22,6 +24,7 @@
         "redux-devtools-extension": "^2.13.9",
         "redux-thunk": "^2.4.0",
         "socket.io-client": "^4.4.0",
+        "tailwindcss": "npm:@tailwindcss/postcss7-compat",
         "timeago.js": "^4.0.2",
         "web-vitals": "^1.0.1"
     },
@@ -49,10 +52,6 @@
             "last 1 safari version"
         ]
     },
-    "devDependencies": {
-        "autoprefixer": "^9",
-        "postcss": "^7",
-        "tailwindcss": "npm:@tailwindcss/postcss7-compat"
-    },
+    "devDependencies": {},
     "proxy": "http://localhost:5000"
 }

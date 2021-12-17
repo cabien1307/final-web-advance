@@ -3,12 +3,12 @@
 require("dotenv").config();
 
 const express = require("express");
-const logged = require("morgan");
+// const logged = require("morgan");
 const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-
+// new line
 
 // Module
 const route = require("./routes");
@@ -53,7 +53,7 @@ app.use(express.json());
 db.connect();
 
 // Middlewares
-app.use(logged("dev"));
+// app.use(logged("dev"));
 
 // Path upload img
 app.use("/images", express.static(path.resolve(__dirname, "public/images")));
