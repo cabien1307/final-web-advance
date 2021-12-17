@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { LoginFailure, LoginSuccessfull } from '../../store/actions/authAction'
 import { GoogleLogin } from "react-google-login";
 import axios from "axios";
-import {GLOBALTYPES} from '../../store/actions/globalTypes';
+import { GLOBALTYPES } from '../../store/actions/globalTypes';
 
 function TeacherForm({ login }) {
 
@@ -120,31 +120,8 @@ function Login() {
         }
     };
 
-    const StudentForm = () => {
-        return (
-            <div className="form-group px-10 space-y-3">
-                <h1 className="text-center text-3xl font-semibold">Login</h1>
-                {/* Update login with google button */}
-                
-                <GoogleLogin
-                    render={renderProps => (
-                        <button className="btn w-full" onClick={renderProps.onClick}>
-                        <i className="fab fa-google mr-2"></i>
-                        Sign in with google
-                    </button>
-                      )}
-                    clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
-                    buttonText="Login with Google"
-                    onSuccess={responseGoogle}
-                    onFailure={responseGoogle}
-                    cookiePolicy={"single_host_origin"}
-                />
-            </div>
-        )
-    }
-
-    const handleLogin = async ({type, data}) => {
-        const {email, password} = data
+    const handleLogin = async ({ type, data }) => {
+        const { email, password } = data
         // Teacher login with email
         try {
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
@@ -164,7 +141,7 @@ function Login() {
             });
             dispatch(LoginFailure())
         }
-        
+
     }
 
     return (
@@ -195,7 +172,28 @@ function Login() {
                     isChoose
                         ? typeLogin === 0
                             ? <TeacherForm login={handleLogin} />
-                            : <StudentForm />
+                            : (
+                                (
+                                    <div className="form-group px-10 space-y-3">
+                                        <h1 className="text-center text-3xl font-semibold">Login</h1>
+                                        {/* Update login with google button */}
+
+                                        <GoogleLogin
+                                            render={renderProps => (
+                                                <button className="btn w-full" onClick={renderProps.onClick}>
+                                                    <i className="fab fa-google mr-2"></i>
+                                                    Sign in with google
+                                                </button>
+                                            )}
+                                            clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
+                                            buttonText="Login with Google"
+                                            onSuccess={responseGoogle}
+                                            onFailure={responseGoogle}
+                                            cookiePolicy={"single_host_origin"}
+                                        />
+                                    </div>
+                                )
+                            )
                         : false
                 }
             </div>
