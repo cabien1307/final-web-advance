@@ -22,7 +22,7 @@ const validateParams = (schema, name) => {
 const validateBody = (schema) => {
     return (req, res, next) => {
         const result = schema.validate(req.body);
-
+        console.log(result, req.body);
         if (result.error) {
             //error
             return res.status(400).json(result.error);
@@ -69,9 +69,9 @@ const schemas = {
         username: Joi.string().min(2).max(50),
         email: Joi.string().email(),
         birthday: Joi.date(),
-        class: Joi.string(),
-        major: Joi.string(),
-        faculty: Joi.string(),
+        class: Joi.string().allow(null, ''),
+        major: Joi.string().allow(null, ''),
+        faculty: Joi.string().allow(null, ''),
         profilePic: Joi.string(),
         coverPic: Joi.string(),
         role: Joi.number(),

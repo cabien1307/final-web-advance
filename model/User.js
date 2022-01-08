@@ -45,9 +45,11 @@ const UserSchema = new Schema(
         },
         major: {
             type: String,
+            default: null
         },
         class: {
             type: String,
+            default: null
         },
         posts: [
             {

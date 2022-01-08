@@ -132,7 +132,7 @@ const EditForm = ({ user }) => {
                                     onChange={handleChangeInput}
                                     name="faculty"
                                 >
-                                    <option defaultValue disabled>
+                                    <option defaultValue>
                                         ---List faculty---
                                     </option>
 
