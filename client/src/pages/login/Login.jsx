@@ -170,31 +170,30 @@ function Login() {
 
                 {
                     isChoose
-                        ? typeLogin === 0
-                            ? <TeacherForm login={handleLogin} />
-                            : (
-                                (
-                                    <div className="form-group px-10 space-y-3">
-                                        <h1 className="text-center text-3xl font-semibold">Login</h1>
-                                        {/* Update login with google button */}
+                    && (typeLogin === 0
+                        ? <TeacherForm login={handleLogin} />
+                        : (
+                            (
+                                <div className="form-group px-10 space-y-3">
+                                    <h1 className="text-center text-3xl font-semibold">Login</h1>
+                                    {/* Update login with google button */}
 
-                                        <GoogleLogin
-                                            render={renderProps => (
-                                                <button className="btn w-full" onClick={renderProps.onClick}>
-                                                    <i className="fab fa-google mr-2"></i>
-                                                    Sign in with google
-                                                </button>
-                                            )}
-                                            clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
-                                            buttonText="Login with Google"
-                                            onSuccess={responseGoogle}
-                                            onFailure={responseGoogle}
-                                            cookiePolicy={"single_host_origin"}
-                                        />
-                                    </div>
-                                )
+                                    <GoogleLogin
+                                        render={renderProps => (
+                                            <button className="btn w-full" onClick={renderProps.onClick}>
+                                                <i className="fab fa-google mr-2"></i>
+                                                Sign in with google
+                                            </button>
+                                        )}
+                                        clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
+                                        buttonText="Login with Google"
+                                        onSuccess={responseGoogle}
+                                        onFailure={responseGoogle}
+                                        cookiePolicy={"single_host_origin"}
+                                    />
+                                </div>
                             )
-                        : false
+                        ))
                 }
             </div>
         </div>
