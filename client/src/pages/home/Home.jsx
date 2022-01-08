@@ -27,7 +27,7 @@ function Home() {
     }, [dispatch, token]);
 
     const fetchPosts = async () => {
-        const res = await getDataAPI(`post?limit=${page*3}`);
+        const res = await getDataAPI(`post?limit=${page*10}`);
         return res.data;
     };
 
@@ -36,7 +36,7 @@ function Home() {
         const posts = await fetchPosts();
         dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
 
-        if(homePosts.result < 3 * (page - 1)) {
+        if(homePosts.result < 10 * (page - 1)) {
             setHasMore(false)
         }
 

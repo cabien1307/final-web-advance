@@ -40,7 +40,7 @@ function Profile() {
 
         const getPosts = async () => {
             setLoadingPosts(true)
-            const res = await getDataAPI(`post/${params.id}/timeline?limit=3`)
+            const res = await getDataAPI(`post/${params.id}/timeline?limit=10`)
 
             dispatch({ type: POST_TYPES.GET_POSTS, payload: res.data });
 
@@ -51,7 +51,7 @@ function Profile() {
     }, [params.id, auth.user, dispatch])
 
     const fetchPosts = async () => {
-        const res = await getDataAPI(`post/${params.id}/timeline?limit=${page * 3}`);
+        const res = await getDataAPI(`post/${params.id}/timeline?limit=${page * 10}`);
         return res.data;
     };
 
@@ -60,7 +60,7 @@ function Profile() {
         const posts = await fetchPosts();
         dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
 
-        if (homePosts.result < 3 * (page - 1)) {
+        if (homePosts.result < 10 * (page - 1)) {
             setHasMore(false)
         }
 

@@ -47,7 +47,7 @@ function FacultyDetail() {
 
         const getPosts = async () => {
             setLoadingPosts(true)
-            const res = await getDataAPI(`post/faculty/${params.id}?limit=3`)
+            const res = await getDataAPI(`post/faculty/${params.id}?limit=10`)
 
             dispatch({ type: POST_TYPES.GET_POSTS, payload: res.data });
 
@@ -57,7 +57,7 @@ function FacultyDetail() {
     }, [params.id, dispatch])
 
     const fetchPosts = async () => {
-        const res = await getDataAPI(`post/faculty/${params.id}?limit=${page * 3}`);
+        const res = await getDataAPI(`post/faculty/${params.id}?limit=${page * 10}`);
         return res.data;
     };
 
@@ -66,7 +66,7 @@ function FacultyDetail() {
         const posts = await fetchPosts();
         dispatch({ type: POST_TYPES.GET_POSTS, payload: posts });
 
-        if (homePosts.result < 3 * (page - 1)) {
+        if (homePosts.result < 10 * (page - 1)) {
             setHasMore(false)
         }
 
