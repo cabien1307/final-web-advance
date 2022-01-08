@@ -8,7 +8,7 @@ function Faculty() {
 
     return (
         <div className="col-span-9 2xl:col-span-9 xl:col-span-9 lg:col-span-10 md:col-span-10 sm:col-span-10 px-3 py-3 space-y-5">
-            <h1 className="text-heading text-2xl font-semibold">List faculties</h1>
+            <h1 className="text-heading text-2xl font-semibold">List Deparments</h1>
             <hr />
             <div className="list-faculty px-1 py-3">
                 <div className="grid grid-cols-12 gap-3">

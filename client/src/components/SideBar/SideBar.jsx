@@ -18,7 +18,7 @@ function NavBar() {
             role: [3],
         },
         {
-            name: "Faculty",
+            name: "Deparments",
             to: "/faculty",
             exact: false,
             icon: "far fa-list-alt",
