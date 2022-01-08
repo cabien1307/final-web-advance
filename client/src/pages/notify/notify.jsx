@@ -163,7 +163,7 @@ function Notify() {
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Search here..."
+                                    placeholder="Comming soon ..."
                                     className="w-full focus:outline-none py-2 px-5"
                                     name="search"
                                     onChange={(e) => setKeyword(e.target.value)}
