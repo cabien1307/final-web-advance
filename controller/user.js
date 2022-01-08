@@ -175,9 +175,16 @@ class UserController {
     async updateUser(req, res, next) {
         const { id } = req.value.params;
         const newUser = req.value.body;
-        const result = await User.findByIdAndUpdate(id, newUser, { new: true })
-            .populate("listRolePost")
-            .populate("faculty");
+        var result
+        if (!newUser.faculty) {
+            delete newUser.faculty
+            result = await User.findByIdAndUpdate(id, newUser, { new: true })
+                .populate("listRolePost")
+        } else {
+            result = await User.findByIdAndUpdate(id, newUser, { new: true })
+                .populate("listRolePost")
+                .populate("faculty");
+        }
         const {
             password,
             authFacebookID,
