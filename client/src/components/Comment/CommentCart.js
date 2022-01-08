@@ -51,7 +51,7 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
                 pointerEvents: comment._id ? "inherit" : "none",
             }}
         >
-            <div className="user-commemt flex items-center">
+            <div className="user-commemt flex items-center w-full">
                 <img
                     className="w-8 h-8 mr-4 rounded-full"
                     src={
@@ -61,8 +61,8 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
                     }
                     alt=""
                 />
-                <div className="content px-3 py-2 bg-blue-100 rounded-xl relative mb-1 w-full">
-                    <h5 className="text-base font-semibold pr-5">
+                <div className="content px-3 py-2 bg-green-100 rounded-xl relative mb-1 w-10/12">
+                    <h5 className="text-base font-semibold pr-5 break-words">
                         {comment.userID.username}
                     </h5>
                     {/* <!-- Comment --> */}
@@ -73,7 +73,7 @@ const CommentCart = ({ comment, post, index, timeAgo }) => {
                             onChange={(e) => setContent(e.target.value)}
                         />
                     ) : (
-                        <p className="text-sm">{comment.content}</p>
+                        <p className="text-sm break-words">{comment.content}</p>
                     )}
                     <div className="cursor-pointer block absolute right-0 mt-1">
                         <small className="italic text-xs mr-3">

@@ -57,6 +57,9 @@
     .logo {
         text-align: center;
     }
+    .hover-container{
+        left: 120px !important;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -66,6 +69,9 @@
     }
     .logo {
         text-align: center;
+    }
+    .hover-container{
+        left: 50px !important;
     }
 }
 
@@ -77,6 +83,9 @@
     .logo {
         text-align: center;
     }
+    .hover-container{
+        left: 50px !important;
+    }
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
@@ -86,6 +95,9 @@
     }
     .logo {
         display: none;
+    }
+    .hover-container{
+        left: 50px !important;
     }
 }
 

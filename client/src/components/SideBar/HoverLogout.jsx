@@ -21,7 +21,7 @@ function HoverLogout() {
 
 
     return (
-        <div className="hover-container w-72 bg-background px-2 py-2 rounded-lg shadow-xl flex flex-col z-50">
+        <div className="hover-container w-72 bg-card-bg px-2 py-2 rounded-lg shadow-xl flex flex-col z-50">
             <div className="flex-item-profile flex items-center px-3 my-3">
 
                 {/* Image */}

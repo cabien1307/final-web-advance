@@ -50,6 +50,9 @@ function Login() {
             dispatch(LoginFailure())
         }
     };
+    const responseGoogleFailure = async () => {
+
+    }
 
     const handleLoginLocal = async (e) => {
         e.preventDefault()
@@ -180,7 +183,7 @@ function Login() {
                                 clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
                                 buttonText="Login with Google"
                                 onSuccess={responseGoogle}
-                                onFailure={responseGoogle}
+                                onFailure={responseGoogleFailure}
                                 cookiePolicy={"single_host_origin"}
                             />
                         </div>)
