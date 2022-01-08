@@ -31,6 +31,7 @@ export const createUsers =
     async (dispatch) => {
         try {
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+            delete data.success
 
             await postDataAPI("user/sign-up", data, token);
 
