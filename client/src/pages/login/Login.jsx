@@ -94,12 +94,8 @@ function Login() {
     const [typeLogin, setTypeLogin] = useState(0)
     const [isChoose, setIsChoose] = useState(false)
 
-    const setType = (type) => {
-        setTypeLogin(type)
-        setIsChoose(true)
-    }
-
     const responseGoogle = async (response) => {
+        console.log("CLick login");
         try {
             dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
             const res = await axios.post("/user/auth/google", {
@@ -143,6 +139,10 @@ function Login() {
         }
 
     }
+    const setType = (type) => {
+        setTypeLogin(type ? 1 : 0)
+        setIsChoose(!isChoose)
+    }
 
     return (
         <div className="login-page col-span-12 flex items-center">
@@ -161,8 +161,8 @@ function Login() {
                 <div className="w-full px-5 py-2 flex flex-col items-center">
                     <h1 className="text-3xl text-heading">Who are you ?</h1>
                     <div className="my-3 flex justify-around w-full">
-                        <button className="btn w-2/5" onClick={() => setType(1)}>Student</button>
-                        <button className="btn w-2/5" onClick={() => setType(0)}>Teacher</button>
+                        <button className="btn w-2/5" onClick={() => setType(true)}>Student</button>
+                        <button className="btn w-2/5" onClick={() => setType()}>Teacher</button>
                     </div>
                 </div>
 
@@ -173,26 +173,26 @@ function Login() {
                     && (typeLogin === 0
                         ? <TeacherForm login={handleLogin} />
                         : (
-                            (
-                                <div className="form-group px-10 space-y-3">
-                                    <h1 className="text-center text-3xl font-semibold">Login</h1>
-                                    {/* Update login with google button */}
 
-                                    <GoogleLogin
-                                        render={renderProps => (
-                                            <button className="btn w-full" onClick={renderProps.onClick}>
-                                                <i className="fab fa-google mr-2"></i>
-                                                Sign in with google
-                                            </button>
-                                        )}
-                                        clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
-                                        buttonText="Login with Google"
-                                        onSuccess={responseGoogle}
-                                        onFailure={responseGoogle}
-                                        cookiePolicy={"single_host_origin"}
-                                    />
-                                </div>
-                            )
+                            <div className="form-group px-10 space-y-3">
+                                <h1 className="text-center text-3xl font-semibold">Login</h1>
+                                {/* Update login with google button */}
+
+                                <GoogleLogin
+                                    render={renderProps => (
+                                        <button className="btn w-full" onClick={renderProps.onClick}>
+                                            <i className="fab fa-google mr-2"></i>
+                                            Sign in with google
+                                        </button>
+                                    )}
+                                    clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
+                                    buttonText="Login with Google"
+                                    onSuccess={responseGoogle}
+                                    onFailure={responseGoogle}
+                                    cookiePolicy={"single_host_origin"}
+                                />
+                            </div>
+
                         ))
                 }
             </div>
