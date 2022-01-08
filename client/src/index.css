@@ -30,3 +30,7 @@ body {
     background-color: var(--background);
 }
 
+button:focus{
+    outline: none !important;
+    box-shadow: none !important;
+}

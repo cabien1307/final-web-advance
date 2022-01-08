@@ -7,7 +7,14 @@ import { GoogleLogin } from "react-google-login";
 import axios from "axios";
 import { GLOBALTYPES } from '../../store/actions/globalTypes';
 
-function TeacherForm({ login }) {
+
+function Login() {
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const [typeLogin, setTypeLogin] = useState(0)
+    const [isChoose, setIsChoose] = useState(false)
 
     const [data, setData] = useState({
         email: '',
@@ -21,78 +28,6 @@ function TeacherForm({ login }) {
             [name]: value
         })
     }
-
-    const onSubmit = (e) => {
-        e.preventDefault()
-        login({ type: 0, data })
-    }
-
-    return (
-        <form onSubmit={onSubmit} className="px-10">
-            <h1 className="text-center text-3xl font-semibold">Login</h1>
-
-            {/* Email */}
-            <div className="form-group">
-                <label htmlFor="email" className="label">Email:</label>
-                <div className="flex items-center border-b-4 border-stroke">
-                    <i className="fas fa-envelope"></i>
-                    <input
-                        type="email"
-                        autoComplete="email"
-                        id="email"
-                        className="input"
-                        required
-                        name="email"
-                        placeholder="example@gmail.com"
-                        onChange={inputChange}
-                    />
-                </div>
-            </div>
-
-            {/* Password */}
-            <div className="form-group">
-                <label htmlFor="password" className="label">Password</label>
-                <div className="flex items-center border-b-4 border-stroke">
-                    <i className="fas fa-key"></i>
-                    <input
-                        type="password"
-                        autoComplete="current-password"
-                        id="password"
-                        name="password"
-                        className="input"
-                        required placeholder="************"
-                        onChange={inputChange}
-                    />
-                </div>
-            </div>
-
-            {/* Remember / forget password */}
-            <div className="form-group flex justify-between">
-                <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="remember-me" className="transform scale-125" />
-                    <label htmlFor="remember-me">Remember me</label>
-                </div>
-                <span className="italic cursor-pointer hover:text-tertiary">Forget password ?</span>
-            </div>
-
-            {/* Button submit */}
-            <div className="form-group">
-                <button className="btn w-full" type="submit">Login</button>
-            </div>
-
-        </form>
-    )
-}
-
-
-
-function Login() {
-
-    const dispatch = useDispatch();
-    const history = useHistory();
-
-    const [typeLogin, setTypeLogin] = useState(0)
-    const [isChoose, setIsChoose] = useState(false)
 
     const responseGoogle = async (response) => {
         console.log("CLick login");
@@ -116,7 +51,8 @@ function Login() {
         }
     };
 
-    const handleLogin = async ({ type, data }) => {
+    const handleLoginLocal = async (e) => {
+        e.preventDefault()
         const { email, password } = data
         // Teacher login with email
         try {
@@ -141,7 +77,7 @@ function Login() {
     }
     const setType = (type) => {
         setTypeLogin(type ? 1 : 0)
-        setIsChoose(!isChoose)
+        setIsChoose(true)
     }
 
     return (
@@ -167,33 +103,88 @@ function Login() {
                 </div>
 
                 {isChoose && (<hr className="my-2" />)}
-
+                {/* <TeacherForm login={handleLogin} /> */}
                 {
                     isChoose
                     && (typeLogin === 0
-                        ? <TeacherForm login={handleLogin} />
-                        : (
-
-                            <div className="form-group px-10 space-y-3">
+                        ? (<form onSubmit={handleLoginLocal} className="px-10">
+                            <div className='relative'>
                                 <h1 className="text-center text-3xl font-semibold">Login</h1>
-                                {/* Update login with google button */}
-
-                                <GoogleLogin
-                                    render={renderProps => (
-                                        <button className="btn w-full" onClick={renderProps.onClick}>
-                                            <i className="fab fa-google mr-2"></i>
-                                            Sign in with google
-                                        </button>
-                                    )}
-                                    clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
-                                    buttonText="Login with Google"
-                                    onSuccess={responseGoogle}
-                                    onFailure={responseGoogle}
-                                    cookiePolicy={"single_host_origin"}
-                                />
+                                <i className="fas fa-times absolute top-0 right-0 cursor-pointer hover:text-gray-700 text-xl" onClick={() => setIsChoose(false)}></i>
                             </div>
 
-                        ))
+                            {/* Email */}
+                            <div className="form-group">
+                                <label htmlFor="email" className="label">Email:</label>
+                                <div className="flex items-center border-b-4 border-stroke">
+                                    <i className="fas fa-envelope"></i>
+                                    <input
+                                        type="email"
+                                        autoComplete="email"
+                                        id="email"
+                                        className="input"
+                                        required
+                                        name="email"
+                                        placeholder="example@gmail.com"
+                                        onChange={inputChange}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Password */}
+                            <div className="form-group">
+                                <label htmlFor="password" className="label">Password</label>
+                                <div className="flex items-center border-b-4 border-stroke">
+                                    <i className="fas fa-key"></i>
+                                    <input
+                                        type="password"
+                                        autoComplete="current-password"
+                                        id="password"
+                                        name="password"
+                                        className="input"
+                                        required placeholder="************"
+                                        onChange={inputChange}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Remember / forget password */}
+                            <div className="form-group flex justify-between">
+                                <div className="flex items-center space-x-2">
+                                    <input type="checkbox" id="remember-me" className="transform scale-125" />
+                                    <label htmlFor="remember-me">Remember me</label>
+                                </div>
+                                <span className="italic cursor-pointer hover:text-tertiary">Forget password ?</span>
+                            </div>
+
+                            {/* Button submit */}
+                            <div className="form-group">
+                                <button className="btn w-full" type="submit">Login</button>
+                            </div>
+
+                        </form>)
+                        : (<div className="form-group px-10 space-y-3">
+                            <div className='relative'>
+                                <h1 className="text-center text-3xl font-semibold">Login</h1>
+                                <i className="fas fa-times absolute top-0 right-0 cursor-pointer hover:text-gray-700 text-xl" onClick={() => setIsChoose(false)}></i>
+                            </div>
+                            {/* Update login with google button */}
+
+                            <GoogleLogin
+                                render={renderProps => (
+                                    <button className="btn w-full" onClick={renderProps.onClick}>
+                                        <i className="fab fa-google mr-2"></i>
+                                        Sign in with google
+                                    </button>
+                                )}
+                                clientId="701019100399-ni5bt8ra0kd257fv44luubgrn36dfs53.apps.googleusercontent.com"
+                                buttonText="Login with Google"
+                                onSuccess={responseGoogle}
+                                onFailure={responseGoogle}
+                                cookiePolicy={"single_host_origin"}
+                            />
+                        </div>)
+                    )
                 }
             </div>
         </div>
