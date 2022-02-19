@@ -87,7 +87,7 @@ passport.use(
             clientSecret: auth.google.CLIENT_SECRET,
         },
         async (accessToken, refreshToken, profile, done) => {
-            if (!profile.emails[0].value.includes("@student.tdtu.edu.vn")) {
+            if (!profile.emails[0].value.includes("@student.tdtu.edu.vn") || !profile.emails[0].value.includes("@tdtu.edu.vn")) {
                 done(null, false);
             } else {
                 try {
